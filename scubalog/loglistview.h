@@ -77,7 +77,7 @@ signals:
   //! This signal is emitted when the log \a pcLog should be displayed.
   void displayLog(DiveLog* pcLog);
   //! This signal is emitted just before the log \a pcLog will be deleted.
-  void aboutToDeleteLog(DiveLog* pcLog);
+  void aboutToDeleteLog(const DiveLog* pcLog);
 };
 
 

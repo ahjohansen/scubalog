@@ -143,7 +143,9 @@ ScubaLog::ScubaLog(const char* pzName)
   // Create the log view
   m_pcLogView = new LogView(m_pcViews, "logView");
   m_pcLogView->setLogList(&m_pcLogBook->diveList());
-  connect(m_pcLogView, SIGNAL(viewLogListView()), SLOT(viewLogList()));
+  m_pcLogView->connect(m_pcLogListView,
+                       SIGNAL(aboutToDeleteLog(const DiveLog*)),
+                       SLOT(deletingLog(const DiveLog*)));
   m_pcViews->addTab(m_pcLogView, "Log &view");
 
   connect(m_pcLogListView, SIGNAL(displayLog(DiveLog*)),

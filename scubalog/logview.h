@@ -53,6 +53,7 @@ public:
 public slots:
   void viewLog(DiveLog* pcLog);
   void newLog();
+  void deletingLog(const DiveLog* pcLog);
 
 private slots:
   void diveNumberChanged(int nNumber);
@@ -111,7 +112,6 @@ private:
   QPushButton*    m_pcNextLog;
 
 signals:
-  void viewLogListView();
   void newLog(DiveLog* pcLog);
 };
 

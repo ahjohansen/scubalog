@@ -694,6 +694,41 @@ LogView::gotoNextLog()
 }
 
 
+//*****************************************************************************
+/*!
+  The log \a pcLog is about to be deleted, make sure it is not used anymore.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+LogView::deletingLog(const DiveLog* pcLog)
+{
+  if ( m_pcCurrentLog && pcLog == m_pcCurrentLog ) {
+    DiveLog* pcNewLog = 0;
+    if ( m_pcDiveLogList ) {
+      QListIterator<DiveLog> iLog(*m_pcDiveLogList);
+      for ( ; iLog.current(); ++iLog ) {
+        DiveLog* pcCurrentLog = iLog.current();
+        if ( pcCurrentLog == pcLog ) {
+          QListIterator<DiveLog> iNewLog = iLog;
+          ++iNewLog;
+          if ( iNewLog.current() )
+            pcNewLog = iNewLog.current();
+          else {
+            iNewLog = iLog;
+            --iNewLog;
+            pcNewLog = iNewLog.current();
+          }
+          break;
+        }
+      }
+    }
+    viewLog(pcNewLog);
+  }
+}
+
 // Local Variables:
 // mode: c++
 // tab-width: 8
