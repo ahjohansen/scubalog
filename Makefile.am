@@ -1,7 +1,7 @@
 # These are the subdirectories that have Makefiles
 SUBDIRS = scubalog po
 
-EXTRA_DIST = scubalog.spec automoc
+EXTRA_DIST = scubalog.spec automoc TODO VERSION
 
 
 dist-hook:
