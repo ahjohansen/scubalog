@@ -22,6 +22,7 @@
 #include <qlayout.h>
 #include <qcombobox.h>
 #include <qmultilinedit.h>
+#include <qpushbutton.h>
 #include "debug.h"
 #include "kintegeredit.h"
 #include "kdateedit.h"
@@ -35,6 +36,8 @@
 /*!
   Initialize the log view with \a pcParent as the parent widget
   and \a pzName as the widget name.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -190,12 +193,29 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(diveDescriptionChanged()));
   pcDescriptionLabel->setBuddy(m_pcDescription);
 
+  m_pcPreviousLog = new QPushButton(this, "previousLog");
+  m_pcPreviousLog->setText("Previous log");
+  connect(m_pcPreviousLog, SIGNAL(clicked()),
+          SLOT(gotoPreviousLog()));
+
+  m_pcNextLog = new QPushButton(this, "nextLog");
+  m_pcNextLog->setText("Next log");
+  connect(m_pcNextLog, SIGNAL(clicked()),
+          SLOT(gotoNextLog()));
+
+  QSize cNavSize(m_pcPreviousLog->sizeHint());
+  if ( m_pcNextLog->sizeHint().width() > cNavSize.width() )
+    cNavSize.setWidth(m_pcNextLog->sizeHint().width());
+  m_pcPreviousLog->setMinimumSize(cNavSize);
+  m_pcNextLog->setMinimumSize(cNavSize);
+
   //
   // Geometry management using layout engines
   //
 
   QVBoxLayout* pcDVTopLayout = new QVBoxLayout(this, 5);
   QGridLayout* pcUpperLayout = new QGridLayout(7, 4);
+  QGridLayout* pcNavigatorLayout = new QGridLayout(1, 3);
   pcDVTopLayout->addLayout(pcUpperLayout);
   pcUpperLayout->setColStretch(1, 1);
   pcUpperLayout->setColStretch(3, 1);
@@ -208,7 +228,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   pcUpperLayout->addWidget(pcDiveTimeLabel,      3, 0);
   pcUpperLayout->addWidget(m_pcDiveTime,         3, 1);
   pcUpperLayout->addWidget(pcGasLabel,           4, 0);
-  pcUpperLayout->addWidget(m_pcGasType,      4, 1);
+  pcUpperLayout->addWidget(m_pcGasType,          4, 1);
   pcUpperLayout->addWidget(pcAirTempLabel,       5, 0);
   pcUpperLayout->addWidget(m_pcAirTemp,          5, 1);
   pcUpperLayout->addWidget(pcPlanLabel,          0, 2);
@@ -228,6 +248,10 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
 
   pcDVTopLayout->addWidget(pcDescriptionLabel);
   pcDVTopLayout->addWidget(m_pcDescription, 10);
+  pcDVTopLayout->addLayout(pcNavigatorLayout);
+  pcNavigatorLayout->addWidget(m_pcPreviousLog, 0, 0);
+  pcNavigatorLayout->setColStretch(1, 1);
+  pcNavigatorLayout->addWidget(m_pcNextLog,     0, 2);
 
   pcDVTopLayout->activate();
 
@@ -241,6 +265,8 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
 
   Notice that this class is not the owner of the log-list, thus it will
   not be freed here.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -254,6 +280,8 @@ LogView::~LogView()
   Create a new log entry. The log view will be displayed.
 
   The signal newLog() will be emitted.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -278,6 +306,8 @@ LogView::newLog()
 
   Notice that this function will not make the view visible if it is not,
   that should be done after this function is called.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -330,6 +360,29 @@ LogView::viewLog(DiveLog* pcLog)
     m_pcWaterTemp->setEnabled(true);
     m_pcDescription->setText(pcLog->diveDescription());
     m_pcDescription->setEnabled(true);
+
+    // Check if a previous and next log exists
+    bool isPreviousAvailable = false;
+    bool isNextAvailable = false;
+    if ( m_pcDiveLogList ) {
+      QListIterator<DiveLog> iLog(*m_pcDiveLogList);
+      for ( ; iLog.current(); ++iLog ) {
+        DiveLog* pcCurrent = iLog.current();
+        if ( pcCurrent == m_pcCurrentLog ) {
+          QListIterator<DiveLog> iPrevLog = iLog;
+          QListIterator<DiveLog> iNextLog = iLog;
+          --iPrevLog;
+          ++iNextLog;
+          if ( iPrevLog.current() )
+            isPreviousAvailable = true;
+          if ( iNextLog.current() )
+            isNextAvailable = true;
+          break;
+        }
+      }
+    }
+    m_pcPreviousLog->setEnabled(isPreviousAvailable);
+    m_pcNextLog->setEnabled(isNextAvailable);
   }
   else {
     QDate cDate(QDate::currentDate());
@@ -362,6 +415,8 @@ LogView::viewLog(DiveLog* pcLog)
     m_pcWaterTemp->setEnabled(false);
     m_pcDescription->setText("");
     m_pcDescription->setEnabled(false);
+    m_pcPreviousLog->setEnabled(false);
+    m_pcNextLog->setEnabled(false);
   }
 }
 
@@ -369,6 +424,8 @@ LogView::viewLog(DiveLog* pcLog)
 //*****************************************************************************
 /*!
   The dive number changed to \a nNumber. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -383,6 +440,8 @@ LogView::diveNumberChanged(int nNumber)
 //*****************************************************************************
 /*!
   The dive date changed to \a cDate. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -397,6 +456,8 @@ LogView::diveDateChanged(QDate cDate)
 //*****************************************************************************
 /*!
   The dive start changed to \a cStart. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -411,6 +472,8 @@ LogView::diveStartChanged(QTime cStart)
 //*****************************************************************************
 /*!
   The dive time changed to \a cTime. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -425,6 +488,8 @@ LogView::diveTimeChanged(QTime cTime)
 //*****************************************************************************
 /*!
   The gas type changed to \a pzGasType. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -439,6 +504,8 @@ LogView::gasTypeChanged(const char* pzGasType)
 //*****************************************************************************
 /*!
   The bottom time changed to \a cTime. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -453,6 +520,8 @@ LogView::bottomTimeChanged(QTime cTime)
 //*****************************************************************************
 /*!
   The air temperature changed to \a nTemp. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -467,6 +536,8 @@ LogView::airTemperatureChanged(int nTemp)
 //*****************************************************************************
 /*!
   The water temperature changed to \a nTemp. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -481,6 +552,8 @@ LogView::waterTemperatureChanged(int nTemp)
 //*****************************************************************************
 /*!
   The location changed to \a pzLocation. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -496,6 +569,8 @@ LogView::locationChanged(const char* pzLocation)
 //*****************************************************************************
 /*!
   The maximum depth changed to \a pzDepth. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -512,6 +587,8 @@ LogView::maxDepthChanged(const char* pzDepth)
 //*****************************************************************************
 /*!
   The buddy changed to \a pzBuddy. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -527,6 +604,8 @@ LogView::buddyChanged(const char* pzBuddy)
 //*****************************************************************************
 /*!
   The dive type changed to \a pzDiveType. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -541,6 +620,8 @@ LogView::diveTypeChanged(const char* pzDiveType)
 //*****************************************************************************
 /*!
   The dive description changed. Update the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -552,6 +633,66 @@ LogView::diveDescriptionChanged()
     m_pcCurrentLog->setDiveDescription(cDescription);
   }
 }
+
+
+//*****************************************************************************
+/*!
+  Goto the previous log in the log book.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+LogView::gotoPreviousLog()
+{
+  assert(m_pcDiveLogList);
+
+  DiveLog* pcPrevious = 0;
+  DiveLog* pcCurrent  = 0;
+  QListIterator<DiveLog> iLog(*m_pcDiveLogList);
+  for ( ; iLog.current(); ++iLog ) {
+    pcCurrent = iLog.current();
+    if ( pcCurrent == m_pcCurrentLog )
+      break;
+    pcPrevious = pcCurrent;
+  }
+
+  if ( pcPrevious )
+    viewLog(pcPrevious);
+}
+
+
+//*****************************************************************************
+/*!
+  Goto the next log in the log book.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+LogView::gotoNextLog()
+{
+  assert(m_pcDiveLogList);
+
+  DiveLog* pcCurrent  = 0;
+  DiveLog* pcNext     = 0;
+  QListIterator<DiveLog> iLog(*m_pcDiveLogList);
+  for ( ; iLog.current(); ++iLog ) {
+    pcCurrent = iLog.current();
+    if ( pcCurrent == m_pcCurrentLog ) {
+      QListIterator<DiveLog> iNextLog = iLog;
+      ++iNextLog;
+      pcNext = iNextLog.current();
+      break;
+    }
+  }
+
+  if ( pcNext )
+    viewLog(pcNext);
+}
+
 
 // Local Variables:
 // mode: c++

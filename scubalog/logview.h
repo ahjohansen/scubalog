@@ -24,6 +24,7 @@ class DiveList;
 class QComboBox;
 class QLineEdit;
 class QMultiLineEdit;
+class QPushButton;
 class KIntegerEdit;
 class KDateEdit;
 class KTimeEdit;
@@ -67,6 +68,8 @@ private slots:
   void buddyChanged(const char* pzDepth);
   void diveTypeChanged(const char* pzDiveType);
   void diveDescriptionChanged();
+  void gotoPreviousLog();
+  void gotoNextLog();
 
 private:
   //! The list with dive logs.
@@ -102,6 +105,10 @@ private:
   QComboBox*    m_pcDiveTypeSelector;
   //! The dive description editor.
   QMultiLineEdit* m_pcDescription;
+  //! Move to previous log.
+  QPushButton*    m_pcPreviousLog;
+  //! Move to next log.
+  QPushButton*    m_pcNextLog;
 
 signals:
   void viewLogListView();
