@@ -31,14 +31,31 @@ EXTRA_DIST = scubalog.kdelnk
 bin_PROGRAMS = 	scubalog
 
 # Which sources should be compiled for scubalog.
-scubalog_SOURCES = divelog.cpp divelogitem.cpp equipmentlog.cpp \
-		   equipmentview.cpp exporter.cpp htmlexporter.cpp \
-		   integerdialog.cpp kcelledit.cpp kcelleditview.cpp \
-		   kdateedit.cpp kdatevalidator.cpp kintegeredit.cpp \
-		   kintegervalidator.cpp ktabcontrol.cpp ktimeedit.cpp \
-		   ktimevalidator.cpp listbox.cpp locationlog.cpp \
-		   locationview.cpp logbook.cpp loglistview.cpp logview.cpp \
-		   main.cpp personalinfoview.cpp scubalog.cpp
+scubalog_SOURCES = divelog.cpp \
+		   divelogitem.cpp \
+		   equipmentlog.cpp \
+		   equipmentview.cpp \
+		   exporter.cpp \
+		   htmlexporter.cpp \
+		   integerdialog.cpp \
+		   kcelledit.cpp \
+		   kcelleditview.cpp \
+		   kdateedit.cpp \
+		   kdatevalidator.cpp \
+		   kintegeredit.cpp \
+		   kintegervalidator.cpp \
+		   ktabcontrol.cpp \
+		   ktimeedit.cpp \
+		   ktimevalidator.cpp \
+		   listbox.cpp \
+		   locationlog.cpp \
+		   locationview.cpp \
+		   logbook.cpp \
+		   loglistview.cpp \
+		   logview.cpp \
+		   main.cpp \
+		   personalinfoview.cpp \
+		   scubalog.cpp
 
 # let automoc handle all of the meta source files (moc)
 scubalog_METASOURCES = USE_AUTOMOC
@@ -51,13 +68,33 @@ scubalog_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 scubalog_LDADD = $(LIB_KFILE)
 
 # these are the headers for your project
-noinst_HEADERS = chunkio.h debug.h divelist.h divelog.h divelogitem.h \
-		 equipmentlog.h equipmentview.h exporter.h htmlexporter.h \
-		 integerdialog.h kcelledit.h kcelleditview.h kdateedit.h \
-		 kdatevalidator.h kintegeredit.h kintegervalidator.h \
-		 ktabcontrol.h ktimeedit.h ktimevalidator.h locationlog.h \
-		 locationview.h logbook.h loglistview.h logview.h \
-		 personalinfoview.h scubalog.h
+noinst_HEADERS = chunkio.h \
+		 debug.h \
+                 divelist.h \
+                 divelog.h \
+                 divelogitem.h \
+		 equipmentlog.h \
+                 equipmentview.h \
+                 exporter.h \
+                 htmlexporter.h \
+		 integerdialog.h \
+                 kcelledit.h \
+                 kcelleditview.h \
+                 kdateedit.h \
+		 kdatevalidator.h \
+                 kintegeredit.h \
+                 kintegervalidator.h \
+		 ktabcontrol.h \
+                 ktimeedit.h \
+                 ktimevalidator.h \
+		 listbox.h \
+                 locationlog.h \
+		 locationview.h \
+                 logbook.h \
+                 loglistview.h \
+                 logview.h \
+		 personalinfoview.h \
+                 scubalog.h
 
 # if you "make distclean", this files get removed. If you want to remove
 # them while "make clean", use CLEANFILES
