@@ -319,7 +319,7 @@ LogView::viewLog(DiveLog* pcLog)
   if ( pcLog ) {
     QString cDepth;
     cDepth.sprintf("%f", pcLog->maxDepth());
-    m_pcDiveNumber->setNumber(pcLog->logNumber());
+    m_pcDiveNumber->setValue(pcLog->logNumber());
     m_pcDiveNumber->setEnabled(true);
     m_pcDiveDate->setDate(pcLog->diveDate());
     m_pcDiveDate->setEnabled(true);
@@ -329,7 +329,7 @@ LogView::viewLog(DiveLog* pcLog)
     m_pcDiveTime->setEnabled(true);
     m_pcGasType->setText(pcLog->gasType());
     m_pcGasType->setEnabled(true);
-    m_pcAirTemp->setNumber(pcLog->airTemperature());
+    m_pcAirTemp->setValue(pcLog->airTemperature());
     m_pcAirTemp->setEnabled(true);
     m_pcLocation->setText(pcLog->diveLocation());
     m_pcLocation->setEnabled(true);
@@ -356,7 +356,7 @@ LogView::viewLog(DiveLog* pcLog)
       m_pcDiveTypeSelector->setCurrentItem(m_pcDiveTypeSelector->count()-1);
     }
     m_pcDiveTypeSelector->setEnabled(true);
-    m_pcWaterTemp->setNumber(pcLog->waterTemperature());
+    m_pcWaterTemp->setValue(pcLog->waterTemperature());
     m_pcWaterTemp->setEnabled(true);
     m_pcDescription->setText(pcLog->diveDescription());
     m_pcDescription->setEnabled(true);
@@ -387,7 +387,7 @@ LogView::viewLog(DiveLog* pcLog)
   else {
     QDate cDate(QDate::currentDate());
     QTime cTime;
-    m_pcDiveNumber->setNumber(1);
+    m_pcDiveNumber->setValue(1);
     m_pcDiveNumber->setEnabled(false);
     m_pcDiveDate->setDate(cDate);
     m_pcDiveDate->setEnabled(false);
@@ -397,7 +397,7 @@ LogView::viewLog(DiveLog* pcLog)
     m_pcDiveTime->setEnabled(false);
     m_pcGasType->setText("");
     m_pcGasType->setEnabled(false);
-    m_pcAirTemp->setNumber(30);
+    m_pcAirTemp->setValue(30);
     m_pcAirTemp->setEnabled(false);
     m_pcLocation->setText("");
     m_pcLocation->setEnabled(false);
@@ -411,7 +411,7 @@ LogView::viewLog(DiveLog* pcLog)
     m_pcBuddy->setEnabled(false);
     m_pcDiveTypeSelector->setCurrentItem(0);
     m_pcDiveTypeSelector->setEnabled(false);
-    m_pcWaterTemp->setNumber(20);
+    m_pcWaterTemp->setValue(20);
     m_pcWaterTemp->setEnabled(false);
     m_pcDescription->setText("");
     m_pcDescription->setEnabled(false);
