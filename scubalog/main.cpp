@@ -40,7 +40,7 @@ main(int nArgumentCount, char** apzArguments)
                        I18N_NOOP("ScubaLog is a scuba dive logging program,\n"
                                  "written for the K Desktop Environment."),
                        KAboutData::License_GPL,
-                       "(c) 1999-2002, André Johansen",
+                       "(c) 1999-2004, André Johansen",
                        0,
                        "http://home.tiscali.no/andrej/scubalog",
                        "andrejoh@c2i.net");
