@@ -18,6 +18,8 @@
 #include <qlistview.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
+#include <qmessagebox.h>
+#include <qapplication.h>
 #include "debug.h"
 #include "divelist.h"
 #include "divelogitem.h"
@@ -29,6 +31,8 @@
 /*!
   Create the log list view with \a pcParent as parent widget and \a pzName
   as widget name.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -86,6 +90,8 @@ LogListView::LogListView(QWidget* pcParent, const char* pzName)
 //*****************************************************************************
 /*!
   Destroy the log list view.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -105,6 +111,8 @@ LogListView::~LogListView()
 
   Notice that this class does not take ownership of the list itself,
   but it can insert and delete logs from it.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -133,6 +141,8 @@ LogListView::setLogList(DiveList* pcDiveList)
 
   The log number will be the last logs number plus one, or 1 if this is the
   first log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -165,6 +175,8 @@ LogListView::createNewLog()
   emitted.
 
   The log wil be deleted from the log list.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -177,10 +189,18 @@ LogListView::deleteLog()
   if ( pcItem ) {
     DiveLog* pcLog = pcItem->log();
     DBG(("About to delete dive log #%d\n", pcLog->logNumber()));
-    delete pcItem;
-    emit aboutToDeleteLog(pcLog);
-    m_pcDiveLogList->remove(pcLog); // This will delete the log too!
-    DBG(("Deleted dive log...\n"));
+    QString cMessage;
+    cMessage.sprintf("Are you sure you want to delete log %d?\n"
+                     "(location: `%s')", pcLog->logNumber(),
+                     pcLog->diveLocation().data());
+    int nResult = QMessageBox::information(qApp->mainWidget(), "Delete log",
+                                           cMessage, "&Yes", "&No");
+    if ( 0 == nResult ) {
+      delete pcItem;
+      emit aboutToDeleteLog(pcLog);
+      m_pcDiveLogList->remove(pcLog); // This will delete the log too!
+      DBG(("Deleted dive log...\n"));
+    }
   }
 }
 
@@ -188,6 +208,8 @@ LogListView::deleteLog()
 //*****************************************************************************
 /*!
   Display the currently selected log, if any.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -204,6 +226,8 @@ LogListView::viewLog()
 //*****************************************************************************
 /*!
   Display the log corresponding to \a pcItem.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -219,6 +243,8 @@ LogListView::viewLog(QListViewItem* pcItem)
 //*****************************************************************************
 /*!
   The current selected log has changed to \a pcItem, update the GUI.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
