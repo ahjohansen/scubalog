@@ -193,7 +193,8 @@ LogListView::deleteLog()
     cMessage.sprintf("Are you sure you want to delete log %d?\n"
                      "(location: `%s')", pcLog->logNumber(),
                      pcLog->diveLocation().data());
-    int nResult = QMessageBox::information(qApp->mainWidget(), "Delete log",
+    int nResult = QMessageBox::information(qApp->mainWidget(),
+                                           "[ScubaLog] Delete log",
                                            cMessage, "&Yes", "&No");
     if ( 0 == nResult ) {
       delete pcItem;

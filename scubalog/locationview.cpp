@@ -230,7 +230,7 @@ LocationView::newLocation()
     pcLog = new LocationLog();
   }
   catch ( ... ) {
-    QMessageBox::warning(qApp->mainWidget(), "ScubaLog",
+    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] New location",
                          "Out of memory when creating a new location log!");
     return;
   }
@@ -282,7 +282,7 @@ LocationView::deleteLocation()
   cMessage.sprintf("Are you sure you want to delete the location\n"
                    "`%s'?", pcLog->getName().data());
   const int nResult = QMessageBox::information(qApp->mainWidget(),
-                                               "Delete location",
+                                               "[ScubaLog] Delete location",
                                                cMessage, "&Yes", "&No");
   if ( 1 == nResult )
     return;
