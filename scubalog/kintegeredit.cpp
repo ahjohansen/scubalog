@@ -17,7 +17,7 @@
 #include <assert.h>
 #include "kintegervalidator.h"
 #include "kintegeredit.h"
-#include "kintegeredit.moc"
+
 
 
 //*****************************************************************************

@@ -50,7 +50,7 @@
 #include "personalinfoview.h"
 #include "equipmentview.h"
 #include "scubalog.h"
-#include "scubalog.moc"
+
 
 
 //*****************************************************************************

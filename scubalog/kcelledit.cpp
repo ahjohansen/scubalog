@@ -23,7 +23,7 @@
 #include <qlineedit.h>
 #include <qscrollbar.h>
 #include "kcelledit.h"
-#include "kcelledit.moc"
+
 
 
 class KCellEdit::StringContainer : public std::vector<QString> {};

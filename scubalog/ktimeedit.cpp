@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include "ktimevalidator.h"
 #include "ktimeedit.h"
-#include "ktimeedit.moc"
+
 
 
 //*****************************************************************************

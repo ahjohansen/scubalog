@@ -27,7 +27,7 @@
 #include "logbook.h"
 #include "equipmentlog.h"
 #include "equipmentview.h"
-#include "equipmentview.moc"
+
 
 
 //*****************************************************************************

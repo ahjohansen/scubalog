@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include "kdatevalidator.h"
 #include "kdateedit.h"
-#include "kdateedit.moc"
+
 
 
 //*****************************************************************************

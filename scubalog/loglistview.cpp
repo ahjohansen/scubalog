@@ -25,7 +25,7 @@
 #include "divelist.h"
 #include "divelogitem.h"
 #include "loglistview.h"
-#include "loglistview.moc"
+
 
 
 //*****************************************************************************

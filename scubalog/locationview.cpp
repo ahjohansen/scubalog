@@ -26,7 +26,7 @@
 #include "logbook.h"
 #include "locationlog.h"
 #include "locationview.h"
-#include "locationview.moc"
+
 
 
 //*****************************************************************************

@@ -17,7 +17,7 @@
 #include <qlayout.h>
 #include "kintegeredit.h"
 #include "integerdialog.h"
-#include "integerdialog.moc"
+
 
 
 //*****************************************************************************

@@ -1,7 +1,11 @@
-.dependencies
 documentation
 logbooks
 misc
 output
-ScubaLog
+Makefile
+Makefile.in
+config.h
+config.log
+config.cache
+config.status
 

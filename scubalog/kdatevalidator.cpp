@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include "kdatevalidator.h"
-#include "kdatevalidator.moc"
+
 
 #if defined(DEBUG)
 # define DBG(x)

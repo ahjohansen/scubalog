@@ -1,0 +1,6 @@
+*.moc.cpp
+.deps
+scubalog
+Makefile
+Makefile.in
+

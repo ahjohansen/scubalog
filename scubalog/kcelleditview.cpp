@@ -25,7 +25,7 @@
 #include <qscrollbar.h>
 #include "kcelledit.h"
 #include "kcelleditview.h"
-#include "kcelleditview.moc"
+
 
 
 //*****************************************************************************

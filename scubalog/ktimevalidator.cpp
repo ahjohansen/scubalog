@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include "ktimevalidator.h"
-#include "ktimevalidator.moc"
+
 
 #if defined(DEBUG)
 # define DBG(x)

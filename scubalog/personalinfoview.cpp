@@ -20,7 +20,7 @@
 #include "divelist.h"
 #include "logbook.h"
 #include "personalinfoview.h"
-#include "personalinfoview.moc"
+
 
 
 //*****************************************************************************

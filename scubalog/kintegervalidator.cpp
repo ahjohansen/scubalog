@@ -12,7 +12,7 @@
 
 #include <assert.h>
 #include "kintegervalidator.h"
-#include "kintegervalidator.moc"
+
 
 
 //*****************************************************************************

@@ -34,7 +34,7 @@
 #include "divelist.h"
 #include "logbook.h"
 #include "logview.h"
-#include "logview.moc"
+
 
 
 //*****************************************************************************
