@@ -71,6 +71,7 @@ private slots:
   void diveDescriptionChanged();
   void gotoPreviousLog();
   void gotoNextLog();
+  void editLocation();
 
 private:
   //! The list with dive logs.
@@ -94,6 +95,8 @@ private:
   KIntegerEdit* m_pcWaterTemp;
   //! The location.
   QLineEdit*    m_pcLocation;
+  //! Edit the current location.
+  QPushButton*  m_pcEditLocation;
   //! The plan type (single- or multi-level).
   QComboBox*    m_pcPlanSelector;
   //! The bottom time.
@@ -113,6 +116,7 @@ private:
 
 signals:
   void newLog(DiveLog* pcLog);
+  void editLocation(const QString& cLocationName);
 };
 
 

@@ -109,11 +109,19 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   pcLocationLabel->setText("L&ocation:");
   pcLocationLabel->setMinimumSize(pcLocationLabel->sizeHint());
 
-  m_pcLocation = new QLineEdit(this, "location");
+  QWidget* pcLocationLine = new QWidget(this, "locationEdit");
+
+  m_pcLocation = new QLineEdit(pcLocationLine, "location");
   m_pcLocation->setMinimumSize(m_pcLocation->sizeHint());
   pcLocationLabel->setBuddy(m_pcLocation);
   connect(m_pcLocation, SIGNAL(textChanged(const char*)),
           SLOT(locationChanged(const char*)));
+
+  m_pcEditLocation = new QPushButton(pcLocationLine, "editLocation");
+  m_pcEditLocation->setText("Edit");
+  m_pcEditLocation->setMinimumSize(m_pcEditLocation->sizeHint());
+  connect(m_pcEditLocation, SIGNAL(clicked()),
+          SLOT(editLocation()));
 
   QLabel* pcPlanLabel = new QLabel(this, "planText");
   pcPlanLabel->setText("&Plan type:");
@@ -217,6 +225,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   QVBoxLayout* pcDVTopLayout = new QVBoxLayout(this, 5);
   QGridLayout* pcUpperLayout = new QGridLayout(7, 4);
   QGridLayout* pcNavigatorLayout = new QGridLayout(1, 3);
+  QHBoxLayout* pcLocationLayout = new QHBoxLayout(pcLocationLine);
   pcDVTopLayout->addLayout(pcUpperLayout);
   pcUpperLayout->setColStretch(1, 1);
   pcUpperLayout->setColStretch(3, 1);
@@ -245,8 +254,9 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   pcUpperLayout->addWidget(pcWaterTempLabel,     5, 2);
   pcUpperLayout->addWidget(m_pcWaterTemp,        5, 3);
   pcUpperLayout->addWidget(pcLocationLabel,      6, 0);
-  pcUpperLayout->addMultiCellWidget(m_pcLocation, 6, 6, 1, 3);
-
+  pcLocationLayout->addWidget(m_pcLocation, 1);
+  pcLocationLayout->addWidget(m_pcEditLocation);
+  pcUpperLayout->addMultiCellWidget(pcLocationLine, 6, 6, 1, 3);
   pcDVTopLayout->addWidget(pcDescriptionLabel);
   pcDVTopLayout->addWidget(m_pcDescription, 10);
   pcDVTopLayout->addLayout(pcNavigatorLayout);
@@ -334,6 +344,7 @@ LogView::viewLog(DiveLog* pcLog)
     m_pcAirTemp->setEnabled(true);
     m_pcLocation->setText(pcLog->diveLocation());
     m_pcLocation->setEnabled(true);
+    m_pcEditLocation->setEnabled(true);
     m_pcPlanSelector->setCurrentItem(pcLog->planType());
     m_pcPlanSelector->setEnabled(true);
     m_pcBottomTime->setTime(pcLog->bottomTime());
@@ -402,6 +413,7 @@ LogView::viewLog(DiveLog* pcLog)
     m_pcAirTemp->setEnabled(false);
     m_pcLocation->setText("");
     m_pcLocation->setEnabled(false);
+    m_pcEditLocation->setEnabled(false);
     m_pcPlanSelector->setCurrentItem(DiveLog::e_SingleLevel);
     m_pcPlanSelector->setEnabled(false);
     m_pcBottomTime->setTime(cTime);
@@ -728,6 +740,26 @@ LogView::deletingLog(const DiveLog* pcLog)
     }
     viewLog(pcNewLog);
   }
+}
+
+
+//*****************************************************************************
+/*!
+  Edit the current location.
+
+  This function will emit the signal editLocation().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+LogView::editLocation()
+{
+  assert(m_pcCurrentLog);
+
+  if ( false == m_pcCurrentLog->diveLocation().isNull() )
+    emit editLocation(m_pcCurrentLog->diveLocation());
 }
 
 

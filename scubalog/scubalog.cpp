@@ -160,6 +160,8 @@ ScubaLog::ScubaLog(const char* pzName)
   m_pcLocationView = new LocationView(m_pcViews, "locationView");
   m_pcLocationView->setLogBook(m_pcLogBook);
   m_pcViews->addTab(m_pcLocationView, "Locations");
+  connect(m_pcLogView, SIGNAL(editLocation(const QString&)),
+          SLOT(editLocation(const QString&)));
 
   // Create the personal info view
   m_pcPersonalInfoView =
@@ -498,6 +500,23 @@ ScubaLog::viewLog(DiveLog* pcLog)
   assert(m_pcLogView);
   m_pcLogView->viewLog(pcLog);
   m_pcViews->showPage(m_pcLogView);
+}
+
+
+//*****************************************************************************
+/*!
+  Edit the location with the name \a cLocationName.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+ScubaLog::editLocation(const QString& cLocationName)
+{
+  assert(m_pcLocationView);
+  m_pcLocationView->editLocation(cLocationName);
+  m_pcViews->showPage(m_pcLocationView);
 }
 
 

@@ -59,6 +59,7 @@ private slots:
   void saveProjectAs();
   void viewLogList();
   void viewLog(DiveLog* pcLog);
+  void editLocation(const QString& cLocationName);
   void exportLogBook();
 
 private:

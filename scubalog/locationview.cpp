@@ -214,6 +214,65 @@ LocationView::editLocationName(int nLocationIndex)
 
 //*****************************************************************************
 /*!
+  Edit the location \a cLocationName. If it does not exist, create it.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+LocationView::editLocation(const QString& cLocationName)
+{
+  assert(m_pcLogBook);
+
+  QList<LocationLog>& cLocations = m_pcLogBook->locationList();
+
+  // First, try to find the location
+  QListIterator<LocationLog> iLog(cLocations);
+  int nLocationIndex = 0;
+  bool isFound = false;
+  for ( ; iLog.current(); ++iLog, nLocationIndex++ ) {
+    if ( (iLog.current())->getName() == cLocationName ) {
+      isFound = true;
+      break;
+    }
+  }
+  if ( isFound ) {
+    locationSelected(nLocationIndex);
+    return;
+  }
+
+  // If not found, create a new location, and edit that one.
+  LocationLog* pcLog = 0;
+  try {
+    pcLog = new LocationLog();
+  }
+  catch ( ... ) {
+    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] New location",
+                         "Out of memory when creating a new location log!");
+    return;
+  }
+
+  pcLog->setName(cLocationName);
+  cLocations.append(pcLog);
+  m_pcLocations->insertItem(cLocationName);
+  m_pcLocations->setCurrentItem(m_pcLocations->count()-1);
+  m_pcLocationName->setText(cLocationName);
+  m_pcLocationDescription->setText("");
+
+  m_pcLocations->setEnabled(true);
+  m_pcNewLocation->setEnabled(true);
+  m_pcDeleteLocation->setEnabled(true);
+  m_pcLocationName->setEnabled(false);
+  m_pcLocationDescription->setEnabled(true);
+
+  m_pcLocationName->hide();
+  m_pcLocationDescription->setFocus();
+}
+
+
+//*****************************************************************************
+/*!
   Create a new location.
 
   \author André Johansen.

@@ -54,6 +54,9 @@ public:
 
   void setLogBook(LogBook* pcLogBook);
 
+public slots:
+  void editLocation(const QString& cLocationName);
+
 private slots:
   void locationSelected(int nLocationIndex);
   void editLocationName(int nLocationIndex);
