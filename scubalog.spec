@@ -1,15 +1,14 @@
 #
 # RPM specification file for ScubaLog
-# $Id$
 #
 
 Name:      scubalog
-Version:   0.1.1
+Version:   0.1.2
 Release:   1
 Copyright: GPL
 Group:     Applications
 Prefix:    /usr
-Source:    http://www.stud.ifi.uio.no/~andrej/scubalog/scubalog-0.1.1.tar.gz
+Source:    http://www.stud.ifi.uio.no/~andrej/scubalog/scubalog-0.1.2.tar.gz
 URL:       http://www.stud.ifi.uio.no/~andrej/scubalog/
 Packager:  André Johansen <andrej@ifi.uio.no>
 Summary:   Dive logging application
