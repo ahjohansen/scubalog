@@ -27,6 +27,15 @@ make
 
 %install
 make install
+mkdir -p ${RPM_BUILD_ROOT}%{prefix}/share/icons/hicolor/16x16/apps
+mkdir -p ${RPM_BUILD_ROOT}%{prefix}/share/icons/hicolor/32x32/apps
+mkdir -p ${RPM_BUILD_ROOT}%{prefix}/share/icons/hicolor/48x48/apps
+cp ${RPM_BUILD_ROOT}%{prefix}/share/icons/locolor/16x16/apps/scubalog.png \
+   ${RPM_BUILD_ROOT}%{prefix}/share/icons/hicolor/16x16/apps/scubalog.png
+cp ${RPM_BUILD_ROOT}%{prefix}/share/icons/locolor/32x32/apps/scubalog.png \
+   ${RPM_BUILD_ROOT}%{prefix}/share/icons/hicolor/32x32/apps/scubalog.png
+cp ${RPM_BUILD_ROOT}%{prefix}/share/icons/locolor/48x48/apps/scubalog.png \
+   ${RPM_BUILD_ROOT}%{prefix}/share/icons/hicolor/48x48/apps/scubalog.png
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -37,6 +46,10 @@ rm -rf $RPM_BUILD_ROOT
 %{prefix}/share/doc/HTML/en/scubalog
 %{prefix}/share/icons/locolor/16x16/apps/scubalog.png
 %{prefix}/share/icons/locolor/32x32/apps/scubalog.png
+%{prefix}/share/icons/locolor/48x48/apps/scubalog.png
+%{prefix}/share/icons/hicolor/16x16/apps/scubalog.png
+%{prefix}/share/icons/hicolor/32x32/apps/scubalog.png
+%{prefix}/share/icons/hicolor/48x48/apps/scubalog.png
 %{prefix}/share/locale/es/LC_MESSAGES/scubalog.mo
 %{prefix}/share/locale/no/LC_MESSAGES/scubalog.mo
 %doc AUTHORS
