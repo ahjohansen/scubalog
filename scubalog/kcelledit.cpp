@@ -295,6 +295,10 @@ KCellEdit::keyPressEvent(QKeyEvent* pcEvent)
   case Key_Return:
     if ( 0 == numRows() )
       addRow();
+    if ( -1 == m_nActiveRow || -1 == m_nActiveCol ) {
+      m_nActiveRow = 0;
+      m_nActiveCol = 0;
+    }
     editCell();
     break;
 
@@ -369,7 +373,7 @@ KCellEdit::mousePressEvent(QMouseEvent* pcEvent)
   const int nNewRow = findRow(pcEvent->y());
   const int nNewCol = findCol(pcEvent->x());
 
-  if ( m_isEditing )
+  if ( m_isEditing && -1 != m_nActiveRow && -1 != m_nActiveCol  )
     finishEdit(false);
 
   if ( LeftButton == pcEvent->button() &&
@@ -396,6 +400,7 @@ void
 KCellEdit::editCell()
 {
   assert(false == m_isEditing);
+  assert(-1 != m_nActiveRow && -1 != m_nActiveCol);
 
   QLineEdit* pcEditor = m_papcEditors[m_nActiveCol];
   if ( pcEditor ) {
@@ -427,6 +432,8 @@ KCellEdit::editCell()
 void
 KCellEdit::finishEdit(bool bKeepResult)
 {
+  assert(m_nActiveRow != -1 && m_nActiveCol != -1);
+
   QLineEdit* pcEditor = m_papcEditors[m_nActiveCol];
   assert(pcEditor);
   if ( bKeepResult ) {
