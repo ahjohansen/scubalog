@@ -6,21 +6,19 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
 //*****************************************************************************
 
-#include <assert.h>
 #include "kintegervalidator.h"
 
-
+#include <assert.h>
+#include <qwidget.h>
 
 //*****************************************************************************
 /*!
-  Initialize the validator. The validator will accept integer with
+  Initialise the validator. The validator will accept integer with
   \a nMin as the minimum value and \a nMax as the maximum value.
   If the integer is invalid, \a nDefault will be used insted.
 
@@ -67,9 +65,6 @@ KIntegerValidator::~KIntegerValidator()
 void
 KIntegerValidator::fixup(QString& cInput)
 {
-#if QT_VERSION < 200
-  cInput.detach();
-#endif
   bool isOk;
   long int nCurrent = cInput.toLong(&isOk);
   if ( false == isOk )

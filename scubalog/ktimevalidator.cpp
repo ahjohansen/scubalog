@@ -13,10 +13,11 @@
 */
 //*****************************************************************************
 
-#include <assert.h>
-#include <ctype.h>
 #include "ktimevalidator.h"
 
+#include <assert.h>
+#include <ctype.h>
+#include <qwidget.h>
 
 #if defined(DEBUG)
 # define DBG(x)
@@ -28,7 +29,7 @@
 
 //*****************************************************************************
 /*!
-  Initialize the validator. The validator will accept a time with
+  Initialise the validator. The validator will accept a time with
   \a cFirst as the first and \a cLast as the last time.
   If the time is invalid, \a cDefault will be used instead.
 
@@ -80,14 +81,9 @@ KTimeValidator::~KTimeValidator()
 //*****************************************************************************
 
 QValidator::State
-KTimeValidator::validate(QString& cInput, int&)
-#if QT_VERSION >= 200
-const
-#endif // QT_VERSION
+KTimeValidator::validate(QString& cInput, int&) const
 {
   State eState = Valid;
-
-#if QT_VERSION >= 200
 
   int nLength = cInput.length() + 1;
   int iNumber = 0;
@@ -105,27 +101,6 @@ const
       break;
     }
   }
-
-#else  // Qt 1
-
-  int nLength = cInput.size();
-  int iNumber = 0;
-  int anNumbers[3] = { 0 };     // Hour, minute, second
-  for ( int iPos = 0; iPos < nLength - 1; iPos++ ) {
-    char nChar = cInput[iPos];
-    if ( isdigit(nChar) ) {
-      anNumbers[iNumber] *= 10;
-      anNumbers[iNumber] += nChar - '0';
-    }
-    else if ( (':' == nChar) && (iNumber < 2) )
-      iNumber++;
-    else {
-      eState = Invalid;
-      break;
-    }
-  }
-
-#endif // QT_VERSION
 
   if ( Invalid == eState )
     return Invalid;
@@ -180,8 +155,6 @@ const
 void
 KTimeValidator::fixup(QString& cInput)
 {
-#if QT_VERSION >= 200
-
   int nLength = cInput.length() + 1;
   int iNumber = 0;
   int anNumbers[3] = { 0 };     // Hour, minute, second
@@ -196,26 +169,6 @@ KTimeValidator::fixup(QString& cInput)
     else
       break;
   }
-
-#else  // Qt 1
-
-  cInput.detach();
-  int nLength = cInput.size();
-  int iNumber = 0;
-  int anNumbers[3] = { 0 };     // Hour, minute, second
-  for ( int iPos = 0; iPos < nLength; iPos++ ) {
-    char nChar = cInput[iPos];
-    if ( isdigit(nChar) ) {
-      anNumbers[iNumber] *= 10;
-      anNumbers[iNumber] += nChar;
-    }
-    else if ( (':' == nChar) && (iNumber < 2) )
-      iNumber++;
-    else
-      break;
-  }
-
-#endif // QT_VERSION
 
   // Invalid time
   if ( (0 > anNumbers[0]) || (23 < anNumbers[0]) ||

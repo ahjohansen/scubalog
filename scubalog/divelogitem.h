@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -20,7 +18,6 @@
 
 class DiveLog;
 class QString;
-
 
 //*****************************************************************************
 /*!
@@ -45,13 +42,8 @@ public:
   DiveLogItem(QListView* pcListView, QListViewItem* pcPrevious,
               DiveLog* pcLog);
   virtual ~DiveLogItem();
-#if QT_VERSION >= 200
   virtual QString text(int nColumn) const;
   virtual QString key(int nColumn, bool isAscending) const;
-#else  // Qt 1
-  virtual const char* text(int nColumn) const;
-  virtual const char* key(int nColumn, bool isAscending) const;
-#endif // QT_VERSION
 
   DiveLog* log() const { return m_pcLog; }
 

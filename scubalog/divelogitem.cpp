@@ -76,18 +76,10 @@ DiveLogItem::~DiveLogItem()
 */
 //*****************************************************************************
 
-#if QT_VERSION >= 200
 QString
-#else  // Qt 1
-const char*
-#endif // QT_VERSION
 DiveLogItem::key(int nColumn, bool/* isAscending*/) const
 {
-#if QT_VERSION >= 200
   QString cKey;
-#else  // Qt 1
-  static QString cKey;
-#endif // QT_VERSION
   if ( 0 == nColumn )
     cKey.sprintf("%05d", m_pcLog->logNumber());
   else if ( 1 == nColumn ) {
@@ -109,11 +101,7 @@ DiveLogItem::key(int nColumn, bool/* isAscending*/) const
 */
 //*****************************************************************************
 
-#if QT_VERSION >= 200
 QString
-#else  // Qt 1
-const char*
-#endif // QT_VERSION
 DiveLogItem::text(int nColumn) const
 {
   if ( 0 == nColumn ) {

@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -20,7 +18,6 @@
 #include <qvalidator.h>
 
 class QString;
-
 
 //*****************************************************************************
 /*!
@@ -42,11 +39,7 @@ public:
                  QWidget* pcParent = 0, const char* pzName = 0);
   virtual ~KDateValidator();
 
-#if QT_VERSION >= 200
   virtual State validate(QString& cInput, int& nCursorPos) const;
-#else  // Qt 1
-  virtual State validate(QString& cInput, int& nCursorPos);
-#endif // QT_VERSION
   virtual void fixup(QString& cInput);
 
   virtual void setRange(QDate cFirst, QDate cDefault, QDate cLast);

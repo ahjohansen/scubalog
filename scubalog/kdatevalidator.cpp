@@ -13,11 +13,12 @@
 */
 //*****************************************************************************
 
+#include "kdatevalidator.h"
+
 #include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
-#include "kdatevalidator.h"
-
+#include <qwidget.h>
 
 #if defined(DEBUG)
 # define DBG(x)
@@ -29,7 +30,7 @@
 
 //*****************************************************************************
 /*!
-  Initialize the validator. The validator will accept a date with
+  Initialise the validator. The validator will accept a date with
   \a cFirst as the first and \a cLast as the last date.
   If the date is invalid, \a cDefault will be used instead.
 
@@ -81,14 +82,9 @@ KDateValidator::~KDateValidator()
 //*****************************************************************************
 
 QValidator::State
-KDateValidator::validate(QString& cInput, int&)
-#if QT_VERSION >= 200
-const
-#endif // QT_VERSION
+KDateValidator::validate(QString& cInput, int&) const
 {
   State eState = Valid;
-
-#if QT_VERSION >= 200
 
   int nLength = cInput.length() + 1;
   int iNumber = 0;
@@ -106,27 +102,6 @@ const
       break;
     }
   }
-
-#else  // Qt 1
-
-  int nLength = cInput.size();
-  int iNumber = 0;
-  int anNumbers[3] = { 0 };     // Day, month, year
-  for ( int iPos = 0; iPos < nLength - 1; iPos++ ) {
-    char nChar = cInput[iPos];
-    if ( isdigit(nChar) ) {
-      anNumbers[iNumber] *= 10;
-      anNumbers[iNumber] += nChar - '0';
-    }
-    else if ( ('.' == nChar) && (iNumber < 2) )
-      iNumber++;
-    else {
-      eState = Invalid;
-      break;
-    }
-  }
-
-#endif // QT_VERSION
 
   if ( Invalid == eState )
     return Invalid;
@@ -182,8 +157,6 @@ const
 void
 KDateValidator::fixup(QString& cInput)
 {
-#if QT_VERSION >= 200
-
   int nLength = cInput.length() + 1;
   int iNumber = 0;
   int anNumbers[3] = { 0 };     // Day, month, year
@@ -198,26 +171,6 @@ KDateValidator::fixup(QString& cInput)
     else
       break;
   }
-
-#else  // Qt 1
-
-  cInput.detach();
-  int nLength = cInput.size();
-  int iNumber = 0;
-  int anNumbers[3] = { 0 };     // Day, month, year
-  for ( int iPos = 0; iPos < nLength; iPos++ ) {
-    char nChar = cInput[iPos];
-    if ( isdigit(nChar) ) {
-      anNumbers[iNumber] *= 10;
-      anNumbers[iNumber] += nChar;
-    }
-    else if ( ('.' == nChar) && (iNumber < 2) )
-      iNumber++;
-    else
-      break;
-  }
-
-#endif // QT_VERSION
 
   // Invalid date
   if ( (   1 > anNumbers[0]) || (  31 < anNumbers[0]) ||
