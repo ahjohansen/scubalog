@@ -35,7 +35,8 @@ main(int nArgumentCount, char** apzArguments)
   cApplication.setMainWidget(pcMainGUI);
   pcMainGUI->show();
   int nReturnValue = cApplication.exec();
-  //delete pcMainGUI;
+  pcMainGUI->saveConfig();
+  delete pcMainGUI;
   return nReturnValue;
 }
 

@@ -13,6 +13,7 @@
 */
 //*****************************************************************************
 
+#include <limits.h>
 #include <assert.h>
 #include <qcolor.h>
 #include <qframe.h>
@@ -23,13 +24,13 @@
 #include <qstring.h>
 #include <qfiledialog.h>
 #include <qlistview.h>
-#include <qlayout.h>
 #include <qmessagebox.h>
 #include <qlist.h>
 #include <kapp.h>
 
 #include "debug.h"
 #include "htmlexporter.h"
+#include "integerdialog.h"
 #include "ktabcontrol.h"
 #include "divelist.h"
 #include "logbook.h"
@@ -45,6 +46,8 @@
 //*****************************************************************************
 /*!
   Initialize the ScubaLog application GUI. Use \a pzName as the widget name.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -104,6 +107,10 @@ ScubaLog::ScubaLog(const char* pzName)
   pcMenu->insertSeparator();
   pcMenu->insertItem("&Quit", pcApp, SLOT(quit()), CTRL + Key_Q);
   pcMenuBar->insertItem("&Project", pcMenu);
+
+  QPopupMenu* pcLogMenu = new QPopupMenu(0, "logMenu");
+  pcLogMenu->insertItem("&Goto log...", this, SLOT(gotoLog()), CTRL + Key_G);
+  pcMenuBar->insertItem("Log", pcLogMenu);
 
   QString cAboutText;
   cAboutText.sprintf("ScubaLog is a scuba dive logging program,\n"
@@ -165,13 +172,14 @@ ScubaLog::ScubaLog(const char* pzName)
 //*****************************************************************************
 /*!
   Destroy the application GUI.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
 ScubaLog::~ScubaLog()
 {
   DBG(("Destructing the main widget...\n"));
-  saveConfig();
 
   hide();
   if ( m_pcLogBook )
@@ -191,6 +199,8 @@ ScubaLog::~ScubaLog()
 //*****************************************************************************
 /*!
   The program is about to exit, save the settings.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -221,6 +231,8 @@ ScubaLog::saveConfig()
   Open the recent project \a nRecentNumber.
 
   \sa openProject().
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -264,6 +276,8 @@ ScubaLog::openRecent(int nRecentNumber)
   project.
 
   \sa saveProject(), saveProjectAs().
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -306,6 +320,8 @@ ScubaLog::openProject()
   Save the current project.
 
   \sa openProject(), saveProjectAs().
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -327,6 +343,8 @@ ScubaLog::saveProject()
   the user for a filename.
 
   \sa openProject(), saveProject().
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -349,6 +367,8 @@ ScubaLog::saveProjectAs()
   projects. If found longer down in the list, remove that entry.
 
   Only the five last entries will be remembered.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -400,6 +420,8 @@ ScubaLog::updateRecentProjects(const QString& cProjectName)
 
   Currently, a file dialog will be opened asking for an output directory.
   When more export formats are added, a dialog will be added.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -425,6 +447,8 @@ ScubaLog::exportLogBook()
 //*****************************************************************************
 /*!
   Switch to the log view, displaying the log \a pcLog.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -441,6 +465,8 @@ ScubaLog::viewLog(DiveLog* pcLog)
 //*****************************************************************************
 /*!
   Switch to the log list view.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -448,6 +474,64 @@ void
 ScubaLog::viewLogList()
 {
   m_pcViews->showPage(m_pcLogListView);
+}
+
+
+//*****************************************************************************
+/*!
+  Ask the user for a log to view.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+ScubaLog::gotoLog()
+{
+  // Ensure we have a lookbook
+  if ( 0 == m_pcLogBook )
+    return;
+
+  // Find the smallest and largest available log numbers
+  int nMinLogNumber = INT_MAX;
+  int nMaxLogNumber = INT_MIN;
+  QListIterator<DiveLog> iCurrentLog(m_pcLogBook->diveList());
+  for ( ; iCurrentLog.current(); ++iCurrentLog ) {
+    if ( iCurrentLog.current()->logNumber() < nMinLogNumber )
+      nMinLogNumber = iCurrentLog.current()->logNumber();
+    if ( iCurrentLog.current()->logNumber() > nMaxLogNumber )
+      nMaxLogNumber = iCurrentLog.current()->logNumber();
+  }
+  if ( nMinLogNumber <= 0 || INT_MAX == nMinLogNumber ||
+       nMaxLogNumber <= 0 || INT_MIN == nMaxLogNumber ||
+       nMinLogNumber > nMaxLogNumber )
+    return;
+
+  IntegerDialog cDialog(this, "gotoLogDialog", true);
+  cDialog.setValue(nMinLogNumber);
+  cDialog.setMinValue(nMinLogNumber);
+  cDialog.setMaxValue(nMaxLogNumber);
+  cDialog.setText("Goto log");
+  cDialog.setCaption("[ScubaLog] Goto");
+  if ( cDialog.exec() ) {
+    cDialog.hide();
+    DiveLog* pcLog = 0;
+    const int nLogNumber = cDialog.getValue();
+    QListIterator<DiveLog> iLog(m_pcLogBook->diveList());
+    for ( ; iLog.current(); ++iLog ) {
+      if ( iLog.current()->logNumber() == nLogNumber ) {
+        pcLog = iLog.current();
+        break;
+      }
+    }
+    if ( 0 == pcLog ) {
+      QString cText;
+      cText.sprintf("Couldn't find log %d", nLogNumber);
+      QMessageBox::information(this, "ScubaLog", cText);
+      return;
+    }
+    viewLog(pcLog);
+  }
 }
 
 

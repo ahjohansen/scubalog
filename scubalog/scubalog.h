@@ -47,6 +47,10 @@ public:
   ScubaLog(const char* pzName = 0);
   ~ScubaLog();
 
+public slots:
+  void gotoLog();
+  void saveConfig();
+
 private slots:
   void openRecent(int nRecentProjectNumber);
   void openProject();
@@ -54,7 +58,6 @@ private slots:
   void saveProjectAs();
   void viewLogList();
   void viewLog(DiveLog* pcLog);
-  void saveConfig();
   void exportLogBook();
 
 private:
