@@ -40,7 +40,7 @@
 
 //*****************************************************************************
 /*!
-  Initialize the log view with \a pcParent as the parent widget
+  Initialise the log view with \a pcParent as the parent widget
   and \a pzName as the widget name.
 
   \author André Johansen.
@@ -374,7 +374,7 @@ LogView::viewLog(DiveLog* pcLog)
     m_pcDiveTime->setEnabled(true);
     m_pcGasType->setText(pcLog->gasType());
     m_pcGasType->setEnabled(true);
-    m_pcAirTemp->setValue(pcLog->airTemperature());
+    m_pcAirTemp->setValue((int)pcLog->airTemperature());
     m_pcAirTemp->setEnabled(true);
     m_pcLocation->setText(pcLog->diveLocation());
     m_pcLocation->setEnabled(true);
@@ -402,7 +402,7 @@ LogView::viewLog(DiveLog* pcLog)
       m_pcDiveTypeSelector->setCurrentItem(m_pcDiveTypeSelector->count()-1);
     }
     m_pcDiveTypeSelector->setEnabled(true);
-    m_pcWaterTemp->setValue(pcLog->waterTemperature());
+    m_pcWaterTemp->setValue((int)pcLog->waterTemperature());
     m_pcWaterTemp->setEnabled(true);
     m_pcDescription->setText(pcLog->diveDescription());
     m_pcDescription->setEnabled(true);
