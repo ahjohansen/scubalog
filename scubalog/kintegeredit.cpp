@@ -16,11 +16,9 @@
 #include "kintegervalidator.h"
 #include "kintegeredit.h"
 
-
-
 //*****************************************************************************
 /*!
-  Initialize this integer edit widget.
+  Initialise this integer edit widget.
 
   This widget will accept all valid integers.
 
@@ -40,7 +38,7 @@ KIntegerEdit::KIntegerEdit(QWidget* pcParent, const char* pzName)
 
 //*****************************************************************************
 /*!
-  Initialize this integer edit widget.
+  Initialise this integer edit widget.
 
   This widget will accept integers between \a nMin and \a nMax.
   If the widget is left with an invalid integer, \a nDefault will be used.

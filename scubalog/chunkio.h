@@ -43,7 +43,7 @@
 
 class IOException {
 public:
-  //! Initialize the exceptions object with \a cExplanation as explanation.
+  //! Initialise the exceptions object with \a cExplanation as explanation.
   IOException(const QString& cExplanation) : m_cExplanation(cExplanation) {}
   //! Get the explanation for the exception.
   QString explanation() const { return m_cExplanation; }

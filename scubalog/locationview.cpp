@@ -32,7 +32,7 @@
 
 //*****************************************************************************
 /*!
-  Initialize the view.
+  Initialise the view.
 
   \author André Johansen.
 */

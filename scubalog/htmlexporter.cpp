@@ -31,7 +31,7 @@
 
 //*****************************************************************************
 /*!
-  Initialize the exporter object.
+  Initialise the exporter object.
 
   \author André Johansen.
 */

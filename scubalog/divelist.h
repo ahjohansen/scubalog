@@ -32,7 +32,7 @@
 
 class DiveList : public QList<DiveLog> {
 public:
-  //! Initialize the list.
+  //! Initialise the list.
   DiveList() : QList<DiveLog>::QList<DiveLog>() {
     DBG(("DiveList::DiveList()\n"));
     setAutoDelete(true);
