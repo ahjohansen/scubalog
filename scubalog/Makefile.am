@@ -78,7 +78,7 @@ srcdoc:
 # if you have more of them, create a subdirectory with an extra Makefile 
 install-data-local: 
 	$(mkinstalldirs) $(APPSDIR)
-	$(INSTALL_DATA) scubalog.kdelnk $(APPSDIR)
+	$(INSTALL_DATA) ScubaLog.kdelnk $(APPSDIR)
 	$(mkinstalldirs) $(kde_icondir)
 	$(INSTALL_DATA) pics/ScubaLog.xpm $(kde_icondir)
 	$(mkinstalldirs) $(kde_minidir)

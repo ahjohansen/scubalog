@@ -1,0 +1,9 @@
+# KDE Config File 
+[KDE Desktop Entry]
+Name=ScubaLog
+Exec=scubalog
+Icon=ScubaLog.xpm
+Type=Application
+DocPath=scubalog/scubalog.html
+Terminal=0
+MiniIcon=ScubaLog.xpm
