@@ -6,19 +6,16 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
 //*****************************************************************************
 
+#include "kdateedit.h"
+#include "kdatevalidator.h"
+
 #include <string.h>
 #include <stdio.h>
-#include "kdatevalidator.h"
-#include "kdateedit.h"
-
-
 
 //*****************************************************************************
 /*!
