@@ -5,9 +5,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ScubaLog 0.1.0\n"
-"POT-Creation-Date: 2000-02-17 23:02+0100\n"
-"PO-Revision-Date: 1999-09-28 22:33+02:00\n"
+"Project-Id-Version: ScubaLog 0.1.3\n"
+"POT-Creation-Date: 2000-06-02 00:31+0200\n"
+"PO-Revision-Date: 2000-06-02 00:43+02:00\n"
 "Last-Translator: André Johansen <andrej@ifi.uio.no>\n"
 "Language-Team: no <no@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -64,19 +64,19 @@ msgstr ""
 "Uventet posisjon etter skriving av utstyrslogg!\n"
 "Nåværende posisjon er %d; forventet %d..."
 
-#: equipmentview.cpp:52 locationview.cpp:58 scubalog.cpp:128
+#: equipmentview.cpp:55 locationview.cpp:63 scubalog.cpp:128
 msgid "&New"
 msgstr "&Ny"
 
-#: equipmentview.cpp:62
+#: equipmentview.cpp:65
 msgid "Move &up"
 msgstr "Flytt &opp"
 
-#: equipmentview.cpp:67
+#: equipmentview.cpp:70
 msgid "Move &down"
 msgstr "Flytt &ned"
 
-#: equipmentview.cpp:77
+#: equipmentview.cpp:79
 msgid "Type: "
 msgstr "Type: "
 
@@ -84,15 +84,15 @@ msgstr "Type: "
 msgid "Serial number: "
 msgstr "Serienummer: "
 
-#: equipmentview.cpp:95
+#: equipmentview.cpp:93
 msgid "Service: "
 msgstr "Vedlikehold: "
 
-#: equipmentview.cpp:106 htmlexporter.cpp:199 loglistview.cpp:46
+#: equipmentview.cpp:102 htmlexporter.cpp:199 loglistview.cpp:46
 msgid "Date"
 msgstr "Dato"
 
-#: equipmentview.cpp:107
+#: equipmentview.cpp:103
 msgid "Event"
 msgstr "Hendelse"
 
@@ -184,7 +184,7 @@ msgstr "Dykkelogger"
 msgid "Location logs"
 msgstr "Lokasjonslogger"
 
-#: htmlexporter.cpp:337 logbook.cpp:322
+#: htmlexporter.cpp:337 logbook.cpp:331
 msgid "Error writing to file"
 msgstr "Feil ved skriving til fil"
 
@@ -231,15 +231,15 @@ msgstr ""
 "Uventet posisjon etter skriving av lokasjonslogg!\n"
 "Nåværende posisjon er %d; forventet %d..."
 
-#: locationview.cpp:253 locationview.cpp:295
+#: locationview.cpp:301 locationview.cpp:343
 msgid "[ScubaLog] New location"
 msgstr "[ScubaLog] Ny lokasjon"
 
-#: locationview.cpp:254 locationview.cpp:296
+#: locationview.cpp:302 locationview.cpp:344
 msgid "Out of memory when creating a new location log!"
 msgstr "Gikk tom for minne ved oppretting av en ny lokasjonslogg!"
 
-#: locationview.cpp:345
+#: locationview.cpp:393
 #, c-format
 msgid ""
 "Are you sure you want to delete the location\n"
@@ -248,44 +248,48 @@ msgstr ""
 "Er du sikker på at du vil slette lokasjonen\n"
 "`%s'?"
 
-#: locationview.cpp:349
+#: locationview.cpp:397
 msgid "[ScubaLog] Delete location"
 msgstr "[ScubaLog] Slett lokasjon"
 
-#: locationview.cpp:350 loglistview.cpp:208
+#: locationview.cpp:398 loglistview.cpp:208
 msgid "&Yes"
 msgstr "&Ja"
 
-#: locationview.cpp:350 loglistview.cpp:208
+#: locationview.cpp:398 loglistview.cpp:208
 msgid "&No"
 msgstr "&Nei"
 
-#: logbook.cpp:86 logbook.cpp:245
+#: logbook.cpp:84 logbook.cpp:254
 msgid "Couldn't open file"
 msgstr "Kunne ikke åpne filen"
 
-#: logbook.cpp:88 logbook.cpp:107 logbook.cpp:143 logbook.cpp:170
-#: logbook.cpp:197 logbook.cpp:220
+#: logbook.cpp:86 logbook.cpp:106 logbook.cpp:142 logbook.cpp:169
+#: logbook.cpp:196 logbook.cpp:217 logbook.cpp:229
 msgid "[ScubaLog] Read log book"
 msgstr "[ScubaLog] Les loggbok"
 
-#: logbook.cpp:104
+#: logbook.cpp:103
 msgid "Couldn't read log book from"
 msgstr "Kunne ikke lese loggbok fra"
 
-#: logbook.cpp:106
+#: logbook.cpp:105
 msgid "Unknown file format -- probably not a log book!"
 msgstr "Ukjent filformat -- troligvis ikke en loggbok!"
 
-#: logbook.cpp:140 logbook.cpp:167 logbook.cpp:194
+#: logbook.cpp:139 logbook.cpp:166 logbook.cpp:193
 msgid "Error while reading log book from"
 msgstr "Feil ved lesing av loggbok fra"
 
-#: logbook.cpp:218
+#: logbook.cpp:215
+msgid "Can't read further, aborting load of log-book"
+msgstr "Kan ikke lese videre, avbryter lesing av loggbok"
+
+#: logbook.cpp:227
 msgid "Error reading from file"
 msgstr "Feil ved lesing fra fil"
 
-#: logbook.cpp:247
+#: logbook.cpp:256
 msgid ""
 "Ensure that you have write permission and\n"
 "that there is enough free space on the media!"
@@ -293,15 +297,15 @@ msgstr ""
 "Forsikre deg om at du har skriverettigheter\n"
 "og at det er nok ledig plass på mediet!"
 
-#: logbook.cpp:249 logbook.cpp:306 logbook.cpp:324
+#: logbook.cpp:258 logbook.cpp:315 logbook.cpp:333
 msgid "[ScubaLog] Write log book"
 msgstr "[ScubaLog] Skriv loggbok"
 
-#: logbook.cpp:303
+#: logbook.cpp:312
 msgid "Error while writing log book to"
 msgstr "Feil ved skriving av loggbok til"
 
-#: logbook.cpp:305
+#: logbook.cpp:314
 msgid "Ensure there is enough free space on the media!"
 msgstr "Forsikre deg om at det er nok ledig plass på mediet!"
 
@@ -446,11 +450,25 @@ msgstr "Minimal &vanntemperatur:"
 msgid "Dive des&cription:"
 msgstr "Dykk&beskrivelse:"
 
-#: main.cpp:46
+#: main.cpp:42
+msgid "[ScubaLog] Invalid argument"
+msgstr "[ScubaLog] Ugyldig argument"
+
+#: main.cpp:43
+msgid ""
+"ScubaLog encountered an invalid argument.\n"
+"ScubaLog can either be started with no arguments,\n"
+"or optionally with one argument giving the filename of a log book."
+msgstr ""
+"ScubaLog oppdaget et ugyldig argument.\n"
+"ScubaLog kan enten bli startet uten argumenter,\n"
+"eller med ett argument som spesifiserer filnavnet til en loggbok."
+
+#: main.cpp:62
 msgid "Out of memory -- exiting ScubaLog...\n"
 msgstr "Tom for minne -- avslutter ScubaLog...\n"
 
-#: main.cpp:50
+#: main.cpp:66
 msgid "Caught unhandled exception -- exiting ScubaLog...\n"
 msgstr "Fanget et ubehandlet avbrudd -- avslutter ScubaLog...\n"
 
@@ -564,116 +582,116 @@ msgstr "Personlig &informasjon"
 msgid "&Equipment"
 msgstr "&Utstyr"
 
-#: scubalog.cpp:260
+#: scubalog.cpp:269
 msgid "Welcome to ScubaLog"
 msgstr "Velkommen til ScubaLog"
 
-#: scubalog.cpp:387 scubalog.cpp:987
+#: scubalog.cpp:396 scubalog.cpp:996
 msgid "Out of memory!"
 msgstr "Tom for minne!"
 
-#: scubalog.cpp:407 scubalog.cpp:472
+#: scubalog.cpp:416 scubalog.cpp:481
 msgid "ScubaLog files (*.slb)"
 msgstr "ScubaLog filer (*.slb)"
 
-#: scubalog.cpp:408 scubalog.cpp:473
+#: scubalog.cpp:417 scubalog.cpp:482
 msgid "All files (*)"
 msgstr "Alle filer (*)"
 
-#: scubalog.cpp:413
+#: scubalog.cpp:422
 msgid "[ScubaLog] Open log book"
 msgstr "[ScubaLog] Åpne loggbok"
 
-#: scubalog.cpp:443 scubalog.cpp:477
+#: scubalog.cpp:452 scubalog.cpp:486
 msgid "Writing log book..."
 msgstr "Skriver loggbok..."
 
-#: scubalog.cpp:448 scubalog.cpp:496
+#: scubalog.cpp:457 scubalog.cpp:505
 msgid "Writing log book...Done"
 msgstr "Skriver loggbok...Ferdig!"
 
-#: scubalog.cpp:451 scubalog.cpp:499
+#: scubalog.cpp:460 scubalog.cpp:508
 msgid "Writing log book...Failed!"
 msgstr "Skriver loggbok...Feil!"
 
-#: scubalog.cpp:480
+#: scubalog.cpp:489
 msgid "[ScubaLog] Save log book"
 msgstr "[ScubaLog] Lagre loggbok"
 
-#: scubalog.cpp:503
+#: scubalog.cpp:512
 msgid "Writing log book...Aborted"
 msgstr "Skriver loggbok...Avbrutt"
 
-#: scubalog.cpp:611
+#: scubalog.cpp:620
 msgid "Reading log book..."
 msgstr "Leser loggbok..."
 
-#: scubalog.cpp:628
+#: scubalog.cpp:637
 msgid "Reading log book...Done"
 msgstr "Leser loggbok...Ferdig"
 
-#: scubalog.cpp:633
+#: scubalog.cpp:642
 msgid "Reading log book...Failed!"
 msgstr "Leser loggbok...Feil!"
 
-#: scubalog.cpp:639
+#: scubalog.cpp:648
 msgid "Reading log book...Out of memory!"
 msgstr "Leser loggbok...Tom for minne!"
 
-#: scubalog.cpp:716
+#: scubalog.cpp:725
 msgid "Exporting log book..."
 msgstr "Eksporterer loggbok..."
 
-#: scubalog.cpp:719
+#: scubalog.cpp:728
 msgid "[ScubaLog] Select output directory"
 msgstr "[ScubaLog] Velg utdumpingskatalog"
 
-#: scubalog.cpp:727
+#: scubalog.cpp:736
 msgid "Exporting log book...Done"
 msgstr "Eksporterer loggbok...Ferdig"
 
-#: scubalog.cpp:730
+#: scubalog.cpp:739
 msgid "Exporting log book...Aborted"
 msgstr "Eksporterer loggbok...Avbrutt"
 
-#: scubalog.cpp:819
+#: scubalog.cpp:828
 msgid "Goto log"
 msgstr "Gå til logg"
 
-#: scubalog.cpp:820 scubalog.cpp:835
+#: scubalog.cpp:829 scubalog.cpp:844
 msgid "[ScubaLog] Goto"
 msgstr "[ScubaLog] Gå til"
 
-#: scubalog.cpp:834
+#: scubalog.cpp:843
 #, c-format
 msgid "Couldn't find log %d"
 msgstr "Kunne ikke finne logg %d"
 
-#: scubalog.cpp:855
+#: scubalog.cpp:864
 msgid "Print log book..."
 msgstr "Skriv ut loggbok..."
 
-#: scubalog.cpp:866
+#: scubalog.cpp:875
 msgid "Print log book...Failed!"
 msgstr "Skriv ut loggbok...Feil!"
 
-#: scubalog.cpp:870
+#: scubalog.cpp:879
 msgid "Print log book...Done"
 msgstr "Skriv ut loggbok...Ferdig"
 
-#: scubalog.cpp:914
+#: scubalog.cpp:923
 msgid "An invalid URL was dropped on ScubaLog!"
 msgstr "En ugyldig URL ble droppet på ScubaLog!"
 
-#: scubalog.cpp:967
+#: scubalog.cpp:976
 msgid "A remote download is already in progress!"
 msgstr "En fjernlasting pågår allerede!"
 
-#: scubalog.cpp:976
+#: scubalog.cpp:985
 msgid "Couldn't connect to KFM!"
 msgstr "Kunne ikke åpne en forbindelse til KFM!"
 
-#: scubalog.cpp:1067
+#: scubalog.cpp:1076
 #, c-format
 msgid ""
 "Error downloading log book (%d):\n"
@@ -684,6 +702,6 @@ msgstr ""
 "%s\n"
 "(`%s')"
 
-#: scubalog.cpp:1070
+#: scubalog.cpp:1079
 msgid "[ScubaLog] Download error"
 msgstr "[ScubaLog] Nedlastingsfeil"
