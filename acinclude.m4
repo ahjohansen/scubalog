@@ -44,7 +44,7 @@ done
 ##
 AC_DEFUN(AC_PATH_QT_MOC,
 [
-AC_PATH_PROG(MOC, moc, /usr/bin/moc,
+AC_PATH_PROG(MOC, moc, $QTDIR/bin/moc,
  $ac_qt_bindir $QTDIR/bin $PATH /usr/bin /usr/X11R6/bin /usr/lib/qt/bin /usr/local/qt/bin)
 ])
 
