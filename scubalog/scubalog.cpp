@@ -294,31 +294,42 @@ ScubaLog::openRecent(int nRecentNumber)
 void
 ScubaLog::openProject()
 {
-  QString cProjectName = QFileDialog::getOpenFileName(*m_pcProjectName);
-  if ( false == cProjectName.isEmpty() ) {
-    *m_pcProjectName = cProjectName.copy();
+  const char* apzFilters[] = {
+    "ScubaLog files (*.slb)",
+    "All files (*)",
+    0
+  };
 
-    LogBook* pcLogBook = new LogBook();
-    if ( pcLogBook->readLogBook(*m_pcProjectName) ) {
-      // Insert the new logbook
-      m_pcLogListView->setLogList(&pcLogBook->diveList());
-      m_pcLogView->setLogList(&pcLogBook->diveList());
-      m_pcLocationView->setLogBook(pcLogBook);
-      m_pcPersonalInfoView->setLogBook(pcLogBook);
-      m_pcEquipmentView->setLogBook(pcLogBook);
-      delete m_pcLogBook;
-      m_pcLogBook = pcLogBook;
+  QFileDialog cDialog(qApp->mainWidget(), "openDialog", true);
+  cDialog.setCaption("[ScubaLog] Open log book");
+  cDialog.setMode(QFileDialog::ExistingFile);
+  cDialog.setFilters(apzFilters);
+  if ( cDialog.exec() ) {
+    QString cProjectName = cDialog.selectedFile();
+    if ( false == cProjectName.isEmpty() ) {
+      *m_pcProjectName = cProjectName.copy();
 
-      const QString cCaption("ScubaLog [" + cProjectName + "]");
-      setCaption(cCaption);
+      LogBook* pcLogBook = new LogBook();
+      if ( pcLogBook->readLogBook(*m_pcProjectName) ) {
+        // Insert the new logbook
+        m_pcLogListView->setLogList(&pcLogBook->diveList());
+        m_pcLogView->setLogList(&pcLogBook->diveList());
+        m_pcLocationView->setLogBook(pcLogBook);
+        m_pcPersonalInfoView->setLogBook(pcLogBook);
+        m_pcEquipmentView->setLogBook(pcLogBook);
+        delete m_pcLogBook;
+        m_pcLogBook = pcLogBook;
 
-      updateRecentProjects(cProjectName);
+        const QString cCaption("ScubaLog [" + cProjectName + "]");
+        setCaption(cCaption);
+
+        updateRecentProjects(cProjectName);
+        setUnsavedData(false);
+      }
+      else {
+        delete pcLogBook;
+      }
     }
-    else {
-      delete pcLogBook;
-    }
-
-    setUnsavedData(false);
   }
 }
 
@@ -360,16 +371,28 @@ ScubaLog::saveProject()
 void
 ScubaLog::saveProjectAs()
 {
-  QString cProjectName = QFileDialog::getSaveFileName(*m_pcProjectName);
-  if ( false == cProjectName.isEmpty() ) {
-    *m_pcProjectName = cProjectName.copy();
-    bool isOk = m_pcLogBook->saveLogBook(*m_pcProjectName);
-    if ( isOk ) {
-      setUnsavedData(false);
-      updateRecentProjects(cProjectName);
+  const char* apzFilters[] = {
+    "ScubaLog files (*.slb)",
+    "All files (*)",
+    0
+  };
 
-      const QString cCaption("ScubaLog [" + cProjectName + "]");
-      setCaption(cCaption);
+  QFileDialog cDialog(qApp->mainWidget(), "saveDialog", true);
+  cDialog.setCaption("[ScubaLog] Save log book");
+  cDialog.setMode(QFileDialog::AnyFile);
+  cDialog.setFilters(apzFilters);
+  if ( cDialog.exec() ) {
+    QString cProjectName = cDialog.selectedFile();
+    if ( false == cProjectName.isEmpty() ) {
+      *m_pcProjectName = cProjectName.copy();
+      bool isOk = m_pcLogBook->saveLogBook(*m_pcProjectName);
+      if ( isOk ) {
+        setUnsavedData(false);
+        updateRecentProjects(cProjectName);
+
+        const QString cCaption("ScubaLog [" + cProjectName + "]");
+        setCaption(cCaption);
+      }
     }
   }
 }
@@ -445,7 +468,7 @@ ScubaLog::exportLogBook()
   if ( 0 == m_pcLogBook )
     return;
 
-  QFileDialog cOutputDialog(this, "outputDialog", true);
+  QFileDialog cOutputDialog(qApp->mainWidget(), "outputDialog", true);
   cOutputDialog.setCaption("[ScubaLog] Select output directory");
   cOutputDialog.setMode(QFileDialog::Directory);
   if ( cOutputDialog.exec() ) {
