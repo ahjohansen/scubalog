@@ -1,4 +1,4 @@
-GMOFILES = 
+GMOFILES = no.gmo
 POFILES = $(GMOFILES:.gmo=.po) 
 
 localedir = $(kde_locale)
