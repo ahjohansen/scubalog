@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/scubalog.cpp
+  \file scubalog.cpp
   \brief This file contains the implementation of the ScubaLog class.
 
   This file is part of ScubaLog, a dive logging application for KDE.
@@ -36,7 +36,6 @@
 #include <ktoolbar.h>
 #include <kurl.h>
 #include <kfm.h>
-
 #include "debug.h"
 #include "htmlexporter.h"
 #include "integerdialog.h"
@@ -230,6 +229,7 @@ ScubaLog::ScubaLog(const char* pzName)
 
   enableStatusBar();
   setView(m_pcViews);
+  setCaption("ScubaLog");
 
 
   //
@@ -257,7 +257,6 @@ ScubaLog::ScubaLog(const char* pzName)
   m_pcEquipmentView->setLogBook(m_pcLogBook);
 
   statusBar()->message(i18n("Welcome to ScubaLog"));
-  setCaption("ScubaLog");
 }
 
 
