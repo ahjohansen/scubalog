@@ -24,6 +24,8 @@ class DiveLog;
 class LogBook;
 class QPopupMenu;
 class KTabControl;
+class KDNDDropZone;
+class KFM;
 class LogListView;
 class LogView;
 class LocationView;
@@ -44,6 +46,15 @@ class EquipmentView;
 
 class ScubaLog : public KTMainWindow {
   Q_OBJECT
+
+  //! Download modes.
+  enum DownloadMode_e {
+    //! Synchronous mode (i.e. don't return until finished).
+    e_DownloadSynchronous,
+    //! Asynchronous mode (i.e. return immediately, download in background).
+    e_DownloadAsynchronous
+  };
+
 public:
   ScubaLog(const char* pzName = 0);
   virtual ~ScubaLog();
@@ -56,17 +67,27 @@ protected:
   virtual bool queryExit();
 
 private slots:
+  void newProject();
   void openRecent(int nRecentProjectNumber);
   void openProject();
   void saveProject();
   void saveProjectAs();
+  void print();
+  void handleDrop(KDNDDropZone* pcDropZone);
+  void handleDownloadFinished();
+  void handleDownloadError(int nErrorCode, const char* pzMessage);
   void viewLogList();
   void viewLog(DiveLog* pcLog);
   void editLocation(const QString& cLocationName);
   void exportLogBook();
 
 private:
+  bool readLogBookUrl(const QString& cUrlName, DownloadMode_e eMode);
+  bool readLogBook(const QString& cFileName);
+
   void updateRecentProjects(const QString& cProjectName);
+  KFM* createKfmConnection();
+  void destroyKfmConnection();
 
   //! The name of the current project, or none if not saved yet.
   QString*          m_pcProjectName;
@@ -86,6 +107,13 @@ private:
   PersonalInfoView* m_pcPersonalInfoView;
   //! The equipment view.
   EquipmentView*    m_pcEquipmentView;
+
+  //! The current KFM connection.
+  KFM*              m_pcKfmConnection;
+  //! The current URL being processed by KFM.
+  QString*          m_pcKfmUrl;
+  //! The current temporary file from KFM.
+  QString*          m_pcKfmFileName;
 
   //
   // Configuration settings

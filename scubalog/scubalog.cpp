@@ -23,11 +23,19 @@
 #include <qpopupmenu.h>
 #include <qkeycode.h>
 #include <qstring.h>
+#include <qstrlist.h>
 #include <qfiledialog.h>
 #include <qlistview.h>
 #include <qmessagebox.h>
 #include <qlist.h>
+#include <qprinter.h>
+#include <qpainter.h>
 #include <kapp.h>
+#include <kstdaccel.h>
+#include <kiconloader.h>
+#include <ktoolbar.h>
+#include <kurl.h>
+#include <kfm.h>
 
 #include "debug.h"
 #include "htmlexporter.h"
@@ -54,7 +62,12 @@
 //*****************************************************************************
 
 ScubaLog::ScubaLog(const char* pzName)
-  : KTMainWindow(pzName), m_pcProjectName(0)
+  : KTMainWindow(pzName),
+    m_pcProjectName(0),
+    m_pcLogBook(0),
+    m_pcKfmConnection(0),
+    m_pcKfmUrl(0),
+    m_pcKfmFileName(0)
 {
   KApplication* pcApp = KApplication::getKApplication();
   connect(pcApp, SIGNAL(saveYourself()), SLOT(saveConfig()));
@@ -81,12 +94,25 @@ ScubaLog::ScubaLog(const char* pzName)
     pcConfiguration->readBoolEntry("AutoOpenLast", true);
 
 
-  m_pcProjectName = new QString;
+  m_pcProjectName = new QString();
+  m_pcKfmUrl      = new QString();
+  m_pcKfmFileName = new QString();
+
+
+  //
+  // Setup drag'n'drop
+  //
+
+  KDNDDropZone* pcDnD = new KDNDDropZone(this, DndURL);
+  connect(pcDnD, SIGNAL(dropAction(KDNDDropZone*)),
+          SLOT(handleDrop(KDNDDropZone*)));
 
 
   //
   // Setup menu
   //
+
+  KStdAccel* pcKeyAccel = new KStdAccel(kapp->getConfig());
 
   KMenuBar* pcMenuBar = menuBar();
   m_pcRecentMenu = new QPopupMenu(0, "recentMenu");
@@ -100,14 +126,18 @@ ScubaLog::ScubaLog(const char* pzName)
   connect(m_pcRecentMenu, SIGNAL(activated(int)), SLOT(openRecent(int)));
 
   QPopupMenu* pcMenu = new QPopupMenu(0, "projectMenu");
-  pcMenu->insertItem("&Open...", this, SLOT(openProject()), CTRL + Key_O);
+  pcMenu->insertItem("&New", this, SLOT(newProject()),
+                     pcKeyAccel->openNew());
+  pcMenu->insertItem("&Open...", this, SLOT(openProject()),
+                     pcKeyAccel->open());
   pcMenu->insertItem("Open &recent", m_pcRecentMenu);
-  pcMenu->insertItem("&Save", this, SLOT(saveProject()), CTRL + Key_S);
+  pcMenu->insertItem("&Save", this, SLOT(saveProject()), pcKeyAccel->save());
   pcMenu->insertItem("Save &As", this, SLOT(saveProjectAs()), CTRL + Key_A);
   pcMenu->insertSeparator();
   pcMenu->insertItem("&Export logbook...", this, SLOT(exportLogBook()));
+  pcMenu->insertItem("&Print...", this, SLOT(print()), pcKeyAccel->print());
   pcMenu->insertSeparator();
-  pcMenu->insertItem("&Quit", pcApp, SLOT(quit()), CTRL + Key_Q);
+  pcMenu->insertItem("&Quit", pcApp, SLOT(quit()), pcKeyAccel->quit());
   pcMenuBar->insertItem("&Project", pcMenu);
 
   QPopupMenu* pcLogMenu = new QPopupMenu(0, "logMenu");
@@ -124,18 +154,40 @@ ScubaLog::ScubaLog(const char* pzName)
   pcMenuBar->insertItem("&Help", pcApp->getHelpMenu(true, cAboutText));
 
 
-  // Create a log book
-  m_pcLogBook = new LogBook();
+  //
+  // Setup tool-bar
+  //
 
-  // Read the recent one, if wanted
-  if ( m_bReadLastUsedProject && m_cRecentProjects.first() ) {
-    bool isOk = m_pcLogBook->readLogBook(*m_cRecentProjects.first());
-    if ( isOk ) {
-      *m_pcProjectName = *m_cRecentProjects.first();
-      const QString cCaption("ScubaLog [" + *m_pcProjectName + "]");
-      setCaption(cCaption);
-    }
-  }
+  KToolBar& cToolBar = *toolBar();
+  KIconLoader& cIconLoader = *kapp->getIconLoader();
+  QPixmap cIcon;
+
+  cIcon = cIconLoader.loadIcon("filenew.xpm");
+  cToolBar.insertButton(cIcon, 0,
+                        SIGNAL(clicked()), this, SLOT(newProject()),
+                        true, "New log-book");
+
+  cIcon = cIconLoader.loadIcon("fileopen.xpm");
+  cToolBar.insertButton(cIcon, 0,
+                        SIGNAL(clicked()), this, SLOT(openProject()),
+                        true, "Open log-book");
+
+  cIcon = cIconLoader.loadIcon("filefloppy.xpm");
+  cToolBar.insertButton(cIcon, 0,
+                        SIGNAL(clicked()), this, SLOT(saveProject()),
+                        true, "Save log-book");
+
+  cToolBar.insertSeparator();
+
+  cIcon = cIconLoader.loadIcon("fileprint.xpm");
+  cToolBar.insertButton(cIcon, 0,
+                        SIGNAL(clicked()), this, SLOT(print()),
+                        true, "Print log-book");
+
+
+  //
+  // Setup views
+  //
 
   // Create the tab controller
   m_pcViews = new KTabControl(this, "tabView");
@@ -143,12 +195,10 @@ ScubaLog::ScubaLog(const char* pzName)
 
   // Create the log list view
   m_pcLogListView = new LogListView(m_pcViews, "logListView");
-  m_pcLogListView->setLogList(&m_pcLogBook->diveList());
   m_pcViews->addTab(m_pcLogListView, "Log &list");
 
   // Create the log view
   m_pcLogView = new LogView(m_pcViews, "logView");
-  m_pcLogView->setLogList(&m_pcLogBook->diveList());
   m_pcLogView->connect(m_pcLogListView,
                        SIGNAL(aboutToDeleteLog(const DiveLog*)),
                        SLOT(deletingLog(const DiveLog*)));
@@ -159,7 +209,6 @@ ScubaLog::ScubaLog(const char* pzName)
 
   // Create the location view
   m_pcLocationView = new LocationView(m_pcViews, "locationView");
-  m_pcLocationView->setLogBook(m_pcLogBook);
   m_pcViews->addTab(m_pcLocationView, "Locations");
   connect(m_pcLogView, SIGNAL(editLocation(const QString&)),
           SLOT(editLocation(const QString&)));
@@ -167,18 +216,41 @@ ScubaLog::ScubaLog(const char* pzName)
   // Create the personal info view
   m_pcPersonalInfoView =
     new PersonalInfoView(m_pcViews, "personalInfo");
-  m_pcPersonalInfoView->setLogBook(m_pcLogBook);
   m_pcViews->addTab(m_pcPersonalInfoView, "Personal &info");
   m_pcPersonalInfoView->connect(m_pcViews, SIGNAL(tabSelected(int)),
                                 SLOT(updateLoggedDiveTime()));
 
   // Create the equipment view
   m_pcEquipmentView = new EquipmentView(m_pcViews, "equipment");
-  m_pcEquipmentView->setLogBook(m_pcLogBook);
   m_pcViews->addTab(m_pcEquipmentView, "&Equipment");
 
   enableStatusBar();
   setView(m_pcViews);
+
+
+  //
+  // Read a recent logbook or create a new one
+  //
+
+  // Read the recent logbook one, if wanted
+  if ( m_bReadLastUsedProject && m_cRecentProjects.first() ) {
+    bool isOk = readLogBookUrl(*m_cRecentProjects.first(),
+                               e_DownloadSynchronous);
+    if ( isOk ) {
+      *m_pcProjectName = *m_cRecentProjects.first();
+      const QString cCaption("ScubaLog [" + *m_pcProjectName + "]");
+      setCaption(cCaption);
+    }
+  }
+  // Create a log book if none loaded
+  if ( 0 == m_pcLogBook )
+    m_pcLogBook = new LogBook();
+  // Update editors
+  m_pcLogListView->setLogList(&m_pcLogBook->diveList());
+  m_pcLogView->setLogBook(m_pcLogBook);
+  m_pcLocationView->setLogBook(m_pcLogBook);
+  m_pcPersonalInfoView->setLogBook(m_pcLogBook);
+  m_pcEquipmentView->setLogBook(m_pcLogBook);
 
   statusBar()->message("Welcome to ScubaLog");
 }
@@ -201,6 +273,9 @@ ScubaLog::~ScubaLog()
     m_pcLogBook->diveList().clear();
   delete m_pcLogBook;
   delete m_pcProjectName;
+  delete m_pcKfmUrl;
+  delete m_pcKfmFileName;
+  destroyKfmConnection();
 
   for ( QString* pcRecent = m_cRecentProjects.first();
         pcRecent; pcRecent = m_cRecentProjects.next() ) {
@@ -273,42 +348,38 @@ ScubaLog::saveConfig()
 void
 ScubaLog::openRecent(int nRecentNumber)
 {
-  QString* pcProjectName = m_cRecentProjects.at(nRecentNumber);
-  if ( pcProjectName ) {
-    *m_pcProjectName = pcProjectName->copy();
+  if ( m_cRecentProjects.at(nRecentNumber) ) {
+    QString cUrlName(*(m_cRecentProjects.at(nRecentNumber)));
+    readLogBookUrl(cUrlName, e_DownloadAsynchronous);
+  }
+}
 
-    statusBar()->message("Reading log book...");
 
-    LogBook* pcLogBook = 0;
-    try {
-      pcLogBook = new LogBook();
-      if ( pcLogBook->readLogBook(*m_pcProjectName) ) {
-        // Insert the new logbook
-        m_pcLogListView->setLogList(&pcLogBook->diveList());
-        m_pcLogView->setLogList(&pcLogBook->diveList());
-        m_pcLocationView->setLogBook(pcLogBook);
-        m_pcPersonalInfoView->setLogBook(pcLogBook);
-        m_pcEquipmentView->setLogBook(pcLogBook);
-        delete m_pcLogBook;
-        m_pcLogBook = pcLogBook;
+//*****************************************************************************
+/*!
+  Create a new project.
 
-        const QString cCaption("ScubaLog [" + *pcProjectName + "]");
-        setCaption(cCaption);
+  \author André Johansen.
+*/
+//*****************************************************************************
 
-        updateRecentProjects(*pcProjectName);
-        setUnsavedData(false);
-
-        statusBar()->message("Reading log book...Done", 3000);
-      }
-      else {
-        delete pcLogBook;
-        statusBar()->message("Reading log book...Failed!", 3000);
-      }
-    }
-    catch ( std::bad_alloc ) {
-      statusBar()->message("Reading log book...Out of memory!", 3000);
-      delete pcLogBook;
-    }
+void
+ScubaLog::newProject()
+{
+  try {
+    LogBook* pcLogBook = new LogBook();
+    m_pcLogListView->setLogList(&pcLogBook->diveList());
+    m_pcLogView->setLogBook(pcLogBook);
+    m_pcLocationView->setLogBook(pcLogBook);
+    m_pcPersonalInfoView->setLogBook(pcLogBook);
+    m_pcEquipmentView->setLogBook(pcLogBook);
+    delete m_pcLogBook;
+    m_pcLogBook = pcLogBook;
+    const QString cCaption("ScubaLog");
+    setCaption(cCaption);
+  }
+  catch ( std::bad_alloc ) {
+    statusBar()->message("Out of memory!", 3000);
   }
 }
 
@@ -333,8 +404,6 @@ ScubaLog::openProject()
     0
   };
 
-  statusBar()->message("Reading log book...");
-
   QFileDialog cDialog(qApp->mainWidget(), "openDialog", true);
   cDialog.setCaption("[ScubaLog] Open log book");
   cDialog.setMode(QFileDialog::ExistingFile);
@@ -342,41 +411,7 @@ ScubaLog::openProject()
   if ( cDialog.exec() &&
        false == cDialog.selectedFile().isNull() ) {
     const QString cProjectName = cDialog.selectedFile();
-    *m_pcProjectName = cProjectName.copy();
-
-    LogBook* pcLogBook = 0;
-    try {
-      pcLogBook = new LogBook();
-      if ( pcLogBook->readLogBook(*m_pcProjectName) ) {
-        // Insert the new logbook
-        m_pcLogListView->setLogList(&pcLogBook->diveList());
-        m_pcLogView->setLogList(&pcLogBook->diveList());
-        m_pcLocationView->setLogBook(pcLogBook);
-        m_pcPersonalInfoView->setLogBook(pcLogBook);
-        m_pcEquipmentView->setLogBook(pcLogBook);
-        delete m_pcLogBook;
-        m_pcLogBook = pcLogBook;
-
-        const QString cCaption("ScubaLog [" + cProjectName + "]");
-        setCaption(cCaption);
-
-        updateRecentProjects(cProjectName);
-        setUnsavedData(false);
-
-        statusBar()->message("Reading log book...Done", 3000);
-      }
-      else {
-        delete pcLogBook;
-        statusBar()->message("Reading log book...Failed!", 3000);
-      }
-    }
-    catch ( std::bad_alloc ) {
-      delete pcLogBook;
-      statusBar()->message("Reading log book...Out of memory!", 3000);
-    }
-  }
-  else {
-    statusBar()->message("Reading log book...Aborted", 3000);
+    readLogBookUrl(cProjectName, e_DownloadSynchronous);
   }
 }
 
@@ -394,12 +429,15 @@ ScubaLog::openProject()
 void
 ScubaLog::saveProject()
 {
-  if ( m_pcProjectName->isEmpty() )
+  QString cUrlName(*m_pcProjectName);
+  KURL cUrl(cUrlName);
+
+  if ( cUrlName.isEmpty() || false == cUrl.isLocalFile() )
     saveProjectAs();
   else {
     statusBar()->message("Writing log book...");
 
-    bool isOk = m_pcLogBook->saveLogBook(*m_pcProjectName);
+    bool isOk = m_pcLogBook->saveLogBook(cUrlName);
     if ( isOk ) {
       setUnsavedData(false);
       statusBar()->message("Writing log book...Done", 3000);
@@ -459,6 +497,144 @@ ScubaLog::saveProjectAs()
   else {
     statusBar()->message("Writing log book...Aborted", 3000);
   }
+}
+
+
+//*****************************************************************************
+/*!
+  Read a project from the URL \a cUrlName with mode \a eMode.
+
+  If the file is local or the download mode is #e_DownloadSynchronous,
+  it will be attempted loaded right away.
+  If the file is remote and the mode is #e_DownloadAsynchronous,
+  a connection to KFM is created, and the final loading
+  will happpen when the file is downloaded and handleDownloadFinished()
+  is called.
+
+  If a log book is loaded, the caption and the `recent projects' menu
+  are updated.
+
+  Returns `true' if no errors were encountered, `false' otherwise.
+  Notice that `true' does not necessarily mean a project was loaded,
+  as it might have to be downloaded first.
+
+  \sa readLogBook().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+bool
+ScubaLog::readLogBookUrl(const QString& cUrlName, DownloadMode_e eMode)
+{
+  // Ensure the URL is valid, try local files in current directory too
+  KURL cUrl(cUrlName);
+  if ( cUrl.isMalformed() ) {
+    QString cLocalFile("file:");
+    if ( cUrlName.find('/') ) {
+      cLocalFile += QDir::currentDirPath() + "/";
+    }
+    cLocalFile += cUrlName;
+    cUrl.parse(cLocalFile);
+    if ( cUrl.isMalformed() ) {
+      return false;
+    }
+  }
+    
+  // Load local file
+  if ( cUrl.isLocalFile() ) {
+    QString cProjectName(cUrl.path());
+    KURL::decodeURL(cProjectName);
+
+    bool isOk = readLogBook(cProjectName);
+    if ( false == isOk )
+      return false;
+    *m_pcProjectName = cProjectName.copy();
+    updateRecentProjects(cProjectName);
+    setUnsavedData(false);
+    const QString cCaption("ScubaLog [" + cProjectName + "]");
+    setCaption(cCaption);
+  }
+  // Load remote file synchronously
+  else if ( e_DownloadSynchronous == eMode ) {
+    QString cProjectName;
+    bool isDownloadOk = KFM::download(cUrlName, cProjectName);
+    if ( false == isDownloadOk )
+      return false;
+    bool isOk = readLogBook(cProjectName);
+    KFM::removeTempFile(cProjectName);
+    if ( false == isOk )
+      return false;
+    *m_pcProjectName = cUrlName.copy();
+    updateRecentProjects(cUrlName);
+    setUnsavedData(false);
+    const QString cCaption("ScubaLog [" + cUrlName + "]");
+    setCaption(cCaption);
+  }
+  // Load remote file asynchronously
+  else {
+    KFM* pcKfmConnection = createKfmConnection();
+    if ( 0 == pcKfmConnection )
+      return false;
+
+    *m_pcKfmUrl = cUrlName;
+    m_pcKfmFileName->sprintf("%s", tmpnam(0));
+    m_pcKfmConnection->copy(cUrlName, *m_pcKfmFileName);
+  }
+
+  return true;
+}
+
+
+//*****************************************************************************
+/*!
+  Try to read a project from the local file \a cFileName.
+  Returns `true' on success or `false' on failure.
+
+  This function will update all the GUI elements of the program,
+  except the `recent projects' menu and the caption.
+
+  \sa LogBook::readLogBook().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+bool
+ScubaLog::readLogBook(const QString& cFileName)
+{
+  statusBar()->message("Reading log book...");
+
+  LogBook* pcLogBook = 0;
+  try {
+    pcLogBook = new LogBook();
+    if ( pcLogBook->readLogBook(cFileName) ) {
+      // Insert the new logbook
+      m_pcLogListView->setLogList(&pcLogBook->diveList());
+      m_pcLogView->setLogBook(pcLogBook);
+      m_pcLocationView->setLogBook(pcLogBook);
+      m_pcPersonalInfoView->setLogBook(pcLogBook);
+      m_pcEquipmentView->setLogBook(pcLogBook);
+      delete m_pcLogBook;
+      m_pcLogBook = pcLogBook;
+
+      setUnsavedData(false);
+
+      statusBar()->message("Reading log book...Done", 3000);
+    }
+    else {
+      delete pcLogBook;
+      pcLogBook = 0;
+      statusBar()->message("Reading log book...Failed!", 3000);
+    }
+  }
+  catch ( std::bad_alloc ) {
+    delete pcLogBook;
+    pcLogBook = 0;
+    statusBar()->message("Reading log book...Out of memory!", 3000);
+  }
+
+  return pcLogBook != 0;
 }
 
 
@@ -657,6 +833,240 @@ ScubaLog::gotoLog()
     }
     viewLog(pcLog);
   }
+}
+
+
+//*****************************************************************************
+/*!
+  Print logbook.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+ScubaLog::print()
+{
+  statusBar()->message("Print log book...");
+
+  QPrinter cPrinter;
+  if ( cPrinter.setup() ) {
+    QPainter cPainter;
+    if ( cPainter.begin(&cPrinter) ) {
+      cPainter.setFont(QFont("helvetica", 6));
+      cPainter.drawText(500, 20, "ScubaLog");
+      cPainter.end();
+    }
+    else {
+      statusBar()->message("Print log book...Failed!", 3000);
+      return;
+    }
+  }
+  statusBar()->message("Print log book...Done", 3000);
+}
+
+
+//*****************************************************************************
+/*!
+  Handle drop action in zone \a pcDropZone.
+
+  The logbook will be loaded if the drop is a local file,
+  else KFM will be started to download the file if possible.
+
+  \sa handleDownloadFinished(), createKFMConnection(), KDNDDropZone.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+ScubaLog::handleDrop(KDNDDropZone* pcDropZone)
+{
+  assert(pcDropZone);
+  QStrList& cFileList = pcDropZone->getURLList();
+  QString cUrlName(cFileList.getFirst());
+  if ( cUrlName.isNull() )
+    return;
+
+  // Ensure log book is not the same as the one currently loaded
+  if ( *m_pcProjectName == cUrlName )
+    return;
+
+
+  // Ask user to save changes if any
+  // TODO -- implement!
+
+  // Ensure the URL is valid, try local files in current directory too
+  KURL cUrl(cUrlName);
+  if ( cUrl.isMalformed() ) {
+    QString cLocalFile("file:");
+    if ( cUrlName.find('/') ) {
+      cLocalFile += QDir::currentDirPath() + "/";
+    }
+    cLocalFile += cUrlName;
+    cUrl.parse(cLocalFile);
+    if ( cUrl.isMalformed() ) {
+      statusBar()->message("An invalid URL was dropped on ScubaLog!", 3000);
+      return;
+    }
+  }
+
+  // Load local file
+  if ( cUrl.isLocalFile() ) {
+    QString cProjectName(cUrl.path());
+    KURL::decodeURL(cProjectName);
+
+    bool isOk = readLogBook(cProjectName);
+    if ( isOk ) {
+      *m_pcProjectName = cProjectName.copy();
+      updateRecentProjects(cProjectName);
+      setUnsavedData(false);
+      const QString cCaption("ScubaLog [" + cProjectName + "]");
+      setCaption(cCaption);
+    }
+  }
+  // Load remote file, use KFM to help us out...
+  else {
+    KFM* pcKfmConnection = createKfmConnection();
+    if ( 0 == pcKfmConnection )
+      return;
+
+    *m_pcKfmUrl = cUrlName;
+    m_pcKfmFileName->sprintf("%s", tmpnam(0));
+    m_pcKfmConnection->copy(cUrlName, *m_pcKfmFileName);
+  }
+}
+
+
+//*****************************************************************************
+/*!
+  Create a new connection to KFM to enable remote loading.
+  If #m_pcKfmConnection is set (which means a download is currently in
+  progress), 0 will be returned, else the new connection, in which case
+  #m_pcKfmConnection will be set to that one.
+
+  Code heavily inspired by KHexEdit by Espen Sand.
+
+  \sa destroyKfmConnection().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+KFM*
+ScubaLog::createKfmConnection()
+{
+  // Only allow one connection
+  if ( m_pcKfmConnection ) {
+    statusBar()->message("A remote download is already in progress!", 3000);
+    return 0;
+  }
+
+  // Establish connection
+  try {
+    m_pcKfmConnection = new KFM();
+    if ( false == m_pcKfmConnection->isOK() ) {
+      statusBar()->message("Couldn't connect to KFM!", 3000);
+      delete m_pcKfmConnection;
+      m_pcKfmConnection = 0;
+      return 0;
+    }
+    connect(m_pcKfmConnection, SIGNAL(finished()),
+            SLOT(handleDownloadFinished()));
+    connect(m_pcKfmConnection, SIGNAL(error(int, const char*)),
+            SLOT(handleDownloadError(int, const char*)));
+  }
+  catch ( std::bad_alloc ) {
+    statusBar()->message("Out of memory!", 3000);
+    return 0;
+  }
+
+  return m_pcKfmConnection;
+}
+
+
+//*****************************************************************************
+/*!
+  Destroy the current connection to KFM.
+
+  \sa createKfmConnection().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+ScubaLog::destroyKfmConnection()
+{
+  delete m_pcKfmConnection;
+  m_pcKfmConnection = 0;
+}
+
+
+//*****************************************************************************
+/*!
+  KFM is finished downloading the file, close the connection and try to load
+  the log book.
+
+  \sa destroyKFMConnection().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+ScubaLog::handleDownloadFinished()
+{
+  assert(m_pcKfmConnection);
+
+  // Read the log book
+  const QString cUrlName(*m_pcKfmUrl);
+  const QString cProjectName(*m_pcKfmFileName);
+  bool isOk = readLogBook(cProjectName);
+  if ( isOk ) {
+    *m_pcProjectName = cUrlName.copy();
+    updateRecentProjects(cUrlName);
+    setUnsavedData(false);
+
+    const QString cCaption("ScubaLog [" + cUrlName + "]");
+    setCaption(cCaption);
+  }
+
+  // Remove the temporary file
+  ::unlink(*m_pcKfmFileName);
+  // Destroy the connection
+  destroyKfmConnection();
+}
+
+
+//*****************************************************************************
+/*!
+  KFM had en error downloading the file, report to user and close the
+  connection...
+  The error-code is \a nErrorCode, the error-message is \a pzMessage.
+
+  \sa destroyKFMConnection().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+ScubaLog::handleDownloadError(int nErrorCode, const char* pzMessage)
+{
+  assert(m_pcKfmConnection);
+
+  QString cMessage;
+  cMessage.sprintf("Error downloading log book (%d):\n%s\n(`%s')",
+                   nErrorCode, pzMessage, m_pcKfmUrl->data());
+
+  QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Download error",
+                       cMessage);
+
+  // Remove the temporary file
+  ::unlink(*m_pcKfmFileName);
+  // Destroy the connection
+  destroyKfmConnection();
 }
 
 
