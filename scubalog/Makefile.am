@@ -24,6 +24,8 @@ SUBDIRS = doc pics
 # this is where the source documentation will be installed
 SRCDOC_DEST=$(kde_htmldir)/en/scubalog
 
+EXTRA_DIST = scubalog.kdelnk
+
 ####### This part is very scubalog specific
 # this is the program that gets installed
 bin_PROGRAMS = 	scubalog
@@ -82,7 +84,7 @@ install-data-local:
 	$(mkinstalldirs) $(kde_icondir)
 	$(INSTALL_DATA) pics/scubalog.xpm $(kde_icondir)
 	$(mkinstalldirs) $(kde_minidir)
-	$(INSTALL_DATA) pics/mini/scubalog.xpm $(kde_minidir)
+	$(INSTALL_DATA) pics/scubalog-mini.xpm $(kde_minidir)/scubalog.xpm
 
 # remove ALL you have installed in install-data-local or install-exec-local
 uninstall-local:
