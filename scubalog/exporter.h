@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -29,17 +27,18 @@ class QString;
 */
 //*****************************************************************************
 
-class Exporter {
+class Exporter
+{
 public:
-  Exporter();
-  virtual ~Exporter();
+  //! Destroy the object.
+  virtual ~Exporter() {}
 
-  //! Export the log \a cLog to the file \a cFileName.
+  //! Export the log \a cLog to the file \a cName.
   virtual bool exportLog(const DiveLog& cLog,
-                         const QString& cFileName) const = 0;
-  //! Export the logbook \a cLogBook to the directory \a cDirName.
+                         const QString& cName) const = 0;
+  //! Export the logbook \a cLogBook to  \a cName.
   virtual bool exportLogBook(const LogBook& cLogBook,
-                             const QString& cDirName) const = 0;
+                             const QString& cName) const = 0;
 };
 
 #endif // EXPORTER_H

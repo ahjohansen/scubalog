@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -16,14 +14,9 @@
 #ifndef EQUIPMENTLOG_H
 #define EQUIPMENTLOG_H
 
-#include <new>
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qlist.h>
-#include "chunkio.h"
-
-class QDataStream;
-
 
 //*****************************************************************************
 /*!
@@ -42,9 +35,6 @@ class QDataStream;
 
 class EquipmentHistoryEntry {
 public:
-  friend QDataStream& operator >>(QDataStream&, EquipmentHistoryEntry&);
-  friend QDataStream& operator <<(QDataStream&, const EquipmentHistoryEntry&);
-
   EquipmentHistoryEntry();
   ~EquipmentHistoryEntry();
 
@@ -77,18 +67,9 @@ private:
 */
 //*****************************************************************************
 
-class EquipmentLog {
+class EquipmentLog
+{
 public:
-  friend QDataStream& operator >>(QDataStream&, EquipmentLog&)
-    throw (IOException, std::bad_alloc);
-  friend QDataStream& operator <<(QDataStream&, const EquipmentLog&)
-    throw (IOException);
-
-  enum {
-    //! The current version of the chunk.
-    e_ChunkVersion = 1
-  };
-
   EquipmentLog();
   ~EquipmentLog();
 

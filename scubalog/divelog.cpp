@@ -22,7 +22,7 @@
 
 //*****************************************************************************
 /*!
-  Initialize an empty log.
+  Initialise an empty log.
 */
 //*****************************************************************************
 
@@ -58,136 +58,6 @@ DiveLog::~DiveLog()
 #if !defined(NDEBUG)
   m_nLogNumber = 0xDEADBEEF;
 #endif // NDEBUG
-}
-
-
-//*****************************************************************************
-/*!
-  Read a log from the stream \a cStream into \a cLog.
-  Returns a reference to the stream.
-  On error, the exception IOException is thrown.
-*/
-//*****************************************************************************
-
-QDataStream&
-operator >>(QDataStream& cStream, DiveLog& cLog)
-{
-  // Save current IO position for checking at end
-  const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
-
-  // Read rest of header
-  unsigned int nChunkSize;
-  unsigned int nChunkVersion;
-  cStream >> nChunkSize
-          >> nChunkVersion;
-  if ( 1 != nChunkVersion ) {
-    QString cText;
-    cText.sprintf(i18n("Unknown dive log chunk version %d!"), nChunkVersion);
-    throw IOException(cText);
-  }
-
-  unsigned char nPlanType;
-  cStream >> cLog.m_nLogNumber
-          >> cLog.m_cDiveDate
-          >> cLog.m_cDiveStart
-          >> cLog.m_cLocation
-          >> cLog.m_cBuddyName
-          >> cLog.m_vMaxDepth
-          >> cLog.m_cDiveTime
-          >> cLog.m_cBottomTime
-          >> cLog.m_cGasType
-          >> cLog.m_nNumLitresUsed
-          >> cLog.m_vAirTemperature
-          >> cLog.m_vSurfaceTemperature
-          >> cLog.m_vWaterTemperature
-          >> nPlanType
-          >> cLog.m_cDiveType
-          >> cLog.m_cDiveDescription;
-
-  cLog.setPlanType((DiveLog::PlanType_e)nPlanType);
-
-  // Ensure we're at the correct position in the stream
-  const int nNextChunkPos = nPos + nChunkSize - sizeof(unsigned int);
-  if ( nNextChunkPos != cDevice.at() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after reading dive log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
-    throw IOException(cText);
-  }
-
-  return cStream;
-}
-
-
-//*****************************************************************************
-/*!
-  Write the log \a cLog to the stream \a cStream.
-  Returns a reference to the stream.
-  On error, the exception IOException is thrown.
-*/
-//*****************************************************************************
-
-QDataStream&
-operator <<(QDataStream& cStream, const DiveLog& cLog)
-{
-  // Save current IO position for checking at end
-  const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
-
-  const unsigned int nChunkVersion = 1;
-  const unsigned int nChunkSize =
-    3 * sizeof(unsigned int)
-    + sizeof(unsigned int)
-    + sizeof(unsigned int)
-    + sizeof(unsigned int)
-    + sizeof(unsigned int) + cLog.m_cLocation.length()
-    + sizeof(unsigned int) + cLog.m_cBuddyName.length()
-    + sizeof(float)
-    + sizeof(unsigned int)
-    + sizeof(unsigned int)
-    + sizeof(unsigned int) + cLog.m_cGasType.length()
-    + sizeof(unsigned int)
-    + sizeof(float)
-    + sizeof(float)
-    + sizeof(float)
-    + sizeof(unsigned char)
-    + sizeof(unsigned int) + cLog.m_cDiveType.length()
-    + sizeof(unsigned int) + cLog.m_cDiveDescription.length();
-  const unsigned char nPlanType = (unsigned char)cLog.m_ePlanType;
-  cStream << MAKE_CHUNK_ID('S', 'L', 'D', 'L')
-          << nChunkSize
-          << nChunkVersion
-          << cLog.m_nLogNumber
-          << cLog.m_cDiveDate
-          << cLog.m_cDiveStart
-          << cLog.m_cLocation
-          << cLog.m_cBuddyName
-          << cLog.m_vMaxDepth
-          << cLog.m_cDiveTime
-          << cLog.m_cBottomTime
-          << cLog.m_cGasType
-          << cLog.m_nNumLitresUsed
-          << cLog.m_vAirTemperature
-          << cLog.m_vSurfaceTemperature
-          << cLog.m_vWaterTemperature
-          << nPlanType
-          << cLog.m_cDiveType
-          << cLog.m_cDiveDescription;
-
-
-  // Ensure we're at the correct position in the stream
-  const int nNextChunkPos = nPos + nChunkSize;
-  if ( nNextChunkPos != cDevice.at() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after writing dive log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
-    throw IOException(cText);
-  }
-
-  return cStream;
 }
 
 

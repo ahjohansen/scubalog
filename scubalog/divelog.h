@@ -6,13 +6,10 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
 //*****************************************************************************
-
 
 #ifndef DIVELOG_H
 #define DIVELOG_H
@@ -20,20 +17,17 @@
 #include <qdatetime.h>
 #include <qstring.h>
 
-
-class QDataStream;
-
-
 //*****************************************************************************
 /*!
   \class DiveLog
   \brief The DiveLog class is used to hold log data for a dive.
 
-  \author André Johansen <andrej@ifi.uio.no>.
+  \author André Johansen.
 */
 //*****************************************************************************
 
-class DiveLog {
+class DiveLog
+{
 public:
   //! The plan types.
   enum PlanType_e {
@@ -42,9 +36,6 @@ public:
     //! Multi-level dive (with e.g. ``the wheel'').
     e_MultiLevel
   };
-
-  friend QDataStream& operator >>(QDataStream&, DiveLog&);
-  friend QDataStream& operator <<(QDataStream&, const DiveLog&);
 
   DiveLog();
   ~DiveLog();

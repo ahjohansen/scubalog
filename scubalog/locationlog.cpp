@@ -11,20 +11,14 @@
 */
 //*****************************************************************************
 
+#include "locationlog.h"
+#include <qstring.h>
 #include <assert.h>
 #include <stdio.h>
-#include <qstring.h>
-#include <qdatastream.h>
-#include <qmessagebox.h>
-#include <kapp.h>
-#include <klocale.h>
-#include "chunkio.h"
-#include "locationlog.h"
-
 
 //*****************************************************************************
 /*!
-  Initialize the log.
+  Initialise the log.
 
   By default, both the name and description are empty.
 
@@ -107,100 +101,6 @@ void
 LocationLog::setDescription(const QString& cDescription)
 {
   m_cDescription = cDescription;
-}
-
-
-//*****************************************************************************
-/*!
-  Read a log from the stream \a cStream into \a cLog.
-  Returns a reference to the stream.
-  On error, the exception IOException is thrown.
-
-  \author André Johansen.
-*/
-//*****************************************************************************
-
-QDataStream&
-operator >>(QDataStream& cStream, LocationLog& cLog)
-{
-  // Save current IO position for checking at end
-  const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
-
-  // Read rest of header
-  unsigned int nChunkSize;
-  unsigned int nChunkVersion;
-  cStream >> nChunkSize
-          >> nChunkVersion;
-  if ( 1 != nChunkVersion ) {
-    QString cText;
-    cText.sprintf(i18n("Unknown location log chunk version %d!"),
-                  nChunkVersion);
-    throw IOException(cText);
-  }
-
-  // Read the body of the data
-  cStream >> cLog.m_cName
-          >> cLog.m_cDescription;
-
-  // Ensure we're at the correct position in the stream
-  const int nNextChunkPos = nPos + nChunkSize - sizeof(unsigned int);
-  if ( nNextChunkPos != cDevice.at() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after reading location log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
-    throw IOException(cText);
-  }
-
-  return cStream;
-}
-
-
-//*****************************************************************************
-/*!
-  Write the log \a cLog to the stream \a cStream.
-  Returns a reference to the stream.
-  On error, the exception IOException is thrown.
-
-  \author André Johansen.
-*/
-//*****************************************************************************
-
-QDataStream&
-operator <<(QDataStream& cStream, const LocationLog& cLog)
-{
-  // Save current IO position for checking at end
-  const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
-
-  // Calculate the chunk size
-  unsigned int nChunkSize =
-    3 * sizeof(unsigned int)
-    + sizeof(unsigned int) + cLog.m_cName.length()
-    + sizeof(unsigned int) + cLog.m_cDescription.length();
-
-  // Write the header
-  unsigned int nChunkVersion = (unsigned int)LocationLog::e_ChunkVersion;
-  cStream << MAKE_CHUNK_ID('S', 'L', 'L', 'L')
-          << nChunkSize
-          << nChunkVersion;
-
-  // Write the body
-  cStream << cLog.m_cName
-          << cLog.m_cDescription;
-
-  // Ensure we're at the correct position in the stream
-  const int nNextChunkPos = nPos + nChunkSize;
-  if ( nNextChunkPos != cDevice.at() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after writing location log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
-    throw IOException(cText);
-  }
-
-  return cStream;
 }
 
 

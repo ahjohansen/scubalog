@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -18,30 +16,18 @@
 
 #include <qstring.h>
 
-class QDataStream;
-
-
 //*****************************************************************************
 /*!
   \class LocationLog
   \brief The LocationLog class is used to log information about a location.
 
-  The name of the chunk is "SLLL" (short for ScubaLog LocationLog).
-
   \author André Johansen.
 */
 //*****************************************************************************
 
-class LocationLog {
+class LocationLog
+{
 public:
-  friend QDataStream& operator >>(QDataStream&, LocationLog&);
-  friend QDataStream& operator <<(QDataStream&, const LocationLog&);
-
-  enum {
-    //! The current version of the chunk.
-    e_ChunkVersion = 1
-  };
-
   LocationLog();
   ~LocationLog();
 

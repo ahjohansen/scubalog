@@ -11,16 +11,7 @@
 */
 //*****************************************************************************
 
-#include <qstring.h>
-#include <qdatetime.h>
-#include <qlist.h>
-#include <qdatastream.h>
-#include <qmessagebox.h>
-#include <kapp.h>
-#include <klocale.h>
-#include "chunkio.h"
 #include "equipmentlog.h"
-
 
 //*****************************************************************************
 /*!
@@ -51,128 +42,6 @@ EquipmentLog::~EquipmentLog()
 
 //*****************************************************************************
 /*!
-  Read a log from the stream \a cStream into \a cLog.
-  Returns a reference to the stream.
-  On error, the exception IOException is thrown.
-  Notice that the OOM exception (std::bad_alloc) must be handled
-  on the outside too!
-*/
-//*****************************************************************************
-
-QDataStream&
-operator >>(QDataStream& cStream, EquipmentLog& cLog)
-  throw(IOException, std::bad_alloc)
-{
-  // Save current IO position for checking at end
-  const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
-
-  // Read rest of header
-  unsigned int nChunkSize;
-  unsigned int nChunkVersion;
-  cStream >> nChunkSize
-          >> nChunkVersion;
-  if ( 1 != nChunkVersion ) {
-    QString cText;
-    cText.sprintf(i18n("Unknown equipment log chunk version %d!"),
-                  nChunkVersion);
-    throw IOException(cText);
-  }
-
-  // Read the body of the data
-  cStream >> cLog.m_cType
-          >> cLog.m_cName
-          >> cLog.m_cSerial
-          >> cLog.m_cServiceRequirements;
-
-  // Read the history entries
-  unsigned int nNumEntries;
-  cStream >> nNumEntries;
-  for ( unsigned int iEntry = 0; iEntry < nNumEntries; iEntry++ ) {
-    EquipmentHistoryEntry* pcEntry = new EquipmentHistoryEntry();
-    cStream >> *pcEntry;
-    cLog.m_cHistory.append(pcEntry);
-  }
-
-  // Ensure we're at the correct position in the stream
-  const int nNextChunkPos = nPos + nChunkSize - sizeof(unsigned int);
-  if ( nNextChunkPos != cDevice.at() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after reading equipment log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
-    throw IOException(cText);
-  }
-
-  return cStream;
-}
-
-
-//*****************************************************************************
-/*!
-  Write the log \a cLog to the stream \a cStream.
-  Returns a reference to the stream.
-  On error, the exception IOException is thrown.
-*/
-//*****************************************************************************
-
-QDataStream&
-operator <<(QDataStream& cStream, const EquipmentLog& cLog) throw(IOException)
-{
-  // Save current IO position for checking at end
-  const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
-
-  QListIterator<EquipmentHistoryEntry> iHistoryEntry(cLog.m_cHistory);
-
-  // Calculate the chunk size
-  unsigned int nChunkSize =
-    3 * sizeof(unsigned int)
-    + sizeof(unsigned int)
-    + sizeof(unsigned int) + cLog.m_cType.length()
-    + sizeof(unsigned int) + cLog.m_cName.length()
-    + sizeof(unsigned int) + cLog.m_cSerial.length()
-    + sizeof(unsigned int) + cLog.m_cServiceRequirements.length();
-  for ( ; iHistoryEntry.current(); ++iHistoryEntry )
-    nChunkSize += 2 * sizeof(unsigned int) +
-      iHistoryEntry.current()->comment().length();
-
-  // Write the header
-  unsigned int nChunkVersion = (unsigned int)EquipmentLog::e_ChunkVersion;
-  cStream << MAKE_CHUNK_ID('S', 'L', 'E', 'L')
-          << nChunkSize
-          << nChunkVersion;
-
-  // Write the body
-  cStream << cLog.m_cType
-          << cLog.m_cName
-          << cLog.m_cSerial
-          << cLog.m_cServiceRequirements
-          << cLog.m_cHistory.count();
-
-  // Write the history entries
-  iHistoryEntry.toFirst();
-  for ( ; iHistoryEntry.current(); ++iHistoryEntry ) {
-    const EquipmentHistoryEntry* pcEntry = iHistoryEntry.current();
-    cStream << *pcEntry;
-  }
-
-  // Ensure we're at the correct position in the stream
-  const int nNextChunkPos = nPos + nChunkSize;
-  if ( nNextChunkPos != cDevice.at() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after writing equipment log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
-    throw IOException(cText);
-  }
-
-  return cStream;
-}
-
-
-//*****************************************************************************
-/*!
   Create an history entry.
 */
 //*****************************************************************************
@@ -190,44 +59,6 @@ EquipmentHistoryEntry::EquipmentHistoryEntry()
 
 EquipmentHistoryEntry::~EquipmentHistoryEntry()
 {
-}
-
-
-//*****************************************************************************
-/*!
-  Read an entry from the stream \a cStream into \a cEntry.
-
-  Returns a reference to the stream.
-
-  This function needs better error-handling. Use exceptions!
-*/
-//*****************************************************************************
-
-QDataStream&
-operator >>(QDataStream& cStream, EquipmentHistoryEntry& cEntry)
-{
-  cStream >> cEntry.m_cDate
-          >> cEntry.m_cComment;
-
-  return cStream;
-}
-
-
-//*****************************************************************************
-/*!
-  Write the entry \a cEntry to the stream \a cStream.
-
-  Returns a reference to the stream.
-*/
-//*****************************************************************************
-
-QDataStream&
-operator <<(QDataStream& cStream, const EquipmentHistoryEntry& cEntry)
-{
-  cStream << cEntry.m_cDate
-          << cEntry.m_cComment;
-
-  return cStream;
 }
 
 
