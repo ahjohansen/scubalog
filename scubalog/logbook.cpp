@@ -19,6 +19,7 @@
 #include "debug.h"
 #include "chunkio.h"
 #include "divelist.h"
+#include "locationlog.h"
 #include "equipmentlog.h"
 #include "logbook.h"
 
@@ -32,8 +33,12 @@
 //*****************************************************************************
 
 LogBook::LogBook()
+  : m_pcDiveList(0),
+    m_pcLocations(0),
+    m_pcEquipment(0)
 {
   m_pcDiveList  = new DiveList();
+  m_pcLocations = new QList<LocationLog>();
   m_pcEquipment = new QList<EquipmentLog>();
 }
 
@@ -49,7 +54,9 @@ LogBook::LogBook()
 LogBook::~LogBook()
 {
   delete m_pcDiveList;
-  m_pcDiveList = 0;
+  m_pcDiveList  = 0;
+  delete m_pcLocations;
+  m_pcLocations = 0;
   delete m_pcEquipment;
   m_pcEquipment = 0;
 }
@@ -128,6 +135,32 @@ LogBook::readLogBook(const QString& cFileName)
       if ( pcLog ) {
         DBG(("Read log %d\n", pcLog->logNumber()));
         m_pcDiveList->inSort(pcLog);
+      }
+    }
+
+    // Read a location log
+    else if ( MAKE_CHUNK_ID('S', 'L', 'L', 'L') == nChunkId ) {
+      int nPos = cFile.at();
+      LocationLog* pcLog = 0;
+      try {
+        pcLog = new LocationLog();
+        cStream >> *pcLog;
+      }
+      catch ( IOException& cException) {
+        QString cText;
+        cText += "While reading log book from\n`" + cFileName + "':\n"
+          + cException.explanation();
+        QMessageBox::warning(0, "ScubaLog: Read error", cText, 1, 0);
+        cFile.at(nPos);
+        cStream >> nChunkSize >> nChunkVersion;
+        cFile.at( nPos + nChunkSize - sizeof(unsigned int) );
+        DBG(("Position of next chunk=%d\n", cFile.at()));
+        delete pcLog;
+        continue;
+      }
+      if ( pcLog ) {
+        DBG(("Read location log for `%s'\n", pcLog->getName().data()));
+        m_pcLocations->inSort(pcLog);
       }
     }
 
@@ -216,10 +249,15 @@ LogBook::saveLogBook(const QString& cFileName)
             << m_cComments;
 
     // Write all the dive logs
-    nChunkVersion = 1;
     const DiveLog* pcLog = m_pcDiveList->first();
     for ( ; pcLog; pcLog = m_pcDiveList->next() ) {
       cStream << *pcLog;
+    }
+
+    // Write all the location logs
+    const LocationLog* pcLocationLog = m_pcLocations->first();
+    for ( ; pcLocationLog; pcLocationLog = m_pcLocations->next() ) {
+      cStream << *pcLocationLog;
     }
 
     // Write all the equipment entries

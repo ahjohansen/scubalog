@@ -37,6 +37,7 @@
 #include "divelogitem.h"
 #include "loglistview.h"
 #include "logview.h"
+#include "locationview.h"
 #include "personalinfoview.h"
 #include "equipmentview.h"
 #include "scubalog.h"
@@ -129,6 +130,8 @@ ScubaLog::ScubaLog(const char* pzName)
   if ( m_bReadLastUsedProject && m_cRecentProjects.first() ) {
     m_pcLogBook->readLogBook(*m_cRecentProjects.first());
     *m_pcProjectName = *m_cRecentProjects.first();
+    const QString cCaption("ScubaLog [" + *m_pcProjectName + "]");
+    setCaption(cCaption);
   }
 
   // Create the tab controller
@@ -150,6 +153,11 @@ ScubaLog::ScubaLog(const char* pzName)
 
   connect(m_pcLogListView, SIGNAL(displayLog(DiveLog*)),
           SLOT(viewLog(DiveLog*)));
+
+  // Create the location view
+  m_pcLocationView = new LocationView(m_pcViews, "locationView");
+  m_pcLocationView->setLogBook(m_pcLogBook);
+  m_pcViews->addTab(m_pcLocationView, "Locations");
 
   // Create the personal info view
   m_pcPersonalInfoView =
@@ -250,10 +258,14 @@ ScubaLog::openRecent(int nRecentNumber)
       // Insert the new logbook
       m_pcLogListView->setLogList(&pcLogBook->diveList());
       m_pcLogView->setLogList(&pcLogBook->diveList());
+      m_pcLocationView->setLogBook(pcLogBook);
       m_pcPersonalInfoView->setLogBook(pcLogBook);
       m_pcEquipmentView->setLogBook(pcLogBook);
       delete m_pcLogBook;
       m_pcLogBook = pcLogBook;
+
+      const QString cCaption("ScubaLog [" + *pcProjectName + "]");
+      setCaption(cCaption);
 
       updateRecentProjects(*pcProjectName);
     }
@@ -295,6 +307,7 @@ ScubaLog::openProject()
       // Insert the new logbook
       m_pcLogListView->setLogList(&pcLogBook->diveList());
       m_pcLogView->setLogList(&pcLogBook->diveList());
+      m_pcLocationView->setLogBook(pcLogBook);
       m_pcPersonalInfoView->setLogBook(pcLogBook);
       m_pcEquipmentView->setLogBook(pcLogBook);
       delete m_pcLogBook;
@@ -359,6 +372,9 @@ ScubaLog::saveProjectAs()
     m_pcLogBook->saveLogBook(*m_pcProjectName);
     setUnsavedData(false);
     updateRecentProjects(cProjectName);
+
+    const QString cCaption("ScubaLog [" + cProjectName + "]");
+    setCaption(cCaption);
   }
 }
 

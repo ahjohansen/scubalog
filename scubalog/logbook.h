@@ -20,6 +20,7 @@
 
 class DiveList;
 class EquipmentLog;
+class LocationLog;
 template <class T> class QList<T>;
 
 
@@ -102,6 +103,7 @@ public:
   QString comments() const { return m_cComments; }
   DiveList& diveList();
   const DiveList& diveList() const;
+  QList<LocationLog>& locationList() const { return *m_pcLocations; }
   QList<EquipmentLog>& equipmentLog() const { return *m_pcEquipment; }
 
   void setDiverName(const QString& cName) { m_cDiverName = cName; }
@@ -125,6 +127,8 @@ private:
   QString   m_cComments;
   //! The dive list.
   DiveList* m_pcDiveList;
+  //! The location list.
+  QList<LocationLog>*  m_pcLocations;
   //! The eqipment with history.
   QList<EquipmentLog>* m_pcEquipment;
 };

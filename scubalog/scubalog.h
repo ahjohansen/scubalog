@@ -26,6 +26,7 @@ class QPopupMenu;
 class KTabControl;
 class LogListView;
 class LogView;
+class LocationView;
 class PersonalInfoView;
 class EquipmentView;
 
@@ -75,6 +76,8 @@ private:
   LogListView*      m_pcLogListView;
   //! The log view.
   LogView*          m_pcLogView;
+  //! The location view.
+  LocationView*     m_pcLocationView;
   //! The personal info view.
   PersonalInfoView* m_pcPersonalInfoView;
   //! The equipment view.
