@@ -36,9 +36,9 @@ scubalog_SOURCES = divelog.cpp divelogitem.cpp equipmentlog.cpp \
 		   integerdialog.cpp kcelledit.cpp kcelleditview.cpp \
 		   kdateedit.cpp kdatevalidator.cpp kintegeredit.cpp \
 		   kintegervalidator.cpp ktabcontrol.cpp ktimeedit.cpp \
-		   ktimevalidator.cpp locationlog.cpp locationview.cpp \
-		   logbook.cpp loglistview.cpp logview.cpp main.cpp \
-		   personalinfoview.cpp scubalog.cpp
+		   ktimevalidator.cpp listbox.cpp locationlog.cpp \
+		   locationview.cpp logbook.cpp loglistview.cpp logview.cpp \
+		   main.cpp personalinfoview.cpp scubalog.cpp
 
 # let automoc handle all of the meta source files (moc)
 scubalog_METASOURCES = USE_AUTOMOC
