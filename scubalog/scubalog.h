@@ -16,7 +16,7 @@
 #define SCUBALOG_H
 
 #include <qlist.h>
-#include <ktmainwindow.h>
+#include <kmainwindow.h>
 #include <kio/job.h>
 
 class QTabWidget;
@@ -42,7 +42,7 @@ class EquipmentView;
 */
 //*****************************************************************************
 
-class ScubaLog : public KTMainWindow {
+class ScubaLog : public KMainWindow {
   Q_OBJECT
 
   //! Download modes.

@@ -11,6 +11,8 @@
 */
 //*****************************************************************************
 
+#include "scubalog.h"
+
 #include <limits.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -34,6 +36,8 @@
 #include <qtabwidget.h>
 #include <kapp.h>
 #include <kstdaccel.h>
+#include <kstatusbar.h>
+#include <kpopupmenu.h>
 #include <kiconloader.h>
 #include <ktoolbar.h>
 #include <kurl.h>
@@ -47,7 +51,6 @@
 #include <kstdaction.h>
 #include "config.h"
 #include "debug.h"
-#include "htmlexporter.h"
 #include "integerdialog.h"
 #include "divelist.h"
 #include "logbook.h"
@@ -57,13 +60,13 @@
 #include "locationview.h"
 #include "personalinfoview.h"
 #include "equipmentview.h"
-#include "scubalog.h"
+#include "htmlexporter.h"
 #include "udcfexporter.h"
-
+#include "scubalogproject.h"
 
 //*****************************************************************************
 /*!
-  Initialize the ScubaLog application GUI. Use \a pzName as the widget name.
+  Initialise the ScubaLog application GUI. Use \a pzName as the widget name.
 
   If \a pzLogBook is non-null, it will be attempted loaded as a log-book.
 
@@ -72,7 +75,7 @@
 //*****************************************************************************
 
 ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
-  : KTMainWindow(pzName),
+  : KMainWindow(0, pzName),
     m_pcProjectName(0),
     m_pcLogBook(0),
     m_pcKfmUrl(0),
@@ -118,8 +121,6 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
   // Setup menu
   //
 
-  KStdAccel* pcKeyAccel = new KStdAccel();
-
   KMenuBar* pcMenuBar = menuBar();
   m_pcRecentMenu = new QPopupMenu(0, "recentMenu");
   int nRecentNumber = 1;
@@ -133,12 +134,12 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
 
   QPopupMenu* pcMenu = new QPopupMenu(0, "projectMenu");
   pcMenu->insertItem(i18n("&New"), this, SLOT(newProject()),
-                     pcKeyAccel->openNew());
+                     KStdAccel::openNew());
   pcMenu->insertItem(i18n("&Open..."), this, SLOT(openProject()),
-                     pcKeyAccel->open());
+                     KStdAccel::open());
   pcMenu->insertItem(i18n("Open &recent"), m_pcRecentMenu);
   pcMenu->insertItem(i18n("&Save"), this, SLOT(saveProject()),
-                     pcKeyAccel->save());
+                     KStdAccel::save());
   pcMenu->insertItem(i18n("Save &As"), this, SLOT(saveProjectAs()),
                      CTRL + Key_A);
   pcMenu->insertSeparator();
@@ -149,9 +150,9 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
                            SLOT(exportLogBookUDCF()));
   pcMenu->insertItem(i18n("&Export"),pcExportMenu);
   pcMenu->insertItem(i18n("&Print..."), this, SLOT(print()),
-                     pcKeyAccel->print());
+                     KStdAccel::print());
   pcMenu->insertSeparator();
-  pcMenu->insertItem(i18n("&Quit"), pcApp, SLOT(quit()), pcKeyAccel->quit());
+  pcMenu->insertItem(i18n("&Quit"), pcApp, SLOT(quit()), KStdAccel::quit());
   pcMenuBar->insertItem(i18n("&Project"), pcMenu);
 
   QPopupMenu* pcLogMenu = new QPopupMenu(0, "logMenu");
@@ -164,7 +165,7 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
                           "written for the K Desktop Environment.\n\n"
                           "This program is free software, licensed\n"
                           "under the GNU General Public License.\n\n"
-                          "Author: André Johansen <andrej@ifi.uio.no>\n\n"
+                          "Author: André Johansen <andrej@tiscali.no>\n\n"
                           "Version: %s\n"
                           "Compilation date: %s"), VERSION, __DATE__);
   pcMenuBar->insertItem(i18n("&Help"), this->helpMenu());
@@ -188,7 +189,7 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
                         SIGNAL(clicked()), this, SLOT(openProject()),
                         true, i18n("Open log-book"));
 
-  cIcon = cIconLoader.loadIcon("filefloppy",KIcon::Toolbar);
+  cIcon = cIconLoader.loadIcon("filesave",KIcon::Toolbar);
   cToolBar.insertButton(cIcon, 0,
                         SIGNAL(clicked()), this, SLOT(saveProject()),
                         true, i18n("Save log-book"));
@@ -239,8 +240,8 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
   m_pcEquipmentView = new EquipmentView(m_pcViews, "equipment");
   m_pcViews->addTab(m_pcEquipmentView, i18n("&Equipment"));
 
-  enableStatusBar();
-  setView(m_pcViews);
+  statusBar();
+  setCentralWidget(m_pcViews);
   setCaption("ScubaLog");
 
 
@@ -312,11 +313,11 @@ ScubaLog::~ScubaLog()
 
 //*****************************************************************************
 /*!
-  Prevent KTMainWindow to delete the widget.
+  Prevent KMainWindow to delete the widget.
   Notice that this function is only called when the window is closed
-  through the window manager, not from `Quit'!
+  through the window manager, not from "Quit"!
 
-  Always returns `false'.
+  Always returns "false".
 
   \author André Johansen.
 */
@@ -459,7 +460,8 @@ ScubaLog::saveProject()
   else {
     statusBar()->message(i18n("Writing log book..."));
 
-    bool isOk = m_pcLogBook->saveLogBook(cUrlName);
+    ScubaLogProject cExporter;
+    const bool isOk = cExporter.exportLogBook(*m_pcLogBook, cUrlName);
     if ( isOk ) {
       //setUnsavedData(false);
       statusBar()->message(i18n("Writing log book...Done"), 3000);
@@ -501,7 +503,8 @@ ScubaLog::saveProjectAs()
     if ( -1 == cProjectName.find(".slb") )
       cProjectName += ".slb";
     *m_pcProjectName = cProjectName.copy();
-    bool isOk = m_pcLogBook->saveLogBook(*m_pcProjectName);
+    ScubaLogProject cExporter;
+    const bool isOk = cExporter.exportLogBook(*m_pcLogBook, *m_pcProjectName);
     if ( isOk ) {
       //setUnsavedData(false);
       updateRecentProjects(cProjectName);
@@ -531,11 +534,11 @@ ScubaLog::saveProjectAs()
   will happpen when the file is downloaded and handleDownloadFinished()
   is called.
 
-  If a log book is loaded, the caption and the `recent projects' menu
+  If a log book is loaded, the caption and the "recent projects" menu
   are updated.
 
-  Returns `true' if no errors were encountered, `false' otherwise.
-  Notice that `true' does not necessarily mean a project was loaded,
+  Returns "true" if no errors were encountered, "false" otherwise.
+  Notice that "true" does not necessarily mean a project was loaded,
   as it might have to be downloaded first.
 
   \sa readLogBook().
@@ -607,10 +610,10 @@ ScubaLog::readLogBookUrl(const QString& cUrlName, DownloadMode_e eMode)
 //*****************************************************************************
 /*!
   Try to read a project from the local file \a cFileName.
-  Returns `true' on success or `false' on failure.
+  Returns "true" on success or "false" on failure.
 
   This function will update all the GUI elements of the program,
-  except the `recent projects' menu and the caption.
+  except the "recent projects" menu and the caption.
 
   \sa LogBook::readLogBook().
 
@@ -625,8 +628,9 @@ ScubaLog::readLogBook(const QString& cFileName)
 
   LogBook* pcLogBook = 0;
   try {
-    pcLogBook = new LogBook();
-    if ( pcLogBook->readLogBook(cFileName) ) {
+    ScubaLogProject cImporter;
+    pcLogBook = cImporter.importLogBook(cFileName);
+    if ( pcLogBook ) {
       // Insert the new logbook
       m_pcLogListView->setLogList(&pcLogBook->diveList());
       m_pcLogView->setLogBook(pcLogBook);
@@ -933,7 +937,7 @@ ScubaLog::print()
     return;
   }
 
-  // Initialize printing
+  // Initialise printing
   QPainter cPainter;
   if ( false == cPainter.begin(&cPrinter) ) {
     statusBar()->message(i18n("Print log book...Failed!"), 3000);

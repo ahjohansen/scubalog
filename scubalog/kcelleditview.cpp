@@ -13,6 +13,8 @@
 */
 //*****************************************************************************
 
+#include "kcelleditview.h"
+
 #include <stdio.h>
 #include <assert.h>
 #include <qheader.h>
@@ -21,12 +23,9 @@
 #include <qkeycode.h>
 #include <qfontinfo.h>
 #include <qlineedit.h>
-#include <qtableview.h>
+#include <qtable.h>
 #include <qscrollbar.h>
 #include "kcelledit.h"
-#include "kcelleditview.h"
-
-
 
 //*****************************************************************************
 /*!
@@ -43,8 +42,8 @@ public:
   _KCellEdit(int nNumCols, QWidget* pcParent, const char* pzName)
     : KCellEdit(nNumCols, pcParent, pzName) {
   }
-  using QTableView::horizontalScrollBar;
-  using QTableView::verticalScrollBar;
+  //using QTableView::horizontalScrollBar;
+  //using QTableView::verticalScrollBar;
 private:
   _KCellEdit(const _KCellEdit&);
   _KCellEdit& operator =(const _KCellEdit&);
@@ -160,7 +159,7 @@ KCellEditView::setColEditor(int nCol, QLineEdit* pcEditor)
 //*****************************************************************************
 /*!
   Set the text in the cell (\a nRow, \a nCol) to \a cText.
-  If \a bUpdateCell is `true', the cell will be repainted.
+  If \a bUpdateCell is "true", the cell will be repainted.
 
   \sa KCellEdit::setCellText().
 */

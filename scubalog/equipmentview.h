@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -23,8 +21,8 @@ class QListBox;
 class QPushButton;
 class QLineEdit;
 class LogBook;
-class KCellEditView;
-
+class QTable;
+class QPopupMenu;
 
 //*****************************************************************************
 /*!
@@ -55,9 +53,15 @@ private slots:
   void itemTypeChanged(const QString& cType);
   void itemSerialChanged(const QString& cSerial);
   void itemServiceChanged(const QString& cService);
-  void logEntryChanged(int nRow, int nCol, const QString& cText);
+  void logEntryChanged(int nRow, int nCol);
+  void newLogEntry();
+  void deleteLogEntry();
   void moveCurrentUp();
   void moveCurrentDown();
+  void showLogEntryMenu(int i_nRow, int i_nCol, const QPoint& i_cPos);
+
+private:
+  void createLogEntryMenu();
 
 private:
   //! The log book.
@@ -81,7 +85,9 @@ private:
   //! The service editor.
   QLineEdit*     m_pcService;
   //! The log edit view.
-  KCellEditView* m_pcLogView;
+  QTable*        m_pcLogView;
+  //! The context menu used in the log for an entry.
+  QPopupMenu*    m_pcLogEntryMenu;
 };
 
 #endif // EQUIPMENTVIEW_H

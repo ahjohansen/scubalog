@@ -17,7 +17,7 @@
 #define KCELLEDIT_H
 
 #include <qstring.h>
-#include <qtableview.h>
+#include <qtable.h>
 
 class QLineEdit;
 
@@ -30,7 +30,7 @@ class QLineEdit;
 */
 //*****************************************************************************
 
-class KCellEdit : public QTableView {
+class KCellEdit : public QTable {
   Q_OBJECT
 public:
   KCellEdit(int nNumCols, QWidget* pcParent = 0, const char* pzName = 0);

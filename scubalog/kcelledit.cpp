@@ -13,6 +13,8 @@
 */
 //*****************************************************************************
 
+#include "kcelledit.h"
+
 #include <stdio.h>
 #include <assert.h>
 #include <vector>
@@ -22,9 +24,6 @@
 #include <qfontinfo.h>
 #include <qlineedit.h>
 #include <qscrollbar.h>
-#include "kcelledit.h"
-
-
 
 class KCellEdit::StringContainer : public std::vector<QString> {};
 
@@ -38,7 +37,7 @@ class KCellEdit::StringContainer : public std::vector<QString> {};
 //*****************************************************************************
 
 KCellEdit::KCellEdit(int nNumCols, QWidget* pcParent, const char* pzName)
-  : QTableView(pcParent, pzName), m_panColWidths(0), m_papcEditors(0),
+  : QTable(pcParent, pzName), m_panColWidths(0), m_papcEditors(0),
     m_pcCellStrings(0)
 {
   assert(nNumCols >= 1);
@@ -67,12 +66,12 @@ KCellEdit::KCellEdit(int nNumCols, QWidget* pcParent, const char* pzName)
           SLOT(verticalScroll(int)));
 
   // Set cell size
-  setCellWidth(0);
-  QFontInfo cFontInfo(font());
-  setCellHeight(cFontInfo.pointSize() + 10);
+  //setColumnWidth(0);
+  //QFontInfo cFontInfo(font());
+  //setRowHeight(0, cFontInfo.pointSize() + 10);
 
   setBackgroundColor(QColor(white));
-  setTableFlags(Tbl_autoScrollBars | Tbl_smoothScrolling);
+  //setTableFlags(Tbl_autoScrollBars | Tbl_smoothScrolling);
   setNumCols(nNumCols);
   setFocusPolicy(StrongFocus);
 }
@@ -154,7 +153,7 @@ KCellEdit::setColEditor(int nCol, QLineEdit* pcEditor)
 //*****************************************************************************
 /*!
  Set the string for the cell at (\a nRow, \a nCol) to be \a cCellText.
- If \a bUpdateCell is `true', the cell will be redrawn, if not,
+ If \a bUpdateCell is "true", the cell will be redrawn, if not,
  it should be so later on. This can be useful if you want to set the text
  for several cells in one go and have them all updated at the end by
  calling repaint().
@@ -176,16 +175,13 @@ KCellEdit::setCellText(int nRow, int nCol, const QString& cText,
     m_pcCellStrings->push_back(QString());
 
   (*m_pcCellStrings)[nRow*numCols()+nCol] = cText;
-#if QT_VERSION < 200
-  (*m_pcCellStrings)[nRow*numCols()+nCol].detach();
-#endif // QT_VERSION
 
   if ( nRow >= numRows() ) {
-    if ( false == bUpdateCell )
-      setAutoUpdate(false);
+//      if ( false == bUpdateCell )
+//        setAutoUpdate(false);
     setNumRows(nRow+1);
-    if ( false == bUpdateCell )
-      setAutoUpdate(true);
+//      if ( false == bUpdateCell )
+//        setAutoUpdate(true);
   }
 
   if ( bUpdateCell )
@@ -336,8 +332,8 @@ KCellEdit::mouseDoubleClickEvent(QMouseEvent* pcEvent)
 
   const int nOldRow = m_nActiveRow;
   const int nOldCol = m_nActiveCol;
-  const int nNewRow = findRow(pcEvent->y());
-  const int nNewCol = findCol(pcEvent->x());
+  const int nNewRow = rowAt(pcEvent->y());
+  const int nNewCol = columnAt(pcEvent->x());
 
   if ( LeftButton == pcEvent->button() &&
        nNewRow >= 0 && nNewRow < numRows() &&
@@ -370,8 +366,8 @@ KCellEdit::mousePressEvent(QMouseEvent* pcEvent)
 
   const int nOldRow = m_nActiveRow;
   const int nOldCol = m_nActiveCol;
-  const int nNewRow = findRow(pcEvent->y());
-  const int nNewCol = findCol(pcEvent->x());
+  const int nNewRow = rowAt(pcEvent->y());
+  const int nNewCol = columnAt(pcEvent->x());
 
   if ( m_isEditing && -1 != m_nActiveRow && -1 != m_nActiveCol  )
     finishEdit(false);
@@ -404,12 +400,11 @@ KCellEdit::editCell()
 
   QLineEdit* pcEditor = m_papcEditors[m_nActiveCol];
   if ( pcEditor ) {
-    int nX, nY;
-    rowYPos(m_nActiveRow, &nY);
-    colXPos(m_nActiveCol, &nX);
+    const int nX = columnPos(m_nActiveCol);
+    const int nY = rowPos(m_nActiveRow);
     pcEditor->installEventFilter(this);
     pcEditor->setGeometry(nX, nY, m_panColWidths[m_nActiveCol],
-                          cellHeight());
+                          rowHeight(m_nActiveRow));
     QString cText;
     if ( (unsigned)m_nActiveRow*numCols()+m_nActiveCol <
          m_pcCellStrings->size() )
@@ -425,7 +420,7 @@ KCellEdit::editCell()
 //*****************************************************************************
 /*!
   Finish editing the cell.
-  Keep the result if \a bKeepResult is `true'.
+  Keep the result if \a bKeepResult is "true".
 */
 //*****************************************************************************
 
@@ -460,7 +455,7 @@ KCellEdit::paintCell(QPainter* pcPainter, int nRow, int nCol)
   assert(0 != pcPainter &&
          nRow >= 0 && nRow < numRows() && nCol >= 0 && nCol < numCols());
   int nW = cellWidth(nCol);
-  int nH = cellHeight(nRow);
+  int nH = rowHeight(nRow);
 
   // Clear cell to white
   pcPainter->fillRect(0, 0, nW, nH, QColor(white));
@@ -488,17 +483,18 @@ KCellEdit::paintCell(QPainter* pcPainter, int nRow, int nCol)
 //*****************************************************************************
 
 void
-KCellEdit::setColumnWidth(int nColumn, int nOldWidth, int nNewWidth)
+KCellEdit::setColumnWidth(int nColumn,
+                          int /*nOldWidth*/,
+                          int nNewWidth)
 {
   m_panColWidths[nColumn] = nNewWidth;
-  updateTableSize();
+  //updateTableSize();
   repaint();
   if ( m_isEditing ) {
-    int nX, nY;
     QLineEdit* pcEditor = m_papcEditors[m_nActiveCol];
     assert(pcEditor);
-    rowYPos(m_nActiveRow, &nY);
-    colXPos(m_nActiveCol, &nX);
+    const int nX = columnPos(m_nActiveCol);
+    const int nY = rowPos(m_nActiveRow);
     pcEditor->setGeometry(nX, nY, m_panColWidths[m_nActiveCol],
                           pcEditor->height());
   }
@@ -556,11 +552,7 @@ KCellEdit::eventFilter(QObject* pcReceiver, QEvent* pcEvent)
 
   QLineEdit* pcEditor = m_papcEditors[m_nActiveCol];
 
-#if QT_VERSION >= 200
   if ( pcReceiver == pcEditor && pcEvent->type() == QEvent::KeyPress ) {
-#else  // Qt 1
-  if ( pcReceiver == pcEditor && pcEvent->type() == Event_KeyPress ) {
-#endif // QT_VERSION
     QKeyEvent* pcKeyEvent = (QKeyEvent*)pcEvent;
     switch ( pcKeyEvent->key() ) {
     case Key_Return:
@@ -607,12 +599,11 @@ KCellEdit::eventFilter(QObject* pcReceiver, QEvent* pcEvent)
 //*****************************************************************************
 
 void
-KCellEdit::horizontalScroll(int nNewX)
+KCellEdit::horizontalScroll(int /*nNewX*/)
 {
   if ( m_isEditing ) {
-    int nX, nY;
-    rowYPos(m_nActiveRow, &nY);
-    colXPos(m_nActiveCol, &nX);
+    const int nX = columnPos(m_nActiveCol);
+    const int nY = rowPos(m_nActiveRow);
     QLineEdit* pcEditor = m_papcEditors[m_nActiveCol];
     pcEditor->move(nX, nY);
   }
@@ -627,12 +618,11 @@ KCellEdit::horizontalScroll(int nNewX)
 //*****************************************************************************
 
 void
-KCellEdit::verticalScroll(int nNewY)
+KCellEdit::verticalScroll(int /*nNewY*/)
 {
   if ( m_isEditing ) {
-    int nX, nY;
-    rowYPos(m_nActiveRow, &nY);
-    colXPos(m_nActiveCol, &nX);
+    const int nX = columnPos(m_nActiveCol);
+    const int nY = rowPos(m_nActiveRow);
     QLineEdit* pcEditor = m_papcEditors[m_nActiveCol];
     pcEditor->move(nX, nY);
   }

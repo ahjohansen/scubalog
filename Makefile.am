@@ -1,13 +1,4 @@
-####### kdevelop will overwrite this part!!! (begin)##########
-
-SUBDIRS = scubalog po doc 
-
-EXTRA_DIST = scubalog.kdevprj AUTHORS COPYING ChangeLog INSTALL README TODO scubalog.lsm scubalog.spec
-
-####### kdevelop will overwrite this part!!! (end)############
-# not a GNU package. You can remove this line, if 
-# have all needed files, that a GNU package needs
-AUTOMAKE_OPTIONS = foreign 
+SUBDIRS = $(TOPSUBDIRS)
 
 $(top_srcdir)/configure.in: configure.in.in $(top_srcdir)/subdirs
 	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common configure.in ;
@@ -24,7 +15,7 @@ package-messages:
 	$(MAKE) -f admin/Makefile.common package-messages
 	$(MAKE) -C po merge
 
-EXTRA_DIST = scubalog/pics/scubalog.xpm scubalog/pics/scubalog-mini.xpm admin 
+EXTRA_DIST = admin 
 
 dist-hook:
 	cd $(top_distdir) && perl admin/am_edit -padmin

@@ -11,24 +11,27 @@
 */
 //*****************************************************************************
 
-#include <assert.h>
-#include <qwidget.h>
-#include <qsplitter.h>
-#include <qlabel.h>
-#include <qlistbox.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-#include <kapp.h>
-#include <klocale.h>
-#include "debug.h"
-#include "kdatevalidator.h"
-#include "kcelleditview.h"
-#include "kdateedit.h"
-#include "logbook.h"
-#include "equipmentlog.h"
 #include "equipmentview.h"
+#include "equipmentlog.h"
+#include "logbook.h"
+#include "kdateedit.h"
+#include "kdatevalidator.h"
+#include "dateitem.h"
+#include "debug.h"
 
+#include <klocale.h>
+#include <kapp.h>
+#include <qtable.h>
+#include <qlayout.h>
+#include <qpopupmenu.h>
+#include <qpushbutton.h>
+#include <qlineedit.h>
+#include <qlistbox.h>
+#include <qlabel.h>
+#include <qsplitter.h>
+#include <qwidget.h>
+#include <assert.h>
+#include <stdio.h>
 
 //*****************************************************************************
 /*!
@@ -97,13 +100,18 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   connect(m_pcService, SIGNAL(textChanged(const QString&)),
           SLOT(itemServiceChanged(const QString&)));
 
-  m_pcLogView = new KCellEditView(2, pcSplitter, "equipmentLog");
-  m_pcLogView->setColEditor(0, new KDateEdit(m_pcLogView, "dateEditor"));
-  m_pcLogView->setColEditor(1, new QLineEdit(m_pcLogView, "eventEditor"));
-  m_pcLogView->setColumnName(0, i18n("Date"));
-  m_pcLogView->setColumnName(1, i18n("Event"));
-  connect(m_pcLogView, SIGNAL(textChanged(int, int, const QString&)),
-          SLOT(logEntryChanged(int, int, const QString&)));
+  m_pcLogView = new QTable(0, 2, pcSplitter, "equipmentLog");
+  m_pcLogView->setSelectionMode(QTable::Single);
+  m_pcLogView->verticalHeader()->hide();
+  m_pcLogView->setLeftMargin(0);
+  m_pcLogView->horizontalHeader()->setLabel(0, i18n("Date"));
+  m_pcLogView->horizontalHeader()->setLabel(1, i18n("Event"));
+//    m_pcLogView->setColEditor(0, new KDateEdit(m_pcLogView, "dateEditor"));
+//    m_pcLogView->setColEditor(1, new QLineEdit(m_pcLogView, "eventEditor"));
+  connect(m_pcLogView, SIGNAL(valueChanged(int, int)),
+          SLOT(logEntryChanged(int, int)));
+  connect(m_pcLogView, SIGNAL(contextMenuRequested(int, int, const QPoint&)),
+          SLOT(showLogEntryMenu(int, int, const QPoint&)));
 
 
   //
@@ -204,7 +212,7 @@ EquipmentView::setLogBook(LogBook* pcLogBook)
       m_pcType->setText("");
       m_pcSerial->setText("");
       m_pcService->setText("");
-      m_pcLogView->clear();
+      m_pcLogView->setNumRows(0);
     }
   }
   else {
@@ -216,7 +224,7 @@ EquipmentView::setLogBook(LogBook* pcLogBook)
     m_pcType->setText("");
     m_pcSerial->setText("");
     m_pcService->setText("");
-    m_pcLogView->clear();
+    m_pcLogView->setNumRows(0);
   }
 }
 
@@ -247,14 +255,18 @@ EquipmentView::itemSelected(int nItemNumber)
   m_pcType->setText(pcLog->type());
   m_pcSerial->setText(pcLog->serialNumber());
   m_pcService->setText(pcLog->serviceRequirements());
-  m_pcLogView->clear();
+
   QList<EquipmentHistoryEntry>& cHistory = pcLog->history();
+  const unsigned int nNumRows = cHistory.count();
+  m_pcLogView->setNumRows(nNumRows);
   int iRow = 0;
   for ( EquipmentHistoryEntry* pcEntry = cHistory.first();
         pcEntry; pcEntry = cHistory.next() ) {
     QString cDateText(pcEntry->date().toString());
-    m_pcLogView->setCellText(iRow, 0, cDateText, true);
-    m_pcLogView->setCellText(iRow, 1, pcEntry->comment(), true);
+    DateItem* pcDateItem =
+      new DateItem(m_pcLogView, QTableItem::OnTyping, cDateText);
+    m_pcLogView->setItem(iRow, 0, pcDateItem);
+    m_pcLogView->setText(iRow, 1, pcEntry->comment());
     iRow++;
   }
 }
@@ -511,7 +523,7 @@ EquipmentView::itemServiceChanged(const QString& cService)
 
 //*****************************************************************************
 /*!
-  The log entry in cell (\a nRow, \a nCol) has been changed to \a cText.
+  The log entry in cell (\a nRow, \a nCol) has been changed.
 
   Save the text for later use.
 
@@ -520,7 +532,7 @@ EquipmentView::itemServiceChanged(const QString& cService)
 //*****************************************************************************
 
 void
-EquipmentView::logEntryChanged(int nRow, int nCol, const QString& cText)
+EquipmentView::logEntryChanged(int nRow, int nCol)
 {
   assert(nRow >= 0 && (0 == nCol || 1 == nCol));
   int nCurrentItem = m_pcItemView->currentItem();
@@ -537,16 +549,115 @@ EquipmentView::logEntryChanged(int nRow, int nCol, const QString& cText)
   EquipmentHistoryEntry& cEntry = *cHistory.at(nRow);
   // Convert text to date
   if ( 0 == nCol ) {
-    QDate cDate(KDateValidator::convertToDate(cText));
+    QTableItem* pcItem = m_pcLogView->item(nRow, nCol);
+    assert(pcItem != 0);
+    DateItem* pcDateItem =
+      dynamic_cast<DateItem*>(m_pcLogView->item(nRow, nCol));
+    assert(pcDateItem != 0);
+    QDate cDate(KDateValidator::convertToDate(pcDateItem->text()));
     if ( false == cDate.isNull() )
       cEntry.setDate(cDate);
     else
-      DBG(("EquipmentView::logEntryChanged(): Invalid date `%s'\n",
+      DBG(("EquipmentView::logEntryChanged(): Invalid date \"%s\"\n",
            cText.data()));
   }
-  else
-    cEntry.setComment(cText);
+  else {
+    const QString cComment = m_pcLogView->text(nRow, nCol);
+    cEntry.setComment(cComment);
+  }
 }
+
+
+//*****************************************************************************
+/*!
+  Create the menu to use in the log entry view.
+  This menu is used to insert new entries.
+
+  The created menu is stored in #m_pcLogEntryMenu.
+
+  \sa showLogEntryMenu().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+EquipmentView::createLogEntryMenu()
+{
+  if ( m_pcLogEntryMenu )
+    return;
+
+  m_pcLogEntryMenu = new QPopupMenu(this, "logEntryMenu");
+  m_pcLogEntryMenu->insertItem(i18n("Insert a &new entry"),
+                               this, SLOT(newLogEntry()));
+  m_pcLogEntryMenu->insertItem(i18n("&Delete the current entry"),
+                               this, SLOT(deleteLogEntry()));
+}
+
+
+//*****************************************************************************
+/*!
+  Show the meny for the entry view.  The cell that has focus is (\a i_nRow,
+  \a i_nCol), the global position is \a i_cPos
+
+  The menu will be created on first use by calling createEntryMenu().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+EquipmentView::showLogEntryMenu(int           /*i_nRow*/,
+                                int           /*i_nCol*/,
+                                const QPoint& i_cPos)
+{
+  createLogEntryMenu();
+
+  m_pcLogEntryMenu->exec(i_cPos);
+}
+
+
+//*****************************************************************************
+/*!
+  Create a new log entry.
+  New entries are always inserted at the end.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+EquipmentView::newLogEntry()
+{
+  assert(m_pcLogView);
+
+  const int nNewRow = m_pcLogView->numRows();
+
+  m_pcLogView->insertRows(nNewRow, 1);
+  DateItem* pcDateItem =
+    new DateItem(m_pcLogView, QTableItem::OnTyping, "2002-01-01");
+  m_pcLogView->setItem(nNewRow, 0, pcDateItem);
+  m_pcLogView->setCurrentCell(nNewRow, 0);
+}
+
+
+//*****************************************************************************
+/*!
+  Delete the currently selected log entry.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+EquipmentView::deleteLogEntry()
+{
+  assert(m_pcLogView);
+         
+  m_pcLogView->removeRow(m_pcLogView->currentRow());
+}
+
+
 
 
 // Local Variables:
