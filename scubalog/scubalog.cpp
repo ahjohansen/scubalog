@@ -384,6 +384,8 @@ ScubaLog::saveProjectAs()
   if ( cDialog.exec() ) {
     QString cProjectName = cDialog.selectedFile();
     if ( false == cProjectName.isEmpty() ) {
+      if ( -1 == cProjectName.find(".slb") )
+        cProjectName += ".slb";
       *m_pcProjectName = cProjectName.copy();
       bool isOk = m_pcLogBook->saveLogBook(*m_pcProjectName);
       if ( isOk ) {
