@@ -18,6 +18,7 @@
 #include <qmultilinedit.h>
 #include <qlayout.h>
 #include <kapp.h>
+#include <klocale.h>
 #include "divelist.h"
 #include "logbook.h"
 #include "personalinfoview.h"
@@ -48,8 +49,8 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
 
   m_pcName = new QLineEdit(this, "diverName");
   m_pcName->setMinimumSize(m_pcName->sizeHint());
-  connect(m_pcName, SIGNAL(textChanged(const char*)),
-          SLOT(diverNameChanged(const char*)));
+  connect(m_pcName, SIGNAL(textChanged(const QString&)),
+          SLOT(diverNameChanged(const QString&)));
   pcNameLabel->setBuddy(m_pcName);
 
   QLabel* pcEmailLabel = new QLabel(this, "emailText");
@@ -58,8 +59,8 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
 
   m_pcEmailAddress = new QLineEdit(this, "emailAddress");
   m_pcEmailAddress->setMinimumSize(m_pcEmailAddress->sizeHint());
-  connect(m_pcEmailAddress, SIGNAL(textChanged(const char*)),
-          SLOT(emailAddressChanged(const char*)));
+  connect(m_pcEmailAddress, SIGNAL(textChanged(const QString&)),
+          SLOT(emailAddressChanged(const QString&)));
   pcEmailLabel->setBuddy(m_pcEmailAddress);
 
   QLabel* pcWwwUrlLabel = new QLabel(this, "wwwUrlText");
@@ -68,8 +69,8 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
 
   m_pcWwwUrl = new QLineEdit(this, "wwwUrl");
   m_pcWwwUrl->setMinimumSize(m_pcWwwUrl->sizeHint());
-  connect(m_pcWwwUrl, SIGNAL(textChanged(const char*)),
-          SLOT(wwwUrlChanged(const char*)));
+  connect(m_pcWwwUrl, SIGNAL(textChanged(const QString&)),
+          SLOT(wwwUrlChanged(const QString&)));
   pcWwwUrlLabel->setBuddy(m_pcWwwUrl);
 
   m_pcLoggedDiveTime = new QLabel(this, "loggedDiveTime");
@@ -163,46 +164,46 @@ PersonalInfoView::setLogBook(LogBook* pcLogBook)
 
 //*****************************************************************************
 /*!
-  The diver name was changed to \a pzName.
+  The diver name was changed to \a cName.
   Update the current log book, if any.
 */
 //*****************************************************************************
 
 void
-PersonalInfoView::diverNameChanged(const char* pzName)
+PersonalInfoView::diverNameChanged(const QString& cName)
 {
   if ( m_pcLogBook )
-    m_pcLogBook->setDiverName(pzName);
+    m_pcLogBook->setDiverName(cName);
 }
 
 
 //*****************************************************************************
 /*!
-  The email address was changed to \a pzEmailAddress.
+  The email address was changed to \a cEmailAddress.
   Update the current log book, if any.
 */
 //*****************************************************************************
 
 void
-PersonalInfoView::emailAddressChanged(const char* pzEmailAddress)
+PersonalInfoView::emailAddressChanged(const QString& cEmailAddress)
 {
   if ( m_pcLogBook )
-    m_pcLogBook->setEmailAddress(pzEmailAddress);
+    m_pcLogBook->setEmailAddress(cEmailAddress);
 }
 
 
 //*****************************************************************************
 /*!
-  The www url was changed to \a pzWwwUrl.
+  The www url was changed to \a cWwwUrl.
   Update the current log book, if any.
 */
 //*****************************************************************************
 
 void
-PersonalInfoView::wwwUrlChanged(const char* pzWwwUrl)
+PersonalInfoView::wwwUrlChanged(const QString& cWwwUrl)
 {
   if ( m_pcLogBook )
-    m_pcLogBook->setWwwUrl(pzWwwUrl);
+    m_pcLogBook->setWwwUrl(cWwwUrl);
 }
 
 

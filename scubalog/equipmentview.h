@@ -52,9 +52,9 @@ private slots:
   void changeItemName();
   void editItemName(int nItemNumber);
   void itemSelected(int nItemNumber);
-  void itemTypeChanged(const char* pzType);
-  void itemSerialChanged(const char* pzSerial);
-  void itemServiceChanged(const char* pzService);
+  void itemTypeChanged(const QString& cType);
+  void itemSerialChanged(const QString& cSerial);
+  void itemServiceChanged(const QString& cService);
   void logEntryChanged(int nRow, int nCol, const QString& cText);
   void moveCurrentUp();
   void moveCurrentDown();

@@ -153,6 +153,7 @@ void
 KCellEditView::setColEditor(int nCol, QLineEdit* pcEditor)
 {
   m_pcCellEdit->setColEditor(nCol, pcEditor);
+  pcEditor->hide();
 }
 
 

@@ -16,12 +16,13 @@
 #ifndef LOGBOOK_H
 #define LOGBOOK_H
 
+#include <new>
 #include <qstring.h>
+#include <qlist.h>
 
 class DiveList;
 class EquipmentLog;
 class LocationLog;
-template <class T> class QList<T>;
 
 
 //*****************************************************************************
@@ -102,7 +103,7 @@ public:
   QString wwwUrl() const { return m_cWwwUrl; }
   QString comments() const { return m_cComments; }
   DiveList& diveList();
-  const DiveList& diveList() const;
+  DiveList& diveList() const;
   QList<LocationLog>& locationList() const { return *m_pcLocations; }
   QList<EquipmentLog>& equipmentLog() const { return *m_pcEquipment; }
 

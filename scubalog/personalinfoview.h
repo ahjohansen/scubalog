@@ -51,9 +51,9 @@ public slots:
   void updateLoggedDiveTime();
 
 private slots:
-  void diverNameChanged(const char* pzName);
-  void emailAddressChanged(const char* pzEmailAddress);
-  void wwwUrlChanged(const char* pzWwwUrl);
+  void diverNameChanged(const QString& cName);
+  void emailAddressChanged(const QString& cEmailAddress);
+  void wwwUrlChanged(const QString& cWwwUrl);
   void commentsChanged();
 
 private:

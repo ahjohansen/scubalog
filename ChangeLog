@@ -1,0 +1,9 @@
+
+0.2
+ Date: 16-9-2001
+-Modifications done by Jordi Cantón from the original source code of Scubalog 0.1.3 by André Johansen.
+-Completely ported to KDE 2.1.x
+-Added UDCF file format export capability
+-Several bugs fixed
+-Added Spanish translation
+

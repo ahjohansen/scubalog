@@ -20,6 +20,7 @@
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <kapp.h>
+#include <klocale.h>
 #include "debug.h"
 #include "kdatevalidator.h"
 #include "kcelleditview.h"
@@ -79,22 +80,22 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   pcTypeText->setText(i18n("Type: "));
 
   m_pcType = new QLineEdit(pcTop, "itemType");
-  connect(m_pcType, SIGNAL(textChanged(const char*)),
-          SLOT(itemTypeChanged(const char*)));
+  connect(m_pcType, SIGNAL(textChanged(const QString&)),
+          SLOT(itemTypeChanged(const QString&)));
 
   QLabel* pcSerialText = new QLabel(pcTop, "itemSerialText");
   pcSerialText->setText(i18n("Serial number: "));
 
   m_pcSerial = new QLineEdit(pcTop, "serial");
-  connect(m_pcSerial, SIGNAL(textChanged(const char*)),
-          SLOT(itemSerialChanged(const char*)));
+  connect(m_pcSerial, SIGNAL(textChanged(const QString&)),
+          SLOT(itemSerialChanged(const QString&)));
 
   QLabel* pcServiceText = new QLabel(pcTop, "serviceText");
   pcServiceText->setText(i18n("Service: "));
 
   m_pcService = new QLineEdit(pcTop, "service");
-  connect(m_pcService, SIGNAL(textChanged(const char*)),
-          SLOT(itemServiceChanged(const char*)));
+  connect(m_pcService, SIGNAL(textChanged(const QString&)),
+          SLOT(itemServiceChanged(const QString&)));
 
   m_pcLogView = new KCellEditView(2, pcSplitter, "equipmentLog");
   m_pcLogView->setColEditor(0, new KDateEdit(m_pcLogView, "dateEditor"));
@@ -226,13 +227,16 @@ EquipmentView::setLogBook(LogBook* pcLogBook)
 
   Update the rest of the GUI.
 
-  \author André Johansen.
+  \author André Johansen, Jordi Canton.
 */
 //*****************************************************************************
 
 void
 EquipmentView::itemSelected(int nItemNumber)
 {
+  if ( nItemNumber < 0 )
+    return;
+
   assert(m_pcLogBook);
   QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.at(nItemNumber);
@@ -441,7 +445,7 @@ EquipmentView::editItemName(int nItemNumber)
 
 //*****************************************************************************
 /*!
-  The item type has been changed to \a pzType.
+  The item type has been changed to \a cType.
 
   Save the text in the log.
 
@@ -450,13 +454,12 @@ EquipmentView::editItemName(int nItemNumber)
 //*****************************************************************************
 
 void
-EquipmentView::itemTypeChanged(const char* pzType)
+EquipmentView::itemTypeChanged(const QString& cType)
 {
   assert(m_pcLogBook);
   QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.at(m_pcItemView->currentItem());
   if ( pcLog ) {
-    QString cType(pzType);
     pcLog->setType(cType);
   }
 }
@@ -464,7 +467,7 @@ EquipmentView::itemTypeChanged(const char* pzType)
 
 //*****************************************************************************
 /*!
-  The item serial number has been changed to \a pzSerial.
+  The item serial number has been changed to \a cSerial.
 
   Save the text in the log.
 
@@ -473,13 +476,12 @@ EquipmentView::itemTypeChanged(const char* pzType)
 //*****************************************************************************
 
 void
-EquipmentView::itemSerialChanged(const char* pzSerial)
+EquipmentView::itemSerialChanged(const QString& cSerial)
 {
   assert(m_pcLogBook);
   QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.at(m_pcItemView->currentItem());
   if ( pcLog ) {
-    QString cSerial(pzSerial);
     pcLog->setSerialNumber(cSerial);
   }
 }
@@ -487,7 +489,7 @@ EquipmentView::itemSerialChanged(const char* pzSerial)
 
 //*****************************************************************************
 /*!
-  The item service requirements has been changed to \a pzService.
+  The item service requirements has been changed to \a cService.
 
   Save the text in the log.
 
@@ -496,14 +498,13 @@ EquipmentView::itemSerialChanged(const char* pzSerial)
 //*****************************************************************************
 
 void
-EquipmentView::itemServiceChanged(const char* pzService)
+EquipmentView::itemServiceChanged(const QString& cService)
 {
   assert(m_pcLogBook);
   QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.at(m_pcItemView->currentItem());
   if ( pcLog ) {
-    QString cServiceRequirements(pzService);
-    pcLog->setServiceRequirements(cServiceRequirements);
+    pcLog->setServiceRequirements(cService);
   }
 }
 

@@ -13,7 +13,7 @@ AC_CANONICAL_SYSTEM
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(scubalog, 0.2.0) dnl searches for some needed programs
+AM_INIT_AUTOMAKE(@MODULENAME@, @VERSION@) dnl searches for some needed programs
 
 KDE_SET_PREFIX
 
@@ -35,18 +35,3 @@ AC_PATH_KDE
 dnl Perform program name transformation
 AC_ARG_PROGRAM
 
-#MIN_CONFIG
-
-dnl PACKAGE set before
-
-KDE_CREATE_SUBDIRSLIST
-AC_OUTPUT( \
-./Makefile \
-doc/Makefile \
-doc/en/Makefile \
-po/Makefile \
-scubalog/Makefile \
-scubalog/doc/Makefile \
-scubalog/doc/en/Makefile \
-scubalog/pics/Makefile \
-)

@@ -23,6 +23,7 @@
 #include <qlayout.h>
 #include <qpopupmenu.h>
 #include <kapp.h>
+#include <klocale.h>
 #include "listbox.h"
 #include "logbook.h"
 #include "locationlog.h"
@@ -193,13 +194,16 @@ LocationView::setLogBook(LogBook* pcLogBook)
 
   Update the rest of the GUI.
 
-  \author André Johansen.
+  \author André Johansen, Jordi Canton.
 */
 //*****************************************************************************
 
 void
 LocationView::locationSelected(int nLocationIndex)
 {
+  if ( nLocationIndex < 0 )
+    return;
+
   assert(m_pcLogBook);
   QList<LocationLog>& cLocationList = m_pcLogBook->locationList();
   LocationLog* pcLog = cLocationList.at(nLocationIndex);

@@ -19,6 +19,7 @@
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <kapp.h>
+#include <klocale.h>
 #include "kintegeredit.h"
 #include "integerdialog.h"
 

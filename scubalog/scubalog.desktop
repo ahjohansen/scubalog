@@ -1,0 +1,10 @@
+# KDE Config File
+[Desktop Entry]
+Type=Application
+Exec=scubalog -caption "%c" %i %m  
+Icon=scubalog.png
+MiniIcon=scubalog.png
+DocPath=scubalog/index.html
+Comment=A dive log application
+Terminal=0
+Name=ScubaLog

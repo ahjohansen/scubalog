@@ -112,6 +112,7 @@ public:
   }
   //! Get the history for this equipment item.
   QList<EquipmentHistoryEntry>& history() { return m_cHistory; }
+  const QList<EquipmentHistoryEntry>& history() const { return m_cHistory; }
 
 private:
   //! The type of equipment (i.e. mask, regulators).

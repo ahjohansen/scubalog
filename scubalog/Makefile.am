@@ -1,8 +1,30 @@
+####### kdevelop will overwrite this part!!! (begin)##########
+bin_PROGRAMS = scubalog
+scubalog_SOURCES = udcfexporter.cpp personalinfoview.cpp logview.cpp loglistview.cpp logbook.cpp locationview.cpp locationlog.cpp listbox.cpp ktimevalidator.cpp ktimeedit.cpp ktabcontrol.cpp kintegervalidator.cpp kintegeredit.cpp kdatevalidator.cpp kdateedit.cpp kcelleditview.cpp kcelledit.cpp integerdialog.cpp htmlexporter.cpp exporter.cpp equipmentview.cpp equipmentlog.cpp divelogitem.cpp divelog.cpp scubalog.cpp main.cpp 
+scubalog_LDADD   = -lkio -lkdeui -lkdecore $(LIB_QT) $(LIBSOCKET)
+
+
+EXTRA_DIST = scubalog.desktop lo32-app-scubalog.png lo16-app-scubalog.png main.cpp scubalog.cpp chunkio.h debug.h divelist.h divelog.cpp divelog.h divelogitem.cpp divelogitem.h equipmentlog.cpp equipmentlog.h equipmentview.cpp equipmentview.h exporter.cpp exporter.h htmlexporter.cpp htmlexporter.h integerdialog.cpp integerdialog.h kcelledit.cpp kcelledit.h kcelleditview.cpp kcelleditview.h kdateedit.cpp kdateedit.h kdatevalidator.cpp kdatevalidator.h kintegeredit.cpp kintegeredit.h kintegervalidator.cpp kintegervalidator.h ktabcontrol.cpp ktabcontrol.h ktimeedit.cpp ktimeedit.h ktimevalidator.cpp ktimevalidator.h listbox.cpp listbox.h locationlog.cpp locationlog.h locationview.cpp locationview.h logbook.cpp logbook.h loglistview.cpp loglistview.h logview.cpp logview.h scubalog.h personalinfoview.h personalinfoview.cpp udcfexporter.cpp udcfexporter.h 
+
+install-data-local:
+	$(mkinstalldirs) $(kde_appsdir)/Applications/
+	$(INSTALL_DATA) $(srcdir)/scubalog.desktop $(kde_appsdir)/Applications/scubalog.desktop
+	$(mkinstalldirs) $(kde_icondir)/locolor/32x32/apps/
+	$(INSTALL_DATA) $(srcdir)/lo32-app-scubalog.png $(kde_icondir)/locolor/32x32/apps/scubalog.png
+	$(mkinstalldirs) $(kde_icondir)/locolor/16x16/apps/
+	$(INSTALL_DATA) $(srcdir)/lo16-app-scubalog.png $(kde_icondir)/locolor/16x16/apps/scubalog.png
+
+uninstall-local:
+	-rm -f $(kde_appsdir)/Applications/scubalog.desktop
+	-rm -f $(kde_icondir)/locolor/32x32/apps/scubalog.png
+	-rm -f $(kde_icondir)/locolor/16x16/apps/scubalog.png
+
+####### kdevelop will overwrite this part!!! (end)############
 # this 10 paths are KDE specific. Use them:
 # kde_htmldir       Where your docs should go to. (contains lang subdirs)
 # kde_appsdir       Where your application file (.kdelnk) should go to. 
 # kde_icondir       Where your icon should go to.
-# kde_sounddir      Where system sounds should go to.
+# kde_minidir       Where your mini icon should go to.
 # kde_datadir       Where you install application data. (Use a subdir)
 # kde_locale        Where translation files should go to.(contains lang subdirs)
 # kde_cgidir        Where cgi-bin executables should go to.
@@ -11,126 +33,32 @@
 # kde_toolbardir    Where general toolbar icons should go to.
 # kde_wallpaperdir  Where general wallpapers should go to.
 
-# this is where the kdelnk file will go 
-APPSDIR = $(kde_appsdir)/Applications
-
-# this is where the mime-type file will go
-MIMEDIR = $(kde_mimedir)/application
-
 # set the include path for X, qt and KDE
 INCLUDES= $(all_includes)
 
-# this has all of the subdirectories that make will recurse into.  if
-# there are none, comment this out
-SUBDIRS = doc pics
-
-# this is where the source documentation will be installed
-SRCDOC_DEST=$(kde_htmldir)/en/scubalog
-
-EXTRA_DIST = scubalog.kdelnk x-scubalog-logbook.kdelnk
-
-####### This part is very scubalog specific
-# this is the program that gets installed
-bin_PROGRAMS = 	scubalog
-
-# Which sources should be compiled for scubalog.
-scubalog_SOURCES = divelog.cpp \
-		   divelogitem.cpp \
-		   equipmentlog.cpp \
-		   equipmentview.cpp \
-		   exporter.cpp \
-		   htmlexporter.cpp \
-		   integerdialog.cpp \
-		   kcelledit.cpp \
-		   kcelleditview.cpp \
-		   kdateedit.cpp \
-		   kdatevalidator.cpp \
-		   kintegeredit.cpp \
-		   kintegervalidator.cpp \
-		   ktabcontrol.cpp \
-		   ktimeedit.cpp \
-		   ktimevalidator.cpp \
-		   listbox.cpp \
-		   locationlog.cpp \
-		   locationview.cpp \
-		   logbook.cpp \
-		   loglistview.cpp \
-		   logview.cpp \
-		   main.cpp \
-		   personalinfoview.cpp \
-		   scubalog.cpp
-
-# let automoc handle all of the meta source files (moc)
-scubalog_METASOURCES = USE_AUTOMOC
+METASOURCES = AUTO
 
 # the library search path. 
 scubalog_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 
-# the libraries to link against. Be aware of the order. First the libraries,
-# that depend on the following ones.
-scubalog_LDADD = $(LIB_KFILE)
+# Uncomment the following two lines if you add a ui.rc file for your application to make use of
+# KDE
+#rcdir = $(kde_datadir)/scubalog
+#rc_DATA = scubalogui.rc
 
-# these are the headers for your project
-noinst_HEADERS = chunkio.h \
-		 debug.h \
-                 divelist.h \
-                 divelog.h \
-                 divelogitem.h \
-		 equipmentlog.h \
-                 equipmentview.h \
-                 exporter.h \
-                 htmlexporter.h \
-		 integerdialog.h \
-                 kcelledit.h \
-                 kcelleditview.h \
-                 kdateedit.h \
-		 kdatevalidator.h \
-                 kintegeredit.h \
-                 kintegervalidator.h \
-		 ktabcontrol.h \
-                 ktimeedit.h \
-                 ktimevalidator.h \
-		 listbox.h \
-                 locationlog.h \
-		 locationview.h \
-                 logbook.h \
-                 loglistview.h \
-                 logview.h \
-		 personalinfoview.h \
-                 scubalog.h
+#WARNING: if you use a ui.rc file above, use:
 
-# if you "make distclean", this files get removed. If you want to remove
-# them while "make clean", use CLEANFILES
-DISTCLEANFILES = $(scubalog_METASOURCES)
+# messages: rc.cpp
 
-# make messages.po. Move this one to ../po/ and "make merge" in po
-# the -x is for skipping messages already translated in kdelibs
-messages:
-	$(XGETTEXT) -C -ki18n -x $(includedir)/kde/kde.pot $(scubalog_SOURCES) && mv messages.po ../po/scubalog.pot
+# instead of 
 
-# generate source documentation
-srcdoc:
-	$(mkinstalldirs) $(SRCDOC_DEST)
-	kdoc -H -d $(SRCDOC_DEST) scubalog 	     $(noinst_HEADERS) -lqt
+# messages:
 
-# just install datas here. Use install-exec-local for scripts and etc.
-# the binary itself is already installed from automake
-# use mkinstalldirs, not "install -d"
-# don't install a list of file. Just one file per install.
-# if you have more of them, create a subdirectory with an extra Makefile 
-install-data-local: 
-	$(mkinstalldirs) $(APPSDIR)
-	$(INSTALL_DATA) scubalog.kdelnk $(APPSDIR)
-	$(mkinstalldirs) $(MIMEDIR)
-	$(INSTALL_DATA) x-scubalog-logbook.kdelnk $(MIMEDIR)
-	$(mkinstalldirs) $(kde_icondir)
-	$(INSTALL_DATA) pics/scubalog.xpm $(kde_icondir)
-	$(mkinstalldirs) $(kde_minidir)
-	$(INSTALL_DATA) pics/scubalog-mini.xpm $(kde_minidir)/scubalog.xpm
+messages: 
+	LIST=`find . -name \*.h -o -name \*.hh -o -name \*.H -o -name \*.hxx -o -name \*.hpp -o -name \*.cpp -o -name \*.cc -o -name \*.cxx -o -name \*.ecpp -o -name \*.C`; \
+	if test -n "$$LIST"; then \
+	 $(XGETTEXT) $$LIST -o $(podir)/scubalog.pot; \
+	fi
 
-# remove ALL you have installed in install-data-local or install-exec-local
-uninstall-local:
-	-rm -f $(APPSDIR)/scubalog.kdelnk
-	-rm -f $(MIMEDIR)/x-scubalog-logbook.kdelnk
-	-rm -f $(kde_icondir)/scubalog.xpm
-	-rm -f $(kde_minidir)/scubalog.xpm
+messages2:
+	$(XGETTEXT) -C -ki18n $(scubalog_SOURCES) && mv messages.po ../po/scubalog.pot

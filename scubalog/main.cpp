@@ -15,8 +15,19 @@
 #include <iostream>
 #include <qmessagebox.h>
 #include <kapp.h>
+#include <klocale.h>
+#include <kcmdlineargs.h>
+#include <kaboutdata.h>
+#include "config.h"
 #include "scubalog.h"
 
+static const char *description =
+	I18N_NOOP("ScubaLog is a scuba dive logging program,\nwritten for the K Desktop Environment.");
+static KCmdLineOptions options[] =
+{
+  { "+[File]", I18N_NOOP("ScubaLog file to open"), 0 },
+  { 0, 0, 0 }
+};
 
 //*****************************************************************************
 /*!
@@ -24,33 +35,37 @@
 
   The entry point for the application.
 
-  \author André Johansen.
+  \author André Johansen, Jordi Cantón.
 */
 //*****************************************************************************
 
 int
 main(int nArgumentCount, char** apzArguments)
 {
+
+  KAboutData aboutData( "scubalog", I18N_NOOP("ScubaLog"),
+                        VERSION, description, KAboutData::License_GPL,
+                        "(c) 2000-2001, André Johansen, Jordi Cantón", 0,
+                        "http://www.virtual-sub.org/scubalog", "scubalogbug@virtual-sub.org");
+  aboutData.addAuthor("Andre Johansen","Creator of the original ScubaLog", "");
+  aboutData.addAuthor("Jordi Canton","Porting to KDE2",
+                      "JordiNitrox@virtual-sub.org",
+                      "http://www.virtual-sub.org");
+  KCmdLineArgs::init( nArgumentCount, apzArguments, &aboutData );
+  KCmdLineArgs::addCmdLineOptions( options );
+
   try {
     // Initialize the application
-    KApplication cApplication(nArgumentCount, apzArguments, "scubalog");
+    KApplication cApplication;
 
     const char* pzLogBook = 0;
 
     // Validate arguments
-    if ( nArgumentCount > 2 ) {
-      QMessageBox::information(0, i18n("[ScubaLog] Invalid argument"),
-                               i18n("ScubaLog encountered an invalid "
-                                    "argument.\n"
-                                    "ScubaLog can either be started with no "
-                                    "arguments,\n"
-                                    "or optionally with one argument giving "
-                                    "the filename of a log book."));
-    }
-    else if ( 2 == nArgumentCount )
-      pzLogBook = apzArguments[1];
+    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+    if ( args->count() )
+      pzLogBook = args->arg(0);
 
-    ScubaLog* pcMainGUI = new ScubaLog("scubaLog", pzLogBook);
+    ScubaLog* pcMainGUI = new ScubaLog("scubalog", pzLogBook);
     cApplication.setMainWidget(pcMainGUI);
     pcMainGUI->show();
     int nReturnValue = cApplication.exec();
@@ -58,7 +73,7 @@ main(int nArgumentCount, char** apzArguments)
     delete pcMainGUI;
     return nReturnValue;
   }
-  catch ( std::bad_alloc ) {
+  catch ( std::bad_alloc& ) {
     std::cerr << i18n("Out of memory -- exiting ScubaLog...\n");
     throw;
   }

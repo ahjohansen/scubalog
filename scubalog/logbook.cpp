@@ -15,6 +15,7 @@
 #include <qdatastream.h>
 #include <qmessagebox.h>
 #include <kapp.h>
+#include <klocale.h>
 #include "debug.h"
 #include "chunkio.h"
 #include "divelist.h"
@@ -88,6 +89,7 @@ LogBook::readLogBook(const QString& cFileName) throw(std::bad_alloc)
     return false;
   }
   QDataStream cStream(&cFile);
+  cStream.setVersion(1);
   unsigned int nFileSize = cFile.size();
 
   unsigned int nChunkId;
@@ -260,6 +262,7 @@ LogBook::saveLogBook(const QString& cFileName) throw()
     return false;
   }
   QDataStream cStream(&cFile);
+  cStream.setVersion(1);
 
   unsigned int nChunkSize;
   unsigned int nChunkVersion;
@@ -362,7 +365,7 @@ LogBook::diveList()
 */
 //*****************************************************************************
 
-const DiveList&
+DiveList&
 LogBook::diveList() const
 {
   return *m_pcDiveList;

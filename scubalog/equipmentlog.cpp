@@ -17,6 +17,7 @@
 #include <qdatastream.h>
 #include <qmessagebox.h>
 #include <kapp.h>
+#include <klocale.h>
 #include "chunkio.h"
 #include "equipmentlog.h"
 

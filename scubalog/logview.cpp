@@ -25,6 +25,7 @@
 #include <qmultilinedit.h>
 #include <qpushbutton.h>
 #include <qmessagebox.h>
+#include <klocale.h>
 #include <kapp.h>
 #include "debug.h"
 #include "kintegeredit.h"
@@ -99,8 +100,8 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcGasType = new QLineEdit(this, "gasType");
   m_pcGasType->setMinimumSize(m_pcGasType->sizeHint());
   pcGasLabel->setBuddy(m_pcGasType);
-  connect(m_pcGasType, SIGNAL(textChanged(const char*)),
-          SLOT(gasTypeChanged(const char*)));
+  connect(m_pcGasType, SIGNAL(textChanged(const QString&)),
+          SLOT(gasTypeChanged(const QString&)));
 
   QLabel* pcAirTempLabel = new QLabel(this, "airTempText");
   pcAirTempLabel->setText(i18n("&Air temperature:"));
@@ -121,8 +122,8 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcLocation = new QLineEdit(pcLocationLine, "location");
   m_pcLocation->setMinimumSize(m_pcLocation->sizeHint());
   pcLocationLabel->setBuddy(m_pcLocation);
-  connect(m_pcLocation, SIGNAL(textChanged(const char*)),
-          SLOT(locationChanged(const char*)));
+  connect(m_pcLocation, SIGNAL(textChanged(const QString&)),
+          SLOT(locationChanged(const QString&)));
 
   m_pcEditLocation = new QPushButton(pcLocationLine, "editLocation");
   m_pcEditLocation->setText(i18n("Edit"));
@@ -156,8 +157,8 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcMaxDepth = new QLineEdit(this, "maxDepth");
   m_pcMaxDepth->setMinimumSize(m_pcMaxDepth->sizeHint());
   pcMaxDepthLabel->setBuddy(m_pcMaxDepth);
-  connect(m_pcMaxDepth, SIGNAL(textChanged(const char*)),
-          SLOT(maxDepthChanged(const char*)));
+  connect(m_pcMaxDepth, SIGNAL(textChanged(const QString&)),
+          SLOT(maxDepthChanged(const QString&)));
 
   QLabel* pcBuddyLabel = new QLabel(this, "buddyText");
   pcBuddyLabel->setText(i18n("B&uddy:"));
@@ -166,8 +167,8 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcBuddy = new QLineEdit(this, "buddy");
   m_pcBuddy->setMinimumSize(m_pcBuddy->sizeHint());
   pcBuddyLabel->setBuddy(m_pcBuddy);
-  connect(m_pcBuddy, SIGNAL(textChanged(const char*)),
-          SLOT(buddyChanged(const char*)));
+  connect(m_pcBuddy, SIGNAL(textChanged(const QString&)),
+          SLOT(buddyChanged(const QString&)));
 
   QLabel* pcDiveTypeLabel = new QLabel(this, "diveTypeText");
   pcDiveTypeLabel->setText(i18n("Dive t&ype:"));
@@ -185,8 +186,8 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcDiveTypeSelector->insertItem(i18n("Rescue"));
   m_pcDiveTypeSelector->insertItem(i18n("Course"));
   m_pcDiveTypeSelector->setMinimumSize(m_pcDiveTypeSelector->sizeHint());
-  connect(m_pcDiveTypeSelector, SIGNAL(activated(const char*)),
-          SLOT(diveTypeChanged(const char*)));
+  connect(m_pcDiveTypeSelector, SIGNAL(activated(const QString&)),
+          SLOT(diveTypeChanged(const QString&)));
   pcDiveTypeLabel->setBuddy(m_pcDiveTypeSelector);
 
   QLabel* pcWaterTempLabel = new QLabel(this, "waterTempText");
@@ -534,17 +535,17 @@ LogView::diveTimeChanged(QTime cTime)
 
 //*****************************************************************************
 /*!
-  The gas type changed to \a pzGasType. Update the log.
+  The gas type changed to \a cGasType. Update the log.
 
   \author André Johansen.
 */
 //*****************************************************************************
 
 void
-LogView::gasTypeChanged(const char* pzGasType)
+LogView::gasTypeChanged(const QString& cGasType)
 {
   if ( m_pcCurrentLog )
-    m_pcCurrentLog->setGasType(QString(pzGasType));
+    m_pcCurrentLog->setGasType(cGasType);
 }
 
 
@@ -598,34 +599,32 @@ LogView::waterTemperatureChanged(int nTemp)
 
 //*****************************************************************************
 /*!
-  The location changed to \a pzLocation. Update the log.
+  The location changed to \a cLocation. Update the log.
 
   \author André Johansen.
 */
 //*****************************************************************************
 
 void
-LogView::locationChanged(const char* pzLocation)
+LogView::locationChanged(const QString& cLocation)
 {
-  assert(pzLocation);
   if ( m_pcCurrentLog )
-    m_pcCurrentLog->setDiveLocation(QString(pzLocation));
+    m_pcCurrentLog->setDiveLocation(cLocation);
 }
 
 
 //*****************************************************************************
 /*!
-  The maximum depth changed to \a pzDepth. Update the log.
+  The maximum depth changed to \a cDepth. Update the log.
 
   \author André Johansen.
 */
 //*****************************************************************************
 
 void
-LogView::maxDepthChanged(const char* pzDepth)
+LogView::maxDepthChanged(const QString& cDepth)
 {
-  assert(pzDepth);
-  float vDepth = (float)atof(pzDepth);
+  float vDepth = (float)atof(cDepth);
   if ( m_pcCurrentLog )
     m_pcCurrentLog->setMaxDepth(vDepth);
 }
@@ -633,34 +632,33 @@ LogView::maxDepthChanged(const char* pzDepth)
 
 //*****************************************************************************
 /*!
-  The buddy changed to \a pzBuddy. Update the log.
+  The buddy changed to \a cBuddy. Update the log.
 
   \author André Johansen.
 */
 //*****************************************************************************
 
 void
-LogView::buddyChanged(const char* pzBuddy)
+LogView::buddyChanged(const QString& cBuddy)
 {
-  assert(pzBuddy);
   if ( m_pcCurrentLog )
-    m_pcCurrentLog->setBuddyName(QString(pzBuddy));
+    m_pcCurrentLog->setBuddyName(cBuddy);
 }
 
 
 //*****************************************************************************
 /*!
-  The dive type changed to \a pzDiveType. Update the log.
+  The dive type changed to \a cDiveType. Update the log.
 
   \author André Johansen.
 */
 //*****************************************************************************
 
 void
-LogView::diveTypeChanged(const char* pzDiveType)
+LogView::diveTypeChanged(const QString& cDiveType)
 {
   if ( m_pcCurrentLog )
-    m_pcCurrentLog->setDiveType(QString(pzDiveType));
+    m_pcCurrentLog->setDiveType(cDiveType);
 }
 
 

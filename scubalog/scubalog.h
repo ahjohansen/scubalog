@@ -17,13 +17,13 @@
 
 #include <qlist.h>
 #include <ktmainwindow.h>
+#include <kio/job.h>
 
+class QTabWidget;
 class DiveLog;
 class LogBook;
 class QPopupMenu;
 class KTabControl;
-class KDNDDropZone;
-class KFM;
 class LogListView;
 class LogView;
 class LocationView;
@@ -71,21 +71,20 @@ private slots:
   void saveProject();
   void saveProjectAs();
   void print();
-  void handleDrop(KDNDDropZone* pcDropZone);
-  void handleDownloadFinished();
-  void handleDownloadError(int nErrorCode, const char* pzMessage);
+  void handleDownloadFinished(KIO::Job* pcJob);
   void viewLogList();
   void viewLog(DiveLog* pcLog);
   void editLocation(const QString& cLocationName);
   void exportLogBook();
+  void exportLogBookUDCF();
 
 private:
+  void dragEnterEvent(QDragEnterEvent* pcEvent);
+  void dropEvent(QDropEvent* pcEvent);
   bool readLogBookUrl(const QString& cUrlName, DownloadMode_e eMode);
   bool readLogBook(const QString& cFileName);
 
   void updateRecentProjects(const QString& cProjectName);
-  KFM* createKfmConnection();
-  void destroyKfmConnection();
 
   //! The name of the current project, or none if not saved yet.
   QString*          m_pcProjectName;
@@ -94,7 +93,7 @@ private:
   //! The recent menu.
   QPopupMenu*       m_pcRecentMenu;
   //! The tab view.
-  KTabControl*      m_pcViews;
+  QTabWidget*       m_pcViews;
   //! The log list view.
   LogListView*      m_pcLogListView;
   //! The log view.
@@ -106,8 +105,6 @@ private:
   //! The equipment view.
   EquipmentView*    m_pcEquipmentView;
 
-  //! The current KFM connection.
-  KFM*              m_pcKfmConnection;
   //! The current URL being processed by KFM.
   QString*          m_pcKfmUrl;
   //! The current temporary file from KFM.

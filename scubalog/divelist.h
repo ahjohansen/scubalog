@@ -40,13 +40,8 @@ public:
 
 protected:
   //! Compare the two items \a pcItem1 and \a pcItem2 in the list.
-#if QT_VERSION < 200
-  virtual int compareItems(GCI pcItem1, GCI pcItem2)
-#else
-# undef Item
   virtual int compareItems(QCollection::Item pcItem1,
                            QCollection::Item pcItem2)
-#endif // QT_VERSION
   {
     DiveLog* pcLog1 = static_cast<DiveLog*>(pcItem1);
     DiveLog* pcLog2 = static_cast<DiveLog*>(pcItem2);

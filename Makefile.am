@@ -1,12 +1,31 @@
-# These are the subdirectories that have Makefiles
-SUBDIRS = scubalog po
+####### kdevelop will overwrite this part!!! (begin)##########
 
-EXTRA_DIST = scubalog.spec automoc TODO VERSION
+SUBDIRS = scubalog po doc 
 
+EXTRA_DIST = scubalog.kdevprj AUTHORS COPYING ChangeLog INSTALL README TODO scubalog.lsm scubalog.spec
+
+####### kdevelop will overwrite this part!!! (end)############
+# not a GNU package. You can remove this line, if 
+# have all needed files, that a GNU package needs
+AUTOMAKE_OPTIONS = foreign 
+
+$(top_srcdir)/configure.in: configure.in.in $(top_srcdir)/subdirs
+	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common configure.in ;
+
+$(top_srcdir)/subdirs:
+	cd $(top_srcdir) && $(MAKE) -f admin/Makefile.common subdirs
+
+$(top_srcdir)/acinclude.m4: $(top_srcdir)/admin/acinclude.m4.in $(top_srcdir)/admin/libtool.m4.in
+	@cd $(top_srcdir) && cat admin/acinclude.m4.in admin/libtool.m4.in > acinclude.m4
+
+MAINTAINERCLEANFILES = subdirs configure.in acinclude.m4 configure.files 
+
+package-messages:
+	$(MAKE) -f admin/Makefile.common package-messages
+	$(MAKE) -C po merge
+
+EXTRA_DIST = scubalog/pics/scubalog.xpm scubalog/pics/scubalog-mini.xpm admin 
 
 dist-hook:
-	cd $(top_distdir) && perl $(top_srcdir)/automoc
-	DOCUDIR=$$PWD/documentation && cd $(top_distdir) && cp -R $$DOCUDIR .
-
-codedoc:
-	doxygen scubalog.dox
+	cd $(top_distdir) && perl admin/am_edit -padmin
+	cd $(top_distdir) && $(MAKE) -f admin/Makefile.common subdirs

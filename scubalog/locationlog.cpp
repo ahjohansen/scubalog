@@ -12,10 +12,12 @@
 //*****************************************************************************
 
 #include <assert.h>
+#include <stdio.h>
 #include <qstring.h>
 #include <qdatastream.h>
 #include <qmessagebox.h>
 #include <kapp.h>
+#include <klocale.h>
 #include "chunkio.h"
 #include "locationlog.h"
 
@@ -75,9 +77,6 @@ void
 LocationLog::setName(const QString& cName)
 {
   m_cName = cName;
-#if QT_VERSION < 200
-  m_cName.detach();
-#endif // QT_VERSION
 }
 
 
@@ -108,9 +107,6 @@ void
 LocationLog::setDescription(const QString& cDescription)
 {
   m_cDescription = cDescription;
-#if QT_VERSION < 200
-  m_cDescription.detach();
-#endif // QT_VERSION
 }
 
 

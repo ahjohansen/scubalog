@@ -21,6 +21,7 @@
 #include <qlayout.h>
 #include <qmessagebox.h>
 #include <kapp.h>
+#include <klocale.h>
 #include "debug.h"
 #include "divelist.h"
 #include "divelogitem.h"
