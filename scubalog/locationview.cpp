@@ -238,6 +238,7 @@ LocationView::editLocation(const QString& cLocationName)
     }
   }
   if ( isFound ) {
+    m_pcLocations->setCurrentItem(nLocationIndex);
     locationSelected(nLocationIndex);
     return;
   }
