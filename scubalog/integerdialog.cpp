@@ -15,6 +15,7 @@
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
+#include <kapp.h>
 #include "kintegeredit.h"
 #include "integerdialog.h"
 
@@ -52,12 +53,12 @@ IntegerDialog::IntegerDialog(QWidget* pcParent, const char* pzName,
   m_pcEditor->setMinimumSize(m_pcEditor->sizeHint());
 
   m_pcOk = new QPushButton(this, "okButton");
-  m_pcOk->setText("&Ok");
+  m_pcOk->setText(i18n("&Ok"));
   m_pcOk->setDefault(true);
   connect(m_pcOk, SIGNAL(clicked()), SLOT(accept()));
 
   m_pcCancel = new QPushButton(this, "cancelButton");
-  m_pcCancel->setText("&Cancel");
+  m_pcCancel->setText(i18n("&Cancel"));
   connect(m_pcCancel, SIGNAL(clicked()), SLOT(reject()));
 
   QSize cButtonSize(m_pcCancel->sizeHint());

@@ -18,6 +18,7 @@
 #include <qlist.h>
 #include <qdatastream.h>
 #include <qmessagebox.h>
+#include <kapp.h>
 #include "chunkio.h"
 #include "equipmentlog.h"
 
@@ -74,7 +75,8 @@ operator >>(QDataStream& cStream, EquipmentLog& cLog)
           >> nChunkVersion;
   if ( 1 != nChunkVersion ) {
     QString cText;
-    cText.sprintf("Unknown equipment log chunk version %d!", nChunkVersion);
+    cText.sprintf(i18n("Unknown equipment log chunk version %d!"),
+                  nChunkVersion);
     throw IOException(cText);
   }
 
@@ -97,8 +99,8 @@ operator >>(QDataStream& cStream, EquipmentLog& cLog)
   const int nNextChunkPos = nPos + nChunkSize - sizeof(unsigned int);
   if ( nNextChunkPos != cDevice.at() ) {
     QString cText;
-    cText.sprintf("Unexpected position after reading equipment log!\n"
-                  "Current position is %d; expected %d...",
+    cText.sprintf(i18n("Unexpected position after reading equipment log!\n"
+                       "Current position is %d; expected %d..."),
                   cDevice.at(), nNextChunkPos);
     throw IOException(cText);
   }
@@ -160,8 +162,8 @@ operator <<(QDataStream& cStream, const EquipmentLog& cLog) throw(IOException)
   const int nNextChunkPos = nPos + nChunkSize;
   if ( nNextChunkPos != cDevice.at() ) {
     QString cText;
-    cText.sprintf("Unexpected position after writing equipment log!\n"
-                  "Current position is %d; expected %d...",
+    cText.sprintf(i18n("Unexpected position after writing equipment log!\n"
+                       "Current position is %d; expected %d..."),
                   cDevice.at(), nNextChunkPos);
     throw IOException(cText);
   }

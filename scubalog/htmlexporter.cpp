@@ -20,8 +20,8 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <qmessagebox.h>
-#include <qapplication.h>
 #include <qregexp.h>
+#include <kapp.h>
 #include "debug.h"
 #include "divelist.h"
 #include "divelog.h"
@@ -92,7 +92,8 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
   if ( false == cOutputDir.exists() ) {
     if ( false == cOutputDir.mkdir(cDirName) ) {
       QString cMessage;
-      cMessage = "Couldn't create output directory\n`" + cDirName + "'";
+      cMessage = QString(i18n("Couldn't create output directory"))
+        + "\n`" + cDirName + "'";
       errorMessage(cMessage);
     }
   }
@@ -125,7 +126,8 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
     bool isOpen = cFile.open(IO_WriteOnly);
     if ( false == isOpen ) {
       QString cMessage;
-      cMessage = "Couldn't open file for output\n(`" + cFileName + "')";
+      cMessage = QString(i18n("Couldn't open file for output"))
+        + "\n(`" + cFileName + "')";
       errorMessage(cMessage);
       return false;
     }
@@ -155,26 +157,29 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
     if ( cDiveTime.hour() ) {
       QString cHours;
       cHours.setNum(cDiveTime.hour());
-      cDiveTimeText += cHours + " hour";
-      if ( cDiveTime.hour() != 1 )
-        cDiveTimeText += "s";
-      cDiveTimeText += " ";
+      cDiveTimeText += cHours + " ";
+      if ( cDiveTime.hour() == 1 )
+        cDiveTimeText += i18n("hour") + QString(" ");
+      else
+        cDiveTimeText += i18n("hours") + QString(" ");
     }
     if ( cDiveTime.minute() ) {
       QString cMinutes;
       cMinutes.setNum(cDiveTime.minute());
-      cDiveTimeText += cMinutes + " minute";
-      if ( cDiveTime.minute() != 1 )
-        cDiveTimeText += "s";
-      cDiveTimeText += " ";
+      cDiveTimeText += cMinutes + " ";
+      if ( cDiveTime.minute() == 1 )
+        cDiveTimeText += i18n("minute") + QString(" ");
+      else
+        cDiveTimeText += i18n("minutes") + QString(" ");
     }
     if ( cDiveTime.second() ) {
       QString cSeconds;
       cSeconds.setNum(cDiveTime.second());
-      cDiveTimeText += cSeconds + " second";
-      if ( cDiveTime.second() != 1 )
-        cDiveTimeText += "s";
-      cDiveTimeText += " ";
+      cDiveTimeText += cSeconds + " ";
+      if ( cDiveTime.second() == 1 )
+        cDiveTimeText += i18n("seconds") + QString(" ");
+      else
+        cDiveTimeText += i18n("second") + QString(" ");
     }
 
     // Output
@@ -183,29 +188,29 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
             << "<HEAD>\n"
             << "<TITLE>"
             << cLogBook.diverName()
-            << " -- Log "
+            << " -- " << i18n("Log") << " "
             << pcCurrentLog->logNumber()
             << "</TITLE>\n"
             << "</HEAD>\n"
             << "<BODY>\n"
-            << "<B>Log number:</B> "
+            << "<B>" << i18n("Log number") << ":</B> "
             << pcCurrentLog->logNumber()
             << "<BR>\n"
-            << "<B>Date:</B> "
+            << "<B>" << i18n("Date") << ":</B> "
             << pcCurrentLog->diveDate().toString()
             << " "
             << pcCurrentLog->diveStart().toString()
             << "<BR>\n"
-            << "<B>Location:</B> "
+            << "<B>" << i18n("Location") << ":</B> "
             << cLocationName
             << "<BR>\n"
-            << "<B>Buddy:</B> "
+            << "<B>" << i18n("Buddy") << ":</B> "
             << pcCurrentLog->buddyName()
             << "<BR>\n"
-            << "<B>Maximum depth:</B> "
+            << "<B>" << i18n("Maximum depth") << ":</B> "
             << pcCurrentLog->maxDepth()
             << "m<BR>\n"
-            << "<B>Dive time:</B> "
+            << "<B>" << i18n("Dive time") << ":</B> "
             << cDiveTimeText
             << "<BR>\n"
             << "<P>\n"
@@ -216,19 +221,19 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
       --iPreviousLog;
       cStream << "<A HREF=\""
               << (iPreviousLog.current())->logNumber()
-              << ".html\">Previous log</A> ";
+              << ".html\">" << i18n("Previous log") << "</A> ";
     }
     if ( false == iLog.atLast() ) {
       QListIterator<DiveLog> iNextLog = iLog;
       ++iNextLog;
       cStream << "<A HREF=\""
               << (iNextLog.current())->logNumber()
-              << ".html\">Next log</A> ";
+              << ".html\">" << i18n("Next log") << "</A> ";
     }
-    cStream << "<A HREF=\"logbook.html\">Index</A>\n"
+    cStream << "<A HREF=\"logbook.html\">" << i18n("Index") << "</A>\n"
             << "<P>\n"
-            << "Dive log exported from "
-            << "<A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
+            << i18n("Dive log exported from")
+            << " <A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
             << "ScubaLog</A> "
             << cCurrentDate.toString()
             << "\n"
@@ -238,7 +243,8 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
     // Ensure output was successful
     if ( IO_Ok != cFile.status() ) {
       QString cMessage;
-      cMessage = "Error outputting log\n(`" + cFileName + "')";
+      cMessage = QString(i18n("Error outputting log"))
+        + "\n(`" + cFileName + "')";
       errorMessage(cMessage);
       cFile.remove();
       return false;
@@ -275,8 +281,9 @@ HTMLExporter::exportIndex(const LogBook& cLogBook,
   QFile cFile(cFileName);
   bool isOpen = cFile.open(IO_WriteOnly);
   if ( false == isOpen ) {
-    const QString cMessage("Couldn't open file for output\n(`" +
-                           cFileName + "')");
+    QString cMessage;
+    cMessage = QString(i18n("Couldn't open file for output"))
+      + "\n(`" + cFileName + "')";
     errorMessage(cMessage);
     return false;
   }
@@ -285,11 +292,11 @@ HTMLExporter::exportIndex(const LogBook& cLogBook,
           << "<HEAD>\n"
           << "<TITLE>"
           << cLogBook.diverName()
-          << " -- log book index"
+          << " -- " << i18n("log book index")
           << "</TITLE>\n"
           << "</HEAD>\n"
           << "<BODY>\n"
-          << "<H1>Dive logs</H1>\n";
+          << "<H1>" << i18n("Dive logs") << "</H1>\n";
   for ( iLog.toFirst(); iLog.current(); ++iLog ) {
     const DiveLog* pcCurrentLog = iLog.current();
     QString cLogNumber;
@@ -302,7 +309,7 @@ HTMLExporter::exportIndex(const LogBook& cLogBook,
             << pcCurrentLog->diveLocation()
             << "<BR>\n";
   }
-  cStream << "<H1>Location logs</H1>\n";
+  cStream << "<H1>" << i18n("Location logs") << "</H1>\n";
   QListIterator<LocationLog> iLocation(cLogBook.locationList());
   for ( ; iLocation.current(); ++iLocation ) {
     const LocationLog* pcCurrentLog = iLocation.current();
@@ -313,8 +320,8 @@ HTMLExporter::exportIndex(const LogBook& cLogBook,
             << "</A><BR>\n";
   }
   cStream << "<HR>\n"
-          << "Dive log exported from "
-          << "<A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
+          << i18n("Dive log exported from")
+          << " <A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
           << "ScubaLog</A> "
           << cCurrentDate.toString()
           << "\n"
@@ -326,9 +333,11 @@ HTMLExporter::exportIndex(const LogBook& cLogBook,
   cFile.close();
   if ( false == isOk ) {
     QFile::remove(cFileName);
-    QString cMessage("Error writing to file\n`" + cFileName + "'!");
-    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Write log index",
-                         cMessage);
+    QString cMessage;
+    cMessage = QString(i18n("Error writing to file"))
+      + "\n`" + cFileName + "'!";
+    QMessageBox::warning(qApp->mainWidget(),
+                         i18n("[ScubaLog] Write log index"), cMessage);
   }
 
   return isOk;
@@ -363,8 +372,9 @@ HTMLExporter::exportLocations(const LogBook& cLogBook,
     QFile cFile(cFileName);
     bool isOpen = cFile.open(IO_WriteOnly);
     if ( false == isOpen ) {
-      const QString cMessage("Couldn't open file for output\n(`" +
-                             cFileName + "')");
+      QString cMessage;
+      cMessage = QString(i18n("Couldn't open file for output"))
+        + "\n(`" + cFileName + "')";
       errorMessage(cMessage);
       return false;
     }
@@ -384,7 +394,7 @@ HTMLExporter::exportLocations(const LogBook& cLogBook,
             << "</TITLE>\n"
             << "</HEAD>\n"
             << "<BODY>\n"
-            << "<B>Location:</B> "
+            << "<B>" << i18n("Location") << ":</B> "
             << cLocationName
             << "<BR>\n"
             << "<P>\n"
@@ -395,19 +405,19 @@ HTMLExporter::exportLocations(const LogBook& cLogBook,
       --iPreviousLog;
       cStream << "<A HREF=\""
               << getLocationExportName((iPreviousLog.current())->getName())
-              << "\">Previous location</A> ";
+              << "\">" << i18n("Previous location") << "</A> ";
     }
     if ( false == iLog.atLast() ) {
       QListIterator<LocationLog> iNextLog = iLog;
       ++iNextLog;
       cStream << "<A HREF=\""
               << getLocationExportName((iNextLog.current())->getName())
-              << "\">Next location</A> ";
+              << "\">" << i18n("Next location") << "</A> ";
     }
-    cStream << "<A HREF=\"logbook.html\">Index</A>\n"
+    cStream << "<A HREF=\"logbook.html\">" << i18n("Index") << "</A>\n"
             << "<P>\n"
-            << "Dive log exported from "
-            << "<A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
+            << i18n("Dive log exported from")
+            << " <A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
             << "ScubaLog</A> "
             << cCurrentDate.toString()
             << "\n"
@@ -417,7 +427,8 @@ HTMLExporter::exportLocations(const LogBook& cLogBook,
     // Ensure output was successful
     if ( IO_Ok != cFile.status() ) {
       QString cMessage;
-      cMessage = "Error outputting log\n(`" + cFileName + "')";
+      cMessage = QString(i18n("Error outputting log"))
+        + "\n(`" + cFileName + "')";
       errorMessage(cMessage);
       cFile.remove();
       return false;
@@ -547,7 +558,7 @@ HTMLExporter::createLinks(QString& cText) const
 void
 HTMLExporter::errorMessage(const QString& cMessage) const
 {
-  QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Output error",
+  QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Output error"),
                        cMessage);
 }
 

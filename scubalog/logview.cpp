@@ -24,8 +24,8 @@
 #include <qcombobox.h>
 #include <qmultilinedit.h>
 #include <qpushbutton.h>
-#include <qapplication.h>
 #include <qmessagebox.h>
+#include <kapp.h>
 #include "debug.h"
 #include "kintegeredit.h"
 #include "kdateedit.h"
@@ -52,7 +52,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
     m_pcCurrentLog(0)
 {
   QLabel* pcDiveNumLabel = new QLabel(this, "diveNumberText");
-  pcDiveNumLabel->setText("Dive &number:");
+  pcDiveNumLabel->setText(i18n("Dive &number:"));
   pcDiveNumLabel->setMinimumSize(pcDiveNumLabel->sizeHint());
 
   m_pcDiveNumber = new KIntegerEdit(1, 1, INT_MAX, this, "diveNumber");
@@ -63,7 +63,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(diveNumberChanged(int)));
 
   QLabel* pcDiveDateLabel = new QLabel(this, "diveDateText");
-  pcDiveDateLabel->setText("Dive &date:");
+  pcDiveDateLabel->setText(i18n("Dive &date:"));
   pcDiveDateLabel->setMinimumSize(pcDiveDateLabel->sizeHint());
 
   m_pcDiveDate = new KDateEdit(this, "diveDate");
@@ -73,7 +73,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(diveDateChanged(QDate)));
 
   QLabel* pcDiveStartLabel = new QLabel(this, "diveStartText");
-  pcDiveStartLabel->setText("Dive &start:");
+  pcDiveStartLabel->setText(i18n("Dive &start:"));
   pcDiveStartLabel->setMinimumSize(pcDiveStartLabel->sizeHint());
 
   m_pcDiveStart = new KTimeEdit(this, "diveStart");
@@ -83,7 +83,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(diveStartChanged(QTime)));
 
   QLabel* pcDiveTimeLabel = new QLabel(this, "diveTimeText");
-  pcDiveTimeLabel->setText("Dive &time:");
+  pcDiveTimeLabel->setText(i18n("Dive &time:"));
   pcDiveTimeLabel->setMinimumSize(pcDiveTimeLabel->sizeHint());
 
   m_pcDiveTime = new KTimeEdit(this, "diveTime");
@@ -93,7 +93,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(diveTimeChanged(QTime)));
 
   QLabel* pcGasLabel = new QLabel(this, "gasText");
-  pcGasLabel->setText("&Gas:");
+  pcGasLabel->setText(i18n("&Gas:"));
   pcGasLabel->setMinimumSize(pcGasLabel->sizeHint());
 
   m_pcGasType = new QLineEdit(this, "gasType");
@@ -103,7 +103,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(gasTypeChanged(const char*)));
 
   QLabel* pcAirTempLabel = new QLabel(this, "airTempText");
-  pcAirTempLabel->setText("&Air temperature:");
+  pcAirTempLabel->setText(i18n("&Air temperature:"));
   pcAirTempLabel->setMinimumSize(pcAirTempLabel->sizeHint());
 
   m_pcAirTemp = new KIntegerEdit(-100, 20, 100, this, "airTemperature");
@@ -113,7 +113,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(airTemperatureChanged(int)));
 
   QLabel* pcLocationLabel = new QLabel(this, "locationText");
-  pcLocationLabel->setText("L&ocation:");
+  pcLocationLabel->setText(i18n("L&ocation:"));
   pcLocationLabel->setMinimumSize(pcLocationLabel->sizeHint());
 
   QWidget* pcLocationLine = new QWidget(this, "locationEdit");
@@ -125,22 +125,22 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(locationChanged(const char*)));
 
   m_pcEditLocation = new QPushButton(pcLocationLine, "editLocation");
-  m_pcEditLocation->setText("Edit");
+  m_pcEditLocation->setText(i18n("Edit"));
   m_pcEditLocation->setMinimumSize(m_pcEditLocation->sizeHint());
   connect(m_pcEditLocation, SIGNAL(clicked()),
           SLOT(editLocation()));
 
   QLabel* pcPlanLabel = new QLabel(this, "planText");
-  pcPlanLabel->setText("&Plan type:");
+  pcPlanLabel->setText(i18n("&Plan type:"));
   pcPlanLabel->setMinimumSize(pcPlanLabel->sizeHint());
 
   m_pcPlanSelector = new QComboBox(true, this, "planSelector");
-  m_pcPlanSelector->insertItem("Single level");
-  m_pcPlanSelector->insertItem("Multi level");
+  m_pcPlanSelector->insertItem(i18n("Single level"));
+  m_pcPlanSelector->insertItem(i18n("Multi level"));
   pcPlanLabel->setBuddy(m_pcPlanSelector);
 
   QLabel* pcBottomTimeLabel = new QLabel(this, "bottomTimeText");
-  pcBottomTimeLabel->setText("&Bottom time:");
+  pcBottomTimeLabel->setText(i18n("&Bottom time:"));
   pcBottomTimeLabel->setMinimumSize(pcBottomTimeLabel->sizeHint());
 
   m_pcBottomTime = new KTimeEdit(this, "bottomTime");
@@ -150,7 +150,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(bottomTimeChanged(QTime)));
 
   QLabel* pcMaxDepthLabel = new QLabel(this, "maxDepthText");
-  pcMaxDepthLabel->setText("&Max depth:");
+  pcMaxDepthLabel->setText(i18n("&Max depth:"));
   pcMaxDepthLabel->setMinimumSize(pcMaxDepthLabel->sizeHint());
 
   m_pcMaxDepth = new QLineEdit(this, "maxDepth");
@@ -160,7 +160,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(maxDepthChanged(const char*)));
 
   QLabel* pcBuddyLabel = new QLabel(this, "buddyText");
-  pcBuddyLabel->setText("B&uddy:");
+  pcBuddyLabel->setText(i18n("B&uddy:"));
   pcBuddyLabel->setMinimumSize(pcBuddyLabel->sizeHint());
 
   m_pcBuddy = new QLineEdit(this, "buddy");
@@ -170,27 +170,27 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(buddyChanged(const char*)));
 
   QLabel* pcDiveTypeLabel = new QLabel(this, "diveTypeText");
-  pcDiveTypeLabel->setText("Dive t&ype:");
+  pcDiveTypeLabel->setText(i18n("Dive t&ype:"));
   pcDiveTypeLabel->setMinimumSize(pcDiveTypeLabel->sizeHint());
 
   m_pcDiveTypeSelector = new QComboBox(true, this, "diveTypeSelector");
-  m_pcDiveTypeSelector->insertItem("Nature");
-  m_pcDiveTypeSelector->insertItem("Deep");
-  m_pcDiveTypeSelector->insertItem("Wreck");
-  m_pcDiveTypeSelector->insertItem("Night");
-  m_pcDiveTypeSelector->insertItem("Cave");
-  m_pcDiveTypeSelector->insertItem("Ice");
-  m_pcDiveTypeSelector->insertItem("Current");
-  m_pcDiveTypeSelector->insertItem("Navigation");
-  m_pcDiveTypeSelector->insertItem("Rescue");
-  m_pcDiveTypeSelector->insertItem("Course");
+  m_pcDiveTypeSelector->insertItem(i18n("Nature"));
+  m_pcDiveTypeSelector->insertItem(i18n("Deep"));
+  m_pcDiveTypeSelector->insertItem(i18n("Wreck"));
+  m_pcDiveTypeSelector->insertItem(i18n("Night"));
+  m_pcDiveTypeSelector->insertItem(i18n("Cave"));
+  m_pcDiveTypeSelector->insertItem(i18n("Ice"));
+  m_pcDiveTypeSelector->insertItem(i18n("Current"));
+  m_pcDiveTypeSelector->insertItem(i18n("Navigation"));
+  m_pcDiveTypeSelector->insertItem(i18n("Rescue"));
+  m_pcDiveTypeSelector->insertItem(i18n("Course"));
   m_pcDiveTypeSelector->setMinimumSize(m_pcDiveTypeSelector->sizeHint());
   connect(m_pcDiveTypeSelector, SIGNAL(activated(const char*)),
           SLOT(diveTypeChanged(const char*)));
   pcDiveTypeLabel->setBuddy(m_pcDiveTypeSelector);
 
   QLabel* pcWaterTempLabel = new QLabel(this, "waterTempText");
-  pcWaterTempLabel->setText("Min &water temp:");
+  pcWaterTempLabel->setText(i18n("Min &water temp:"));
   pcWaterTempLabel->setMinimumSize(pcWaterTempLabel->sizeHint());
 
   m_pcWaterTemp = new KIntegerEdit(this, "waterTemperature");
@@ -200,7 +200,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
           SLOT(waterTemperatureChanged(int)));
 
   QLabel* pcDescriptionLabel = new QLabel(this, "descriptionText");
-  pcDescriptionLabel->setText("Dive des&cription:");
+  pcDescriptionLabel->setText(i18n("Dive des&cription:"));
   pcDescriptionLabel->setMinimumSize(pcDescriptionLabel->sizeHint());
 
   m_pcDescription = new QMultiLineEdit(this, "description");
@@ -209,12 +209,12 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   pcDescriptionLabel->setBuddy(m_pcDescription);
 
   m_pcPreviousLog = new QPushButton(this, "previousLog");
-  m_pcPreviousLog->setText("Previous log");
+  m_pcPreviousLog->setText(i18n("Previous log"));
   connect(m_pcPreviousLog, SIGNAL(clicked()),
           SLOT(gotoPreviousLog()));
 
   m_pcNextLog = new QPushButton(this, "nextLog");
-  m_pcNextLog->setText("Next log");
+  m_pcNextLog->setText(i18n("Next log"));
   connect(m_pcNextLog, SIGNAL(clicked()),
           SLOT(gotoNextLog()));
 
@@ -338,8 +338,8 @@ LogView::newLog()
     emit newLog(pcLog);
   }
   catch ( std::bad_alloc ) {
-    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] New dive log",
-                         "Out of memory when creating a new dive log!");
+    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] New dive log"),
+                         i18n("Out of memory when creating a new dive log!"));
   }
 }
 

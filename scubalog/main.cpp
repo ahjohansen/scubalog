@@ -33,7 +33,7 @@ int
 main(int nArgumentCount, char** apzArguments)
 {
   try {
-    KApplication cApplication(nArgumentCount, apzArguments, "ScubaLog");
+    KApplication cApplication(nArgumentCount, apzArguments, "scubalog");
     ScubaLog* pcMainGUI = new ScubaLog("scubaLog");
     cApplication.setMainWidget(pcMainGUI);
     pcMainGUI->show();
@@ -43,11 +43,11 @@ main(int nArgumentCount, char** apzArguments)
     return nReturnValue;
   }
   catch ( std::bad_alloc ) {
-    std::cerr << "Out of memory -- exiting ScubaLog...\n";
+    std::cerr << i18n("Out of memory -- exiting ScubaLog...\n");
     throw;
   }
   catch ( ... ) {
-    std::cerr << "Caught unhandled exception -- exiting ScubaLog...\n";
+    std::cerr << i18n("Caught unhandled exception -- exiting ScubaLog...\n");
     throw;
   }
 }

@@ -22,7 +22,7 @@
 #include <qmultilinedit.h>
 #include <qmessagebox.h>
 #include <qlayout.h>
-#include <qapplication.h>
+#include <kapp.h>
 #include "logbook.h"
 #include "locationlog.h"
 #include "locationview.h"
@@ -55,12 +55,12 @@ LocationView::LocationView(QWidget* pcParent, const char* pzName)
 
   m_pcNewLocation = new QPushButton(this, "newLocation");
   m_pcNewLocation->setEnabled(false);
-  m_pcNewLocation->setText("&New");
+  m_pcNewLocation->setText(i18n("&New"));
   m_pcNewLocation->setMinimumSize(m_pcNewLocation->sizeHint());
   connect(m_pcNewLocation, SIGNAL(clicked()), SLOT(newLocation()));
 
   m_pcDeleteLocation = new QPushButton(this, "deleteLocation");
-  m_pcDeleteLocation->setText("&Delete");
+  m_pcDeleteLocation->setText(i18n("&Delete"));
   m_pcDeleteLocation->setEnabled(false);
   m_pcDeleteLocation->setMinimumSize(m_pcDeleteLocation->sizeHint());
   connect(m_pcDeleteLocation, SIGNAL(clicked()), SLOT(deleteLocation()));
@@ -250,8 +250,9 @@ LocationView::editLocation(const QString& cLocationName)
     pcLog = new LocationLog();
   }
   catch ( std::bad_alloc ) {
-    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] New location",
-                         "Out of memory when creating a new location log!");
+    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] New location"),
+                         i18n("Out of memory when creating "
+                              "a new location log!"));
     return;
   }
 
@@ -291,8 +292,9 @@ LocationView::newLocation()
     pcLog = new LocationLog();
   }
   catch ( std::bad_alloc ) {
-    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] New location",
-                         "Out of memory when creating a new location log!");
+    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] New location"),
+                         i18n("Out of memory when creating "
+                              "a new location log!"));
     return;
   }
 
@@ -340,11 +342,12 @@ LocationView::deleteLocation()
   assert(pcLog);
 
   QString cMessage;
-  cMessage.sprintf("Are you sure you want to delete the location\n"
-                   "`%s'?", pcLog->getName().data());
-  const int nResult = QMessageBox::information(qApp->mainWidget(),
-                                               "[ScubaLog] Delete location",
-                                               cMessage, "&Yes", "&No");
+  cMessage.sprintf(i18n("Are you sure you want to delete the location\n"
+                        "`%s'?"), pcLog->getName().data());
+  const int nResult =
+    QMessageBox::information(qApp->mainWidget(),
+                             i18n("[ScubaLog] Delete location"),
+                             cMessage, i18n("&Yes"), i18n("&No"));
   if ( 1 == nResult )
     return;
 

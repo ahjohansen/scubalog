@@ -16,6 +16,7 @@
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qdatastream.h>
+#include <kapp.h>
 #include "chunkio.h"
 #include "divelog.h"
 
@@ -42,7 +43,7 @@ DiveLog::DiveLog()
   m_vSurfaceTemperature = 0.0F;
   m_vWaterTemperature   = 0.0F;
   m_ePlanType           = e_SingleLevel;
-  m_cDiveType           = "Nature";
+  m_cDiveType           = i18n("Nature");
   m_cDiveDescription    = "";
 }
 
@@ -83,7 +84,7 @@ operator >>(QDataStream& cStream, DiveLog& cLog)
           >> nChunkVersion;
   if ( 1 != nChunkVersion ) {
     QString cText;
-    cText.sprintf("Unknown dive log chunk version %d!", nChunkVersion);
+    cText.sprintf(i18n("Unknown dive log chunk version %d!"), nChunkVersion);
     throw IOException(cText);
   }
 
@@ -111,8 +112,8 @@ operator >>(QDataStream& cStream, DiveLog& cLog)
   const int nNextChunkPos = nPos + nChunkSize - sizeof(unsigned int);
   if ( nNextChunkPos != cDevice.at() ) {
     QString cText;
-    cText.sprintf("Unexpected position after reading dive log!\n"
-                  "Current position is %d; expected %d...",
+    cText.sprintf(i18n("Unexpected position after reading dive log!\n"
+                       "Current position is %d; expected %d..."),
                   cDevice.at(), nNextChunkPos);
     throw IOException(cText);
   }
@@ -181,8 +182,8 @@ operator <<(QDataStream& cStream, const DiveLog& cLog)
   const int nNextChunkPos = nPos + nChunkSize;
   if ( nNextChunkPos != cDevice.at() ) {
     QString cText;
-    cText.sprintf("Unexpected position after writing dive log!\n"
-                  "Current position is %d; expected %d...",
+    cText.sprintf(i18n("Unexpected position after writing dive log!\n"
+                       "Current position is %d; expected %d..."),
                   cDevice.at(), nNextChunkPos);
     throw IOException(cText);
   }

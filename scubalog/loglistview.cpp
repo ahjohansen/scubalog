@@ -20,7 +20,7 @@
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <qmessagebox.h>
-#include <qapplication.h>
+#include <kapp.h>
 #include "debug.h"
 #include "divelist.h"
 #include "divelogitem.h"
@@ -42,10 +42,10 @@ LogListView::LogListView(QWidget* pcParent, const char* pzName)
 {
   m_pcDiveListView = new QListView(this, "dives");
   m_pcDiveListView->setFrameStyle(QFrame::WinPanel|QFrame::Sunken);
-  m_pcDiveListView->addColumn("Dive");
-  m_pcDiveListView->addColumn("Date");
-  m_pcDiveListView->addColumn("Time");
-  m_pcDiveListView->addColumn("Location");
+  m_pcDiveListView->addColumn(i18n("Dive"));
+  m_pcDiveListView->addColumn(i18n("Date"));
+  m_pcDiveListView->addColumn(i18n("Time"));
+  m_pcDiveListView->addColumn(i18n("Location"));
   m_pcDiveListView->setColumnAlignment(0, AlignRight);
   m_pcDiveListView->setColumnWidthMode(3, QListView::Maximum);
   m_pcDiveListView->setAllColumnsShowFocus(true);
@@ -58,18 +58,18 @@ LogListView::LogListView(QWidget* pcParent, const char* pzName)
           SLOT(selectedLogChanged(QListViewItem*)));
 
   m_pcNewLog = new QPushButton(this, "new");
-  m_pcNewLog->setText("&New log entry");
+  m_pcNewLog->setText(i18n("&New log entry"));
   m_pcNewLog->setMinimumSize(m_pcNewLog->sizeHint());
   connect(m_pcNewLog, SIGNAL(clicked()), SLOT(createNewLog()));
 
   m_pcDeleteLog = new QPushButton(this, "delete");
-  m_pcDeleteLog->setText("&Delete log");
+  m_pcDeleteLog->setText(i18n("&Delete log"));
   m_pcDeleteLog->setMinimumSize(m_pcDeleteLog->sizeHint());
   m_pcDeleteLog->setEnabled(false);
   connect(m_pcDeleteLog, SIGNAL(clicked()), SLOT(deleteLog()));
 
   m_pcViewLog = new QPushButton(this, "view");
-  m_pcViewLog->setText("&View log");
+  m_pcViewLog->setText(i18n("&View log"));
   m_pcViewLog->setMinimumSize(m_pcViewLog->sizeHint());
   m_pcViewLog->setEnabled(false);
   connect(m_pcViewLog, SIGNAL(clicked()), SLOT(viewLog()));
@@ -171,8 +171,8 @@ LogListView::createNewLog()
   catch ( std::bad_alloc ) {
     // In case the divelogitem causes OOM, delete the log to be sure...
     delete pcLog;
-    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] New dive log",
-                         "Out of memory when creating a new dive log!");
+    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] New dive log"),
+                         i18n("Out of memory when creating a new dive log!"));
   }
 }
 
@@ -199,12 +199,13 @@ LogListView::deleteLog()
     DiveLog* pcLog = pcItem->log();
     DBG(("About to delete dive log #%d\n", pcLog->logNumber()));
     QString cMessage;
-    cMessage.sprintf("Are you sure you want to delete log %d?\n"
-                     "(location: `%s')", pcLog->logNumber(),
+    cMessage.sprintf(i18n("Are you sure you want to delete log %d?\n"
+                          "(location: `%s')"), pcLog->logNumber(),
                      pcLog->diveLocation().data());
     int nResult = QMessageBox::information(qApp->mainWidget(),
-                                           "[ScubaLog] Delete log",
-                                           cMessage, "&Yes", "&No");
+                                           i18n("[ScubaLog] Delete log"),
+                                           cMessage,
+                                           i18n("&Yes"), i18n("&No"));
     if ( 0 == nResult ) {
       delete pcItem;
       emit aboutToDeleteLog(pcLog);

@@ -13,10 +13,10 @@
 */
 //*****************************************************************************
 
-#include <qapplication.h>
 #include <qfile.h>
 #include <qdatastream.h>
 #include <qmessagebox.h>
+#include <kapp.h>
 #include "debug.h"
 #include "chunkio.h"
 #include "divelist.h"
@@ -82,8 +82,10 @@ LogBook::readLogBook(const QString& cFileName) throw(std::bad_alloc)
 {
   QFile cFile(cFileName);
   if ( false == cFile.open(IO_ReadOnly) ) {
-    QString cMessage("Couldn't open file\n`" + cFileName + "'!");
-    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Read log book",
+    QString cMessage;
+    cMessage = QString(i18n("Couldn't open file"))
+      + "\n`" + cFileName + "'!";
+    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Read log book"),
                          cMessage);
     return false;
   }
@@ -98,9 +100,11 @@ LogBook::readLogBook(const QString& cFileName) throw(std::bad_alloc)
   if ( (MAKE_CHUNK_ID('S', 'L', 'L', 'B') != nChunkId) ||
        (nChunkSize != cFile.size()) ||
        (1 != nChunkVersion) ) {
-    QString cMessage("Couldn't read log book from\n`" + cFileName + "'.\n"
-                     "Unknown file format -- probably not a log book!");
-    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Read log book",
+    QString cMessage;
+    cMessage = QString(i18n("Couldn't read log book from"))
+      + "\n`" + cFileName + "'.\n"
+      + i18n("Unknown file format -- probably not a log book!");
+    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Read log book"),
                          cMessage);
     return false;
   }
@@ -132,10 +136,11 @@ LogBook::readLogBook(const QString& cFileName) throw(std::bad_alloc)
         cStream >> *pcLog;
       }
       catch ( IOException& cException) {
-        QString cText("Error while reading log book from\n`" + cFileName +
-                      "':\n" + cException.explanation());
-        QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Read log book",
-                             cText);
+        QString cText;
+        cText = QString(i18n("Error while reading log book from"))
+          + "\n`" + cFileName + "':\n" + cException.explanation();
+        QMessageBox::warning(qApp->mainWidget(),
+                             i18n("[ScubaLog] Read log book"), cText);
         cFile.at(nPos);
         cStream >> nChunkSize >> nChunkVersion;
         cFile.at( nPos + nChunkSize - sizeof(unsigned int) );
@@ -158,10 +163,11 @@ LogBook::readLogBook(const QString& cFileName) throw(std::bad_alloc)
         cStream >> *pcLog;
       }
       catch ( IOException& cException) {
-        QString cText("Error while reading log book from\n`" + cFileName +
-                      "':\n" + cException.explanation());
-        QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Read log book",
-                             cText);
+        QString cText;
+        cText = QString(i18n("Error while reading log book from"))
+          + "\n`" + cFileName + "':\n" + cException.explanation();
+        QMessageBox::warning(qApp->mainWidget(),
+                             i18n("[ScubaLog] Read log book"), cText);
         cFile.at(nPos);
         cStream >> nChunkSize >> nChunkVersion;
         cFile.at( nPos + nChunkSize - sizeof(unsigned int) );
@@ -184,10 +190,11 @@ LogBook::readLogBook(const QString& cFileName) throw(std::bad_alloc)
         cStream >> *pcLog;
       }
       catch ( IOException& cException) {
-        QString cText("Error while reading log book from\n`" + cFileName +
-                      "':\n" + cException.explanation());
-        QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Read log book",
-                             cText);
+        QString cText;
+        cText = QString(i18n("Error while reading log book from"))
+          + "\n`" + cFileName + "':\n" + cException.explanation();
+        QMessageBox::warning(qApp->mainWidget(),
+                             i18n("[ScubaLog] Read log book"), cText);
         cFile.at(nPos);
         cStream >> nChunkSize >> nChunkVersion;
         cFile.at( nPos + nChunkSize - sizeof(unsigned int) );
@@ -207,8 +214,10 @@ LogBook::readLogBook(const QString& cFileName) throw(std::bad_alloc)
 
   bool isOk = IO_Ok == cFile.status();
   if ( false == isOk ) {
-    QString cMessage("Error reading from file\n`" + cFileName + "'!");
-    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Read log book",
+    QString cMessage;
+    cMessage = QString(i18n("Error reading from file"))
+      + "\n`" + cFileName + "'!";
+    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Read log book"),
                          cMessage);
   }
 
@@ -232,10 +241,12 @@ LogBook::saveLogBook(const QString& cFileName) throw()
 {
   QFile cFile(cFileName);
   if ( false == cFile.open(IO_WriteOnly) ) {
-    QString cMessage("Couldn't open file\n`" + cFileName + "'.\n"
-                     "Ensure that you have write permission and\n"
-                     "that there is enough free space on the media!");
-    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Write log book",
+    QString cMessage;
+    cMessage = QString(i18n("Couldn't open file"))
+      + "\n`" + cFileName + "'.\n"
+      + i18n("Ensure that you have write permission and\n"
+             "that there is enough free space on the media!");
+    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Write log book"),
                          cMessage);
     return false;
   }
@@ -288,10 +299,11 @@ LogBook::saveLogBook(const QString& cFileName) throw()
     }
   }
   catch ( IOException& cException ) {
-    QString cText("Error while writing log book to\n`" + cFileName + "':\n" +
-                  cException.explanation() + "\n"
-                  "Ensure there is enough free space on the media!");
-    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Write log book",
+    QString cText;
+    cText = QString(i18n("Error while writing log book to"))
+      + "\n`" + cFileName + "':\n" + cException.explanation() + "\n"
+      + i18n("Ensure there is enough free space on the media!");
+    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Write log book"),
                          cText);
     QFile::remove(cFileName);
     return false;
@@ -306,8 +318,10 @@ LogBook::saveLogBook(const QString& cFileName) throw()
   cFile.close();
   if ( false == isOk ) {
     QFile::remove(cFileName);
-    QString cMessage("Error writing to file\n`" + cFileName + "'!");
-    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Write log book",
+    QString cMessage;
+    cMessage = QString(i18n("Error writing to file"))
+      + "\n`" + cFileName + "'!";
+    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Write log book"),
                          cMessage);
   }
 

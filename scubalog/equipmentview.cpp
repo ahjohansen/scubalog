@@ -20,6 +20,7 @@
 #include <qlineedit.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
+#include <kapp.h>
 #include "debug.h"
 #include "kdatevalidator.h"
 #include "kcelleditview.h"
@@ -48,22 +49,22 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   connect(m_pcItemView, SIGNAL(selected(int)), SLOT(editItemName(int)));
 
   m_pcNew = new QPushButton(this, "new");
-  m_pcNew->setText("&New");
+  m_pcNew->setText(i18n("&New"));
   m_pcNew->setEnabled(false);
   connect(m_pcNew, SIGNAL(clicked()), SLOT(newItem()));
 
   m_pcDelete = new QPushButton(this, "delete");
-  m_pcDelete->setText("Delete");
+  m_pcDelete->setText(i18n("Delete"));
   m_pcDelete->setEnabled(false);
   connect(m_pcDelete, SIGNAL(clicked()), SLOT(deleteItem()));
 
   m_pcMoveUp = new QPushButton(this, "moveUp");
-  m_pcMoveUp->setText("Move &up");
+  m_pcMoveUp->setText(i18n("Move &up"));
   m_pcMoveUp->setEnabled(false);
   connect(m_pcMoveUp, SIGNAL(clicked()), SLOT(moveCurrentUp()));
 
   m_pcMoveDown = new QPushButton(this, "moveDown");
-  m_pcMoveDown->setText("Move &down");
+  m_pcMoveDown->setText(i18n("Move &down"));
   m_pcMoveDown->setEnabled(false);
   connect(m_pcMoveDown, SIGNAL(clicked()), SLOT(moveCurrentDown()));
 
@@ -73,7 +74,7 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   connect(m_pcItemName, SIGNAL(returnPressed()), SLOT(changeItemName()));
 
   QLabel* pcTypeText = new QLabel(this, "itemTypeText");
-  pcTypeText->setText("Type: ");
+  pcTypeText->setText(i18n("Type: "));
   pcTypeText->setMinimumSize(pcTypeText->sizeHint());
 
   m_pcType = new QLineEdit(this, "itemType");
@@ -82,7 +83,7 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
           SLOT(itemTypeChanged(const char*)));
 
   QLabel* pcSerialText = new QLabel(this, "itemSerialText");
-  pcSerialText->setText("Serial number: ");
+  pcSerialText->setText(i18n("Serial number: "));
   pcSerialText->setMinimumSize(pcSerialText->sizeHint());
 
   m_pcSerial = new QLineEdit(this, "serial");
@@ -91,7 +92,7 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
           SLOT(itemSerialChanged(const char*)));
 
   QLabel* pcServiceText = new QLabel(this, "serviceText");
-  pcServiceText->setText("Service: ");
+  pcServiceText->setText(i18n("Service: "));
   pcServiceText->setMinimumSize(pcServiceText->sizeHint());
 
   m_pcService = new QLineEdit(this, "service");
@@ -102,8 +103,8 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   m_pcLogView = new KCellEditView(2, this, "equipmentLog");
   m_pcLogView->setColEditor(0, new KDateEdit(m_pcLogView, "dateEditor"));
   m_pcLogView->setColEditor(1, new QLineEdit(m_pcLogView, "eventEditor"));
-  m_pcLogView->setColumnName(0, "Date");
-  m_pcLogView->setColumnName(1, "Event");
+  m_pcLogView->setColumnName(0, i18n("Date"));
+  m_pcLogView->setColumnName(1, i18n("Event"));
   connect(m_pcLogView, SIGNAL(textChanged(int, int, const QString&)),
           SLOT(logEntryChanged(int, int, const QString&)));
 

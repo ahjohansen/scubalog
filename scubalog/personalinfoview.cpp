@@ -17,6 +17,7 @@
 #include <qlineedit.h>
 #include <qmultilinedit.h>
 #include <qlayout.h>
+#include <kapp.h>
 #include "divelist.h"
 #include "logbook.h"
 #include "personalinfoview.h"
@@ -42,7 +43,7 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
   //
 
   QLabel* pcNameLabel = new QLabel(this, "diverNameText");
-  pcNameLabel->setText("&Name:");
+  pcNameLabel->setText(i18n("&Name:"));
   pcNameLabel->setMinimumSize(pcNameLabel->sizeHint());
 
   m_pcName = new QLineEdit(this, "diverName");
@@ -52,7 +53,7 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
   pcNameLabel->setBuddy(m_pcName);
 
   QLabel* pcEmailLabel = new QLabel(this, "emailText");
-  pcEmailLabel->setText("&Email address:");
+  pcEmailLabel->setText(i18n("&Email address:"));
   pcEmailLabel->setMinimumSize(pcEmailLabel->sizeHint());
 
   m_pcEmailAddress = new QLineEdit(this, "emailAddress");
@@ -62,7 +63,7 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
   pcEmailLabel->setBuddy(m_pcEmailAddress);
 
   QLabel* pcWwwUrlLabel = new QLabel(this, "wwwUrlText");
-  pcWwwUrlLabel->setText("&WWW URL:");
+  pcWwwUrlLabel->setText(i18n("&WWW URL:"));
   pcWwwUrlLabel->setMinimumSize(pcWwwUrlLabel->sizeHint());
 
   m_pcWwwUrl = new QLineEdit(this, "wwwUrl");
@@ -71,12 +72,12 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
           SLOT(wwwUrlChanged(const char*)));
   pcWwwUrlLabel->setBuddy(m_pcWwwUrl);
 
-  m_pcLoggedDiveTime = new QLabel(this, "LoggedDiveTime");
-  m_pcLoggedDiveTime->setText("Total logged dive time: 000h 00min");
+  m_pcLoggedDiveTime = new QLabel(this, "loggedDiveTime");
+  m_pcLoggedDiveTime->setText(i18n("Total logged dive time: 000h 00min"));
   m_pcLoggedDiveTime->setMinimumSize(m_pcLoggedDiveTime->sizeHint());
 
   QLabel* pcCommentsLabel = new QLabel(this, "commentsText");
-  pcCommentsLabel->setText("&Comments:");
+  pcCommentsLabel->setText(i18n("&Comments:"));
   pcCommentsLabel->setMinimumSize(pcCommentsLabel->sizeHint());
 
   m_pcComments = new QMultiLineEdit(this, "comments");
@@ -217,14 +218,14 @@ PersonalInfoView::wwwUrlChanged(const char* pzWwwUrl)
 void
 PersonalInfoView::updateLoggedDiveTime()
 {
-  QString cLoggedTimeText("0h 0min");
+  QString cLoggedTimeText(i18n("0h 0min"));
   if ( m_pcLogBook ) {
     unsigned int nNumMins = 0;
     DiveList& cDiveList = m_pcLogBook->diveList();
     for ( DiveLog* pcLog = cDiveList.first(); pcLog; pcLog = cDiveList.next() )
       nNumMins += pcLog->diveTime().hour() * 60 + pcLog->diveTime().minute();
 
-    cLoggedTimeText.sprintf("Total logged dive time: %dh %dmin",
+    cLoggedTimeText.sprintf(i18n("Total logged dive time: %dh %dmin"),
                             nNumMins/60, nNumMins%60);
   }
   m_pcLoggedDiveTime->setText(cLoggedTimeText);
