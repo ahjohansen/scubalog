@@ -209,6 +209,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcPreviousLog->setMinimumSize(cNavSize);
   m_pcNextLog->setMinimumSize(cNavSize);
 
+
   //
   // Geometry management using layout engines
   //
@@ -318,7 +319,7 @@ LogView::viewLog(DiveLog* pcLog)
 
   if ( pcLog ) {
     QString cDepth;
-    cDepth.sprintf("%f", pcLog->maxDepth());
+    cDepth.sprintf("%.2f", pcLog->maxDepth());
     m_pcDiveNumber->setValue(pcLog->logNumber());
     m_pcDiveNumber->setEnabled(true);
     m_pcDiveDate->setDate(pcLog->diveDate());
@@ -578,9 +579,9 @@ void
 LogView::maxDepthChanged(const char* pzDepth)
 {
   assert(pzDepth);
-  int nDepth = atoi(pzDepth);
+  float vDepth = (float)atof(pzDepth);
   if ( m_pcCurrentLog )
-    m_pcCurrentLog->setMaxDepth(nDepth);
+    m_pcCurrentLog->setMaxDepth(vDepth);
 }
 
 
@@ -728,6 +729,7 @@ LogView::deletingLog(const DiveLog* pcLog)
     viewLog(pcNewLog);
   }
 }
+
 
 // Local Variables:
 // mode: c++
