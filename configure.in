@@ -45,7 +45,7 @@ dnl everything to compile and run a KDE program is already checked
 
 dnl add here the package name and its version number. It will
 dnl be defined in config.h and in the Makefiles
-AM_INIT_AUTOMAKE(scubalog, 0.1.2)
+AM_INIT_AUTOMAKE(scubalog, 0.1.3)
 
 dnl add all your Makefiles here. These are created by configure
 AC_OUTPUT(Makefile \
