@@ -4,12 +4,12 @@
 #
 
 Name:      scubalog
-Version:   0.1.0
+Version:   0.1.1
 Release:   1
 Copyright: GPL
 Group:     Applications
-Prefix:    /opt/kde
-Source:    http://www.stud.ifi.uio.no/~andrej/scubalog/scubalog-0.1.0.tar.gz
+Prefix:    /usr
+Source:    http://www.stud.ifi.uio.no/~andrej/scubalog/scubalog-0.1.1.tar.gz
 URL:       http://www.stud.ifi.uio.no/~andrej/scubalog/
 Packager:  André Johansen <andrej@ifi.uio.no>
 Summary:   Dive logging application
@@ -40,10 +40,10 @@ make
 make install
 
 %files
-/opt/kde/bin/scubalog
-/opt/kde/share/applnk/Applications/scubalog.kdelnk
-/opt/kde/share/icons/scubalog.xpm
-/opt/kde/share/icons/mini/scubalog.xpm
+/usr/bin/scubalog
+/usr/share/applnk/Applications/scubalog.kdelnk
+/usr/share/icons/scubalog.xpm
+/usr/share/icons/mini/scubalog.xpm
 %doc AUTHORS
 %doc COPYING
 %doc INSTALL
@@ -55,3 +55,9 @@ make install
 
 %files codedoc
 %doc documentation
+
+
+%changelog
+* Thu Feb 17 2000 André Johansen <andrej@ifi.uio.no>
+
+- Changed default prefix to /usr to comply with Red Hat 6.1.
