@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -56,11 +54,13 @@
 /*!
   Initialize the ScubaLog application GUI. Use \a pzName as the widget name.
 
+  If \a pzLogBook is non-null, it will be attempted loaded as a log-book.
+
   \author André Johansen.
 */
 //*****************************************************************************
 
-ScubaLog::ScubaLog(const char* pzName)
+ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
   : KTMainWindow(pzName),
     m_pcProjectName(0),
     m_pcLogBook(0),
@@ -234,11 +234,20 @@ ScubaLog::ScubaLog(const char* pzName)
 
 
   //
-  // Read a recent logbook or create a new one
+  // Read a logbook or create a new one
   //
 
+  // If specified, load the log-book provided as an argument.
+  if ( pzLogBook ) {
+    bool isOk = readLogBookUrl(pzLogBook, e_DownloadSynchronous);
+    if ( isOk ) {
+      *m_pcProjectName = QString(pzLogBook);
+      const QString cCaption("ScubaLog [" + *m_pcProjectName + "]");
+      setCaption(cCaption);
+    }
+  }
   // Read the recent logbook one, if wanted
-  if ( m_bReadLastUsedProject && m_cRecentProjects.first() ) {
+  else if ( m_bReadLastUsedProject && m_cRecentProjects.first() ) {
     bool isOk = readLogBookUrl(*m_cRecentProjects.first(),
                                e_DownloadSynchronous);
     if ( isOk ) {

@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -15,6 +13,7 @@
 
 #include <new>
 #include <iostream>
+#include <qmessagebox.h>
 #include <kapp.h>
 #include "scubalog.h"
 
@@ -33,8 +32,25 @@ int
 main(int nArgumentCount, char** apzArguments)
 {
   try {
+    // Initialize the application
     KApplication cApplication(nArgumentCount, apzArguments, "scubalog");
-    ScubaLog* pcMainGUI = new ScubaLog("scubaLog");
+
+    const char* pzLogBook = 0;
+
+    // Validate arguments
+    if ( nArgumentCount > 2 ) {
+      QMessageBox::information(0, i18n("[ScubaLog] Invalid argument"),
+                               i18n("ScubaLog encountered an invalid "
+                                    "argument.\n"
+                                    "ScubaLog can either be started with no "
+                                    "arguments,\n"
+                                    "or optionally with one argument giving "
+                                    "the filename of a log book."));
+    }
+    else if ( 2 == nArgumentCount )
+      pzLogBook = apzArguments[1];
+
+    ScubaLog* pcMainGUI = new ScubaLog("scubaLog", pzLogBook);
     cApplication.setMainWidget(pcMainGUI);
     pcMainGUI->show();
     int nReturnValue = cApplication.exec();
