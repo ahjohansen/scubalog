@@ -7,3 +7,4 @@ DocPath=scubalog/index.html
 Comment=A dive log application
 Terminal=0
 Name=ScubaLog
+Encoding=UTF-8
