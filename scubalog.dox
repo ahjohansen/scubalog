@@ -106,7 +106,7 @@ FULL_PATH_NAMES      = YES
 # only done if one of the specified strings matches the left-hand part of
 # the path.
 
-STRIP_FROM_PATH      = /home/andrej/source/ScubaLog/
+STRIP_FROM_PATH      = /home/andrej/source/ScubaLog/scubalog/
 
 # If the CLASS_DIAGRAMS tag is set to YES (the default) Doxygen will
 # generate a class diagram (in Html and LaTeX) for classes with base or
@@ -150,7 +150,7 @@ JAVADOC_AUTOBRIEF    = YES
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                = .
+INPUT                = scubalog
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -163,7 +163,7 @@ FILE_PATTERNS        = *.cpp *.h
 # should be searched for input files as well. Possible values are YES and NO.
 # If left blank NO is used.
 
-RECURSIVE            = YES
+RECURSIVE            = NO
 
 # The EXCLUDE tag can be used to specify files and/or directories that should
 # excluded from the INPUT source files. This way you can easily exclude a 
@@ -175,7 +175,7 @@ EXCLUDE              =
 # EXCLUDE_PATTERNS tag to specify one or more wildcard patterns to exclude
 # certain files from those directories.
 
-EXCLUDE_PATTERNS     =
+EXCLUDE_PATTERNS     = *.moc.cpp
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or 
 # directories that contain example code fragments that are included (see 
