@@ -153,7 +153,8 @@ ScubaLog::ScubaLog(const char* pzName)
                           "This program is free software, licensed\n"
                           "under the GNU General Public License.\n\n"
                           "Author: André Johansen <andrej@ifi.uio.no>\n\n"
-                          "Compilation date: %s"), __DATE__);
+                          "Version: %s\n"
+                          "Compilation date: %s"), VERSION, __DATE__);
   pcMenuBar->insertItem(i18n("&Help"), pcApp->getHelpMenu(true, cAboutText));
 
 
