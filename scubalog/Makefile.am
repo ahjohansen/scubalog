@@ -24,8 +24,6 @@ scubalog_SOURCES = \
 	equipmentview.cpp \
 	htmlexporter.cpp \
 	integerdialog.cpp \
-	kcelledit.cpp \
-	kcelleditview.cpp \
 	kdateedit.cpp \
 	kdatevalidator.cpp \
 	kintegeredit.cpp \
@@ -56,8 +54,6 @@ noinst_HEADERS = \
 	equipmentlog.h \
 	equipmentview.h \
 	integerdialog.h \
-	kcelledit.h \
-	kcelleditview.h \
 	kdateedit.h \
 	kdatevalidator.h \
 	kintegeredit.h \

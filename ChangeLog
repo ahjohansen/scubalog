@@ -1,3 +1,9 @@
+2002-12-12  André Johansen  <andrej@tiscali.no>
+
+	* scubalog/kcelleditview.cpp, scubalog/kcelleditview.h,
+	scubalog/kcelledit.cpp, scubalog/kcelledit.h,
+	scubalog/Makefile.am: Removed obsolete code.
+
 2002-06-04  André Johansen  <andrej@tiscali.no>
 
 	* Ported to Qt v3.0.4/KDE v3.0.
