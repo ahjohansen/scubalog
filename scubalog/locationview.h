@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -18,10 +16,12 @@
 
 #include <qwidget.h>
 
+class QPopupMenu;
 class QListBox;
 class QPushButton;
 class QLineEdit;
 class QMultiLineEdit;
+class ListBox;
 class LogBook;
 class LocationLog;
 
@@ -60,14 +60,16 @@ public slots:
 private slots:
   void locationSelected(int nLocationIndex);
   void editLocationName(int nLocationIndex);
+  void editCurrentLocationName();
   void newLocation();
   void deleteLocation();
   void locationNameChanged();
   void locationDescriptionChanged();
+  void prepareLocationsMenu(QPopupMenu* pcMenu);
 
 private:
   //! The location selector.
-  QListBox*       m_pcLocations;
+  ListBox*        m_pcLocations;
   //! The `new location' button.
   QPushButton*    m_pcNewLocation;
   //! The `delete location' button.

@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -16,17 +14,19 @@
 #include <assert.h>
 #include <new>
 #include <qwidget.h>
+#include <qsplitter.h>
 #include <qlistbox.h>
 #include <qpushbutton.h>
 #include <qlineedit.h>
 #include <qmultilinedit.h>
 #include <qmessagebox.h>
 #include <qlayout.h>
+#include <qpopupmenu.h>
 #include <kapp.h>
+#include "listbox.h"
 #include "logbook.h"
 #include "locationlog.h"
 #include "locationview.h"
-
 
 
 //*****************************************************************************
@@ -46,51 +46,77 @@ LocationView::LocationView(QWidget* pcParent, const char* pzName)
     m_pcLocationDescription(0),
     m_pcLogBook(0)
 {
-  m_pcLocations = new QListBox(this, "locations");
+  QSplitter* pcSplitter =
+    new QSplitter(QSplitter::Vertical, this, "splitter");
+
+  QWidget* pcTop = new QWidget(pcSplitter);
+
+  m_pcLocations = new ListBox(pcTop, "locations");
   m_pcLocations->setEnabled(false);
   connect(m_pcLocations, SIGNAL(highlighted(int)),
           SLOT(locationSelected(int)));
   connect(m_pcLocations, SIGNAL(selected(int)),
           SLOT(editLocationName(int)));
 
-  m_pcNewLocation = new QPushButton(this, "newLocation");
+  m_pcNewLocation = new QPushButton(pcTop, "newLocation");
   m_pcNewLocation->setEnabled(false);
   m_pcNewLocation->setText(i18n("&New"));
-  m_pcNewLocation->setMinimumSize(m_pcNewLocation->sizeHint());
   connect(m_pcNewLocation, SIGNAL(clicked()), SLOT(newLocation()));
 
-  m_pcDeleteLocation = new QPushButton(this, "deleteLocation");
+  m_pcDeleteLocation = new QPushButton(pcTop, "deleteLocation");
   m_pcDeleteLocation->setText(i18n("&Delete"));
   m_pcDeleteLocation->setEnabled(false);
-  m_pcDeleteLocation->setMinimumSize(m_pcDeleteLocation->sizeHint());
   connect(m_pcDeleteLocation, SIGNAL(clicked()), SLOT(deleteLocation()));
 
-  m_pcLocationName = new QLineEdit(this, "locationName");
+  m_pcLocationName = new QLineEdit(pcTop, "locationName");
   m_pcLocationName->hide();
   m_pcLocationName->setEnabled(false);
-  m_pcLocationName->setMinimumSize(m_pcLocationName->sizeHint());
   connect(m_pcLocationName, SIGNAL(returnPressed()),
           SLOT(locationNameChanged()));
 
-  m_pcLocationDescription = new QMultiLineEdit(this, "locationDescription");
+  m_pcLocationDescription =
+    new QMultiLineEdit(pcSplitter, "locationDescription");
   m_pcLocationDescription->setEnabled(false);
   connect(m_pcLocationDescription, SIGNAL(textChanged()),
           SLOT(locationDescriptionChanged()));
 
+  QPopupMenu* pcLocationsMenu = m_pcLocations->getPopupMenu();
+  pcLocationsMenu->insertItem("&New", this, SLOT(newLocation()), 0, 0);
+  pcLocationsMenu->insertItem("&Delete", this, SLOT(deleteLocation()), 0, 1);
+  pcLocationsMenu->insertItem("&Edit name", this,
+                                SLOT(editCurrentLocationName()), 0, 2);
+  connect(m_pcLocations, SIGNAL(aboutToShowPopup(QPopupMenu*)),
+          SLOT(prepareLocationsMenu(QPopupMenu*)));
+
 
   //
-  // Geometry management using layout engines
+  // Geometry management
   //
 
-  QVBoxLayout* pcTopLayout    = new QVBoxLayout(this, 5);
-  QHBoxLayout* pcButtonLayout = new QHBoxLayout();
-  pcTopLayout->addWidget(m_pcLocations, 4);
+  QSize cButtonSize = m_pcDeleteLocation->sizeHint();
+  if ( m_pcNewLocation->sizeHint().width() > cButtonSize.width() ) {
+    cButtonSize = m_pcNewLocation->sizeHint();
+  }
+  QSize cLocationsSize = QSize(cButtonSize.width()*4, cButtonSize.height()*2);
+  m_pcLocations->setMinimumSize(cLocationsSize);
+  m_pcNewLocation->setMinimumSize(cButtonSize);
+  m_pcDeleteLocation->setMinimumSize(cButtonSize);
+  m_pcLocationName->setMinimumSize(m_pcLocationName->sizeHint());
+  m_pcLocationDescription->resize(100, 100);
+
+  QBoxLayout* pcSplitLayout = new QVBoxLayout(this, 5);
+  pcSplitLayout->addWidget(pcSplitter);
+  pcSplitLayout->activate();
+
+  QBoxLayout* pcTopLayout = new QVBoxLayout(pcTop, 0);
+  QBoxLayout* pcButtonLayout = new QHBoxLayout(5);
+  pcTopLayout->addWidget(m_pcLocations, 1);
+  pcTopLayout->addSpacing(5);
   pcTopLayout->addLayout(pcButtonLayout);
-  pcButtonLayout->addWidget(m_pcNewLocation);
-  pcButtonLayout->addWidget(m_pcDeleteLocation);
-  pcButtonLayout->addWidget(m_pcLocationName, 10);
-  pcTopLayout->addSpacing(10);
-  pcTopLayout->addWidget(m_pcLocationDescription, 10);
+  pcTopLayout->addSpacing(5);
+  pcButtonLayout->addWidget(m_pcNewLocation,    0);
+  pcButtonLayout->addWidget(m_pcDeleteLocation, 0);
+  pcButtonLayout->addWidget(m_pcLocationName,   1);
   pcTopLayout->activate();
 }
 
@@ -210,6 +236,28 @@ LocationView::editLocationName(int nLocationIndex)
   m_pcLocationName->setText(pcLog->getName());
   m_pcLocationName->show();
   m_pcLocationName->setFocus();
+}
+
+
+//*****************************************************************************
+/*!
+  Edit the name of the currently selected item, if any.
+
+  \sa editLocationName(), locationNameChanged().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+LocationView::editCurrentLocationName()
+{
+  assert(m_pcLogBook);
+  int nLocationIndex = m_pcLocations->currentItem();
+  if ( -1 == nLocationIndex ) {
+    return;
+  }
+  editLocationName(nLocationIndex);
 }
 
 
@@ -423,6 +471,25 @@ LocationView::locationDescriptionChanged()
     return;
   QString cDescription(m_pcLocationDescription->text());
   pcLocation->setDescription(cDescription);
+}
+
+
+//*****************************************************************************
+/*!
+  Preparte the locations menu \a pcMenu to be shown
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+LocationView::prepareLocationsMenu(QPopupMenu* pcMenu)
+{
+  assert(pcMenu);
+
+  bool bHasSelectedLocation = (m_pcLocations->currentItem() != -1);
+  pcMenu->setItemEnabled(1, bHasSelectedLocation);
+  pcMenu->setItemEnabled(2, bHasSelectedLocation);
 }
 
 
