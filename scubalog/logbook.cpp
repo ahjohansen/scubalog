@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -90,6 +88,7 @@ LogBook::readLogBook(const QString& cFileName) throw(std::bad_alloc)
     return false;
   }
   QDataStream cStream(&cFile);
+  unsigned int nFileSize = cFile.size();
 
   unsigned int nChunkId;
   unsigned int nChunkSize;
@@ -208,7 +207,17 @@ LogBook::readLogBook(const QString& cFileName) throw(std::bad_alloc)
     // Skip unknown chunk
     else {
       cStream >> nChunkSize >> nChunkVersion;
-      cFile.at( cFile.at() + nChunkSize - 3 * sizeof(unsigned int) );
+      const int nOldPos = cFile.at();
+      const int nNewPos = nOldPos + nChunkSize - 3 * sizeof(unsigned int);
+      if ( nNewPos <= nOldPos || nNewPos < 0 ||
+           (unsigned)nNewPos >= nFileSize ) {
+        QString cText;
+        cText = QString(i18n("Can't read further, aborting load of log-book"));
+        QMessageBox::warning(qApp->mainWidget(),
+                             i18n("[ScubaLog] Read log book"), cText);
+        break;
+      }
+      cFile.at(nNewPos);
     }
   }
 
