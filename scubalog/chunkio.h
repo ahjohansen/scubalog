@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/chunkio.h
+  \file chunkio.h
   \brief This file contains some helpers for the I/O system.
 
   This file is part of ScubaLog, a dive logging application for KDE.

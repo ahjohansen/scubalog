@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/widgets/kcelledit.h
+  \file kcelledit.h
   \brief This file contains the definition of KCellEdit.
 
   This file is part of ScubaLog, a dive logging application for KDE.

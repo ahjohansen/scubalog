@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/equipmentlog.h
+  \file equipmentlog.h
   \brief This file contains the definition of the EquipmentLog class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

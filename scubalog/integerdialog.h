@@ -1,7 +1,10 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/widgets/integerdialog.h
+  \file integerdialog.h
   \brief This file contains the definition of the IntegerDialog class.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 

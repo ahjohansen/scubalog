@@ -1,8 +1,17 @@
-// $Id$
-//
-// This code is copyrighted by (c) André Johansen 1999.
-// The class is published under the GPL, version 2.
-//
+//*****************************************************************************
+/*!
+  \file kdatevalidator.h
+  \brief This file contains the definition of the KDateValidator class.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
+
+  $Id$
+
+  \par Copyright:
+  André Johansen.
+*/
+//*****************************************************************************
 
 #ifndef KDATEVALIDATOR_H
 #define KDATEVALIDATOR_H
@@ -13,6 +22,7 @@
 class QString;
 
 
+//*****************************************************************************
 /*!
   \class KDateValidator
   \brief The KDateValidator is used to validate date input.
@@ -23,12 +33,13 @@ class QString;
   If the widget is left with an invalid date, a default date will
   be used.
 */
+//*****************************************************************************
 
 class KDateValidator : public QValidator {
   Q_OBJECT
 public:
   KDateValidator(QDate cMin, QDate cDefault, QDate cMax,
-		 QWidget* pcParent = 0, const char* pzName = 0);
+                 QWidget* pcParent = 0, const char* pzName = 0);
   virtual ~KDateValidator();
 
 #if QT_VERSION >= 200
@@ -73,4 +84,5 @@ protected:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

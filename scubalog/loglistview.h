@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/loglistview.h
+  \file loglistview.h
   \brief This file contains the definition of the LogListView class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

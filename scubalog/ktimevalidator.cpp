@@ -1,8 +1,17 @@
-// $Id$
-//
-// This code is copyrighted by (c) André Johansen 1999.
-// This code is distributed under the GPL, version 2.
-//
+//*****************************************************************************
+/*!
+  \file ktimevalidator.cpp
+  \brief This file contains the implementation of the KTimeValidator class.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
+
+  $Id$
+
+  \par Copyright:
+  André Johansen.
+*/
+//*****************************************************************************
 
 #include <assert.h>
 #include <ctype.h>
@@ -17,6 +26,7 @@
 #endif
 
 
+//*****************************************************************************
 /*!
   Initialize the validator. The validator will accept a time with
   \a cFirst as the first and \a cLast as the last time.
@@ -24,9 +34,10 @@
 
   \sa fixup().
 */
+//*****************************************************************************
 
 KTimeValidator::KTimeValidator(QTime cFirst, QTime cDefault, QTime cLast,
-			       QWidget* pcParent, const char* pzName)
+                               QWidget* pcParent, const char* pzName)
   : QValidator(pcParent, pzName)
 {
   assert(cFirst.isValid());
@@ -41,15 +52,18 @@ KTimeValidator::KTimeValidator(QTime cFirst, QTime cDefault, QTime cLast,
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the validator.
 */
+//*****************************************************************************
 
 KTimeValidator::~KTimeValidator()
 {
 }
 
 
+//*****************************************************************************
 /*!
   Check whether \a cInput is a valid time or not. A valid
   time is between the first and the last time (both inclusive).
@@ -63,6 +77,7 @@ KTimeValidator::~KTimeValidator()
 
   \sa fixup().
 */
+//*****************************************************************************
 
 QValidator::State
 KTimeValidator::validate(QString& cInput, int&)
@@ -76,7 +91,7 @@ const
 
   int nLength = cInput.length() + 1;
   int iNumber = 0;
-  int anNumbers[3] = { 0 };	// Hour, minute, second
+  int anNumbers[3] = { 0 };     // Hour, minute, second
   for ( int iPos = 0; iPos < nLength - 1; iPos++ ) {
     QChar cChar = cInput[iPos];
     if ( cChar.isDigit() ) {
@@ -95,7 +110,7 @@ const
 
   int nLength = cInput.size();
   int iNumber = 0;
-  int anNumbers[3] = { 0 };	// Hour, minute, second
+  int anNumbers[3] = { 0 };     // Hour, minute, second
   for ( int iPos = 0; iPos < nLength - 1; iPos++ ) {
     char nChar = cInput[iPos];
     if ( isdigit(nChar) ) {
@@ -122,20 +137,20 @@ const
        (0 > anNumbers[1]) || (59 < anNumbers[1]) ||
        (0 > anNumbers[2]) || (59 < anNumbers[2]) ||
        ((iNumber >= 1) && ((anNumbers[0] < m_cFirst.hour()) ||
-			   (anNumbers[0] > m_cLast.hour()) ||
-			   (anNumbers[0] == m_cLast.hour() &&
-			    anNumbers[1] > m_cLast.minute()))) ||
+                           (anNumbers[0] > m_cLast.hour()) ||
+                           (anNumbers[0] == m_cLast.hour() &&
+                            anNumbers[1] > m_cLast.minute()))) ||
        ((iNumber >= 2) && ((anNumbers[0] == m_cFirst.hour() &&
-			    anNumbers[1] < m_cFirst.minute()) ||
-			   (anNumbers[0] == m_cLast.hour() &&
-			    anNumbers[1] == m_cLast.minute() &&
-			    anNumbers[2] > m_cLast.second()))) ) {
+                            anNumbers[1] < m_cFirst.minute()) ||
+                           (anNumbers[0] == m_cLast.hour() &&
+                            anNumbers[1] == m_cLast.minute() &&
+                            anNumbers[2] > m_cLast.second()))) ) {
     DBG(("\"%s\" is an invalid time!\n", cInput.data()));
     return Invalid;
   }
   else if ( (0 <= anNumbers[0]) &&  (23 >= anNumbers[0]) &&
-	    (0 <= anNumbers[1]) &&  (59 >= anNumbers[1]) &&
-	    (0 <= anNumbers[2]) &&  (59 >= anNumbers[2]) ) {
+            (0 <= anNumbers[1]) &&  (59 >= anNumbers[1]) &&
+            (0 <= anNumbers[2]) &&  (59 >= anNumbers[2]) ) {
     QTime cTime(anNumbers[0], anNumbers[1], anNumbers[2]);
     if ( (cTime >= m_cFirst) && ( cTime <= m_cLast) ) {
       DBG(("\"%s\" is an acceptable time!\n", cInput.data()));
@@ -148,6 +163,7 @@ const
 }
 
 
+//*****************************************************************************
 /*!
   Fix the time contained in \a cInput to be valid according to
   this validators requirements.
@@ -159,6 +175,7 @@ const
   if it contains a time after the last allowed, the last will be used;
   else it will be left unchanged.
 */
+//*****************************************************************************
 
 void
 KTimeValidator::fixup(QString& cInput)
@@ -167,7 +184,7 @@ KTimeValidator::fixup(QString& cInput)
 
   int nLength = cInput.length() + 1;
   int iNumber = 0;
-  int anNumbers[3] = { 0 };	// Hour, minute, second
+  int anNumbers[3] = { 0 };     // Hour, minute, second
   for ( int iPos = 0; iPos < nLength; iPos++ ) {
     QChar cChar = cInput[iPos];
     if ( cChar.isDigit() ) {
@@ -185,7 +202,7 @@ KTimeValidator::fixup(QString& cInput)
   cInput.detach();
   int nLength = cInput.size();
   int iNumber = 0;
-  int anNumbers[3] = { 0 };	// Hour, minute, second
+  int anNumbers[3] = { 0 };     // Hour, minute, second
   for ( int iPos = 0; iPos < nLength; iPos++ ) {
     char nChar = cInput[iPos];
     if ( isdigit(nChar) ) {
@@ -218,10 +235,12 @@ KTimeValidator::fixup(QString& cInput)
 }
 
 
+//*****************************************************************************
 /*!
   Set the range for this validator to be within \a cFirst and \a cLast.
   The default will be set to \a cDefault.
 */
+//*****************************************************************************
 
 void
 KTimeValidator::setRange(QTime cFirst, QTime cDefault, QTime cLast)
@@ -238,10 +257,12 @@ KTimeValidator::setRange(QTime cFirst, QTime cDefault, QTime cLast)
 }
 
 
+//*****************************************************************************
 /*!
   Check if the time created from \a nHour, \a nMinute and \a nSecond
   is considered valid for this validator.
 */
+//*****************************************************************************
 
 bool
 KTimeValidator::isValidTime(int nHour, int nMinute, int nSecond) const
@@ -261,4 +282,5 @@ KTimeValidator::isValidTime(int nHour, int nMinute, int nSecond) const
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

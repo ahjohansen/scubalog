@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/divelogitem.h
+  \file divelogitem.h
   \brief This file contains the definition of the DiveLogItem class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

@@ -1,7 +1,10 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/widgets/kintegervalidator.cpp
+  \file kintegervalidator.cpp
   \brief This file contains the implementation of the KIntegerValidator class.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 

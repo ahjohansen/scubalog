@@ -1,7 +1,10 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/widgets/kintegeredit.h
+  \file kintegeredit.h
   \brief This file contains the definition of the KIntegerEdit class.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 

@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/equipmentview.h
+  \file equipmentview.h
   \brief This file contains the definition of the EquipmentView class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

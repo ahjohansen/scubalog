@@ -1,8 +1,17 @@
-// $Id$
-//
-// This code is copyrighted by (c) André Johansen 1999.
-// This code is distributed under the GPL, version 2.
-//
+//*****************************************************************************
+/*!
+  \file kdateedit.cpp
+  \brief This file contains the implementation of the KDateValidator class.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
+
+  $Id$
+
+  \par Copyright:
+  André Johansen.
+*/
+//*****************************************************************************
 
 #include <assert.h>
 #include <ctype.h>
@@ -18,6 +27,7 @@
 #endif
 
 
+//*****************************************************************************
 /*!
   Initialize the validator. The validator will accept a date with
   \a cFirst as the first and \a cLast as the last date.
@@ -25,9 +35,10 @@
 
   \sa fixup().
 */
+//*****************************************************************************
 
 KDateValidator::KDateValidator(QDate cFirst, QDate cDefault, QDate cLast,
-			       QWidget* pcParent, const char* pzName)
+                               QWidget* pcParent, const char* pzName)
   : QValidator(pcParent, pzName)
 {
   assert(cFirst.isValid());
@@ -42,15 +53,18 @@ KDateValidator::KDateValidator(QDate cFirst, QDate cDefault, QDate cLast,
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the validator.
 */
+//*****************************************************************************
 
 KDateValidator::~KDateValidator()
 {
 }
 
 
+//*****************************************************************************
 /*!
   Check whether \a cInput is a valid date or not. A valid
   date is between the first and the last date (both inclusive).
@@ -64,6 +78,7 @@ KDateValidator::~KDateValidator()
 
   \sa fixup().
 */
+//*****************************************************************************
 
 QValidator::State
 KDateValidator::validate(QString& cInput, int&)
@@ -77,7 +92,7 @@ const
 
   int nLength = cInput.length() + 1;
   int iNumber = 0;
-  int anNumbers[3] = { 0 };	// Day, month, year
+  int anNumbers[3] = { 0 };     // Day, month, year
   for ( int iPos = 0; iPos < nLength - 1; iPos++ ) {
     QChar cChar = cInput[iPos];
     if ( cChar.isDigit() ) {
@@ -96,7 +111,7 @@ const
 
   int nLength = cInput.size();
   int iNumber = 0;
-  int anNumbers[3] = { 0 };	// Day, month, year
+  int anNumbers[3] = { 0 };     // Day, month, year
   for ( int iPos = 0; iPos < nLength - 1; iPos++ ) {
     char nChar = cInput[iPos];
     if ( isdigit(nChar) ) {
@@ -121,23 +136,23 @@ const
   // Invalid date
   if ( (31 < anNumbers[0]) ||
        ((iNumber >= 1) && ((1 > anNumbers[0]) || (12 < anNumbers[1])) ||
-	((anNumbers[1] >= 1) && (daysInMonth(anNumbers[1]) < anNumbers[0]))) ||
+        ((anNumbers[1] >= 1) && (daysInMonth(anNumbers[1]) < anNumbers[0]))) ||
        ((iNumber == 2) && ((1 > anNumbers[1]) ||
-			   (daysInMonth(anNumbers[1]) < anNumbers[0]) ||
-			   (m_cLast.year() < anNumbers[2]) ||
-			   ((m_cFirst.year()-anNumbers[2] < 10) &&
-			    anNumbers[2] < m_cFirst.year()) ||
-			   (anNumbers[2] >= m_cFirst.year() &&
-			    anNumbers[2] <= m_cLast.year() &&
-			    false == isValidDate(anNumbers[0], anNumbers[1],
-						 anNumbers[2])))) ) {
+                           (daysInMonth(anNumbers[1]) < anNumbers[0]) ||
+                           (m_cLast.year() < anNumbers[2]) ||
+                           ((m_cFirst.year()-anNumbers[2] < 10) &&
+                            anNumbers[2] < m_cFirst.year()) ||
+                           (anNumbers[2] >= m_cFirst.year() &&
+                            anNumbers[2] <= m_cLast.year() &&
+                            false == isValidDate(anNumbers[0], anNumbers[1],
+                                                 anNumbers[2])))) ) {
     DBG(("\"%s\" is an invalid date!\n", cInput.data()));
     return Invalid;
   }
   else if ( (1 <= anNumbers[0]) &&  (31 >= anNumbers[0]) &&
-	    (1 <= anNumbers[1]) &&  (12 >= anNumbers[1]) &&
-	    (1752 <= anNumbers[2]) &&  (8000 >= anNumbers[2]) &&
-	    (daysInMonth(anNumbers[1], anNumbers[2]) >= anNumbers[0]) ) {
+            (1 <= anNumbers[1]) &&  (12 >= anNumbers[1]) &&
+            (1752 <= anNumbers[2]) &&  (8000 >= anNumbers[2]) &&
+            (daysInMonth(anNumbers[1], anNumbers[2]) >= anNumbers[0]) ) {
     QDate cDate(anNumbers[2], anNumbers[1], anNumbers[0]);
     if ( (cDate >= m_cFirst) && ( cDate <= m_cLast) ) {
       DBG(("\"%s\" is an acceptable date!\n", cInput.data()));
@@ -150,6 +165,7 @@ const
 }
 
 
+//*****************************************************************************
 /*!
   Fix the date contained in \a cInput to be valid according to
   this validators requirements.
@@ -161,6 +177,7 @@ const
   if it contains a date after the last allowed, the last will be used;
   else it will be left unchanged.
 */
+//*****************************************************************************
 
 void
 KDateValidator::fixup(QString& cInput)
@@ -169,7 +186,7 @@ KDateValidator::fixup(QString& cInput)
 
   int nLength = cInput.length() + 1;
   int iNumber = 0;
-  int anNumbers[3] = { 0 };	// Day, month, year
+  int anNumbers[3] = { 0 };     // Day, month, year
   for ( int iPos = 0; iPos < nLength; iPos++ ) {
     QChar cChar = cInput[iPos];
     if ( cChar.isDigit() ) {
@@ -187,7 +204,7 @@ KDateValidator::fixup(QString& cInput)
   cInput.detach();
   int nLength = cInput.size();
   int iNumber = 0;
-  int anNumbers[3] = { 0 };	// Day, month, year
+  int anNumbers[3] = { 0 };     // Day, month, year
   for ( int iPos = 0; iPos < nLength; iPos++ ) {
     char nChar = cInput[iPos];
     if ( isdigit(nChar) ) {
@@ -221,10 +238,12 @@ KDateValidator::fixup(QString& cInput)
 }
 
 
+//*****************************************************************************
 /*!
   Set the range for this validator to be within \a cFirst and \a cLast.
   The default will be set to \a cDefault.
 */
+//*****************************************************************************
 
 void
 KDateValidator::setRange(QDate cFirst, QDate cDefault, QDate cLast)
@@ -241,10 +260,12 @@ KDateValidator::setRange(QDate cFirst, QDate cDefault, QDate cLast)
 }
 
 
+//*****************************************************************************
 /*!
   Check if the date created from \a nDay, \a nMonth and \a nYear
   is considered valid for this validator.
 */
+//*****************************************************************************
 
 bool
 KDateValidator::isValidDate(int nDay, int nMonth, int nYear) const
@@ -261,11 +282,13 @@ KDateValidator::isValidDate(int nDay, int nMonth, int nYear) const
 }
 
 
+//*****************************************************************************
 /*!
   Get the number of days in month number \a nMonth.
   This function does no checking on leapyears, the number of months in
   february is returned as 29.
 */
+//*****************************************************************************
 
 int
 KDateValidator::daysInMonth(int nMonth) const
@@ -276,12 +299,14 @@ KDateValidator::daysInMonth(int nMonth) const
 }
 
 
+//*****************************************************************************
 /*!
   Get the number of days in month number \a nMonth in the year \a nYear.
   This function takes leapyears into account.
 
   The month must be between 1 and 12, the year must be between 1752 and 8000.
 */
+//*****************************************************************************
 
 int
 KDateValidator::daysInMonth(int nMonth, int nYear)
@@ -297,6 +322,7 @@ KDateValidator::daysInMonth(int nMonth, int nYear)
 }
 
 
+//*****************************************************************************
 /*!
   Extract a date from \a cDateText.
 
@@ -306,6 +332,7 @@ KDateValidator::daysInMonth(int nMonth, int nYear)
 
   \sa QDate::isNull().
 */
+//*****************************************************************************
 
 QDate
 KDateValidator::convertToDate(const QString& cDateText)
@@ -328,4 +355,5 @@ KDateValidator::convertToDate(const QString& cDateText)
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

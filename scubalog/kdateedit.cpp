@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/widgets/kdateedit.cpp
+  \file kdateedit.cpp
   \brief This file contains the implementation of the KDateEdit class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

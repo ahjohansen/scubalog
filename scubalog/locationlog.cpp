@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/locationlog.cpp
+  \file locationlog.cpp
   \brief This file contains the implementation of the LocationLog class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/widgets/ktabcontrol.h
+  \file ktabcontrol.h
   \brief This file contains the definition of the KTabControl class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

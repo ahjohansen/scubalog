@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/locationlog.h
+  \file locationlog.h
   \brief This file contains the definition of the LocationLog class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

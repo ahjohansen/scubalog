@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/equipmentlog.cpp
+  \file equipmentlog.cpp
   \brief This file contains the implementation of the EquipmentLog class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

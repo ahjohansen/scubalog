@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/locationview.h
+  \file locationview.h
   \brief This file contains the definition of the LocationView class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

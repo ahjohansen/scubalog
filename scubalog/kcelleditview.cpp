@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/widgets/kcelleditview.cpp
+  \file kcelleditview.cpp
   \brief This file contains the implementation of KCellEditView.
 
   This file is part of ScubaLog, a dive logging application for KDE.

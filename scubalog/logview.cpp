@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/logview.cpp
+  \file logview.cpp
   \brief This file contains the implementation of LogView.
 
   This file is part of ScubaLog, a dive logging application for KDE.

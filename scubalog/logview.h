@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/logview.h
+  \file logview.h
   \brief This file contains the definition of the LogView class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

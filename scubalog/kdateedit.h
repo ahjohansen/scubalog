@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/widgets/kdateedit.h
+  \file kdateedit.h
   \brief This file contains the definition of KDateEdit.
 
   This file is part of ScubaLog, a dive logging application for KDE.

@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/scubalog.h
+  \file scubalog.h
   \brief This file contains the definition of the ScubaLog class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

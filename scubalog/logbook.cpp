@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/logbook.cpp
+  \file logbook.cpp
   \brief This file contains the implementation of the LogBook class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

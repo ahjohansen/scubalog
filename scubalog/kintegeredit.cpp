@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/widgets/kintegeredit.cpp
+  \file kintegeredit.cpp
   \brief This file contains the implementation of the KIntegerEdit class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

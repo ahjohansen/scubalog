@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/divelog.cpp
+  \file divelog.cpp
   \brief This file contains the implementation of the DiveLog class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

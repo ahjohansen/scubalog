@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/debug.h
+  \file debug.h
   \brief This file contains debugging helpers.
 
   This file is part of ScubaLog, a dive logging application for KDE.

@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/widgets/ktabcontrol.cpp
+  \file ktabcontrol.cpp
   \brief This file contains the implementation of the KTabControl class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/main.cpp
+  \file main.cpp
   \brief This file contains the definition of the main() function.
 
   This file is part of ScubaLog, a dive logging application for KDE.

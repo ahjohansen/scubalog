@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/loglistview.cpp
+  \file loglistview.cpp
   \brief This file contains the implementation of the LogListView class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

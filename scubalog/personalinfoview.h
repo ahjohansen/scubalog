@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/personalinfoview.h
+  \file personalinfoview.h
   \brief This file contains the definition of the PersonalInfoView class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

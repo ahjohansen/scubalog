@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/logbook.h
+  \file logbook.h
   \brief This file contains the definition of the LogBook class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

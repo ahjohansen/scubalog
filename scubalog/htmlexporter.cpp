@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/htmlexporter.cpp
+  \file htmlexporter.cpp
   \brief This file contains the implementation of HTMLExporter.
 
   This file is part of ScubaLog, a dive logging application for KDE.

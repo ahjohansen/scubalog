@@ -1,8 +1,17 @@
-// $Id$
-//
-// This code is copyrighted by (c) André Johansen 1999.
-// The class is published under the GPL, version 2.
-//
+//*****************************************************************************
+/*!
+  \file ktimevalidator.h
+  \brief This file contains the definition of the KTimeValidator class.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
+
+  $Id$
+
+  \par Copyright:
+  André Johansen.
+*/
+//*****************************************************************************
 
 #ifndef KTIMEVALIDATOR_H
 #define KTIMEVALIDATOR_H
@@ -12,6 +21,8 @@
 
 class QString;
 
+
+//*****************************************************************************
 /*!
   \class KTimeValidator
   \brief The KTimeValidator is used to validate time input.
@@ -22,12 +33,13 @@ class QString;
   If the widget is left with an invalid time, a default time will
   be used.
 */
+//*****************************************************************************
 
 class KTimeValidator : public QValidator {
   Q_OBJECT
 public:
   KTimeValidator(QTime cMin, QTime cDefault, QTime cMax,
-		 QWidget* pcParent = 0, const char* pzName = 0);
+                 QWidget* pcParent = 0, const char* pzName = 0);
   virtual ~KTimeValidator();
 
 #if QT_VERSION >= 200
@@ -64,4 +76,5 @@ protected:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/htmlexporter.h
+  \file htmlexporter.h
   \brief This file contains the definition for the HTMLExporter class.
 
   This file is part of ScubaLog, a dive logging application for KDE.

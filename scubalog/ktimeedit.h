@@ -1,8 +1,17 @@
-// $Id$
-//
-// This code is copyrighted by (c) André Johansen 1999.
-// The class is published under the GPL, version 2.
-//
+//*****************************************************************************
+/*!
+  \file ktimeedit.h
+  \brief This file contains the definition of the KTimeEdit class.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
+
+  $Id$
+
+  \par Copyright:
+  André Johansen.
+*/
+//*****************************************************************************
 
 #ifndef KTIMEEDIT_H
 #define KTIMEEDIT_H
@@ -13,6 +22,7 @@
 class KTimeValidator;
 
 
+//*****************************************************************************
 /*!
   \class KTimeEdit
   \brief The KTimeEdit class is a time input widget.
@@ -22,13 +32,14 @@ class KTimeValidator;
 
   \author André Johansen <andrej@ifi.uio.no>.
 */
+//*****************************************************************************
 
 class KTimeEdit : public QLineEdit {
   Q_OBJECT
 public:
   KTimeEdit(QWidget* pcParent = 0, const char* pzName = 0);
   KTimeEdit(QTime cFirst, QTime cDefault, QTime cLast,
-	    QWidget* pcParent = 0, const char* pzName = 0);
+            QWidget* pcParent = 0, const char* pzName = 0);
   virtual ~KTimeEdit();
 
   QTime time() const;
@@ -58,4 +69,5 @@ signals:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

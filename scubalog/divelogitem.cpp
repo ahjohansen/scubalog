@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file ScubaLog/divelogitem.cpp
+  \file divelogitem.cpp
   \brief This file contains the implementation of the DiveLogItem class.
 
   This file is part of ScubaLog, a dive logging application for KDE.
