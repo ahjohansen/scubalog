@@ -3,12 +3,12 @@
 #
 
 Name:      scubalog
-Version:   0.1.2
+Version:   0.1.3
 Release:   1
 Copyright: GPL
 Group:     Applications
 Prefix:    /usr
-Source:    http://www.stud.ifi.uio.no/~andrej/scubalog/scubalog-0.1.2.tar.gz
+Source:    http://www.stud.ifi.uio.no/~andrej/scubalog/scubalog-0.1.3.tar.gz
 URL:       http://www.stud.ifi.uio.no/~andrej/scubalog/
 Packager:  André Johansen <andrej@ifi.uio.no>
 Summary:   Dive logging application
@@ -41,6 +41,7 @@ make install
 %files
 /usr/bin/scubalog
 /usr/share/applnk/Applications/scubalog.kdelnk
+/usr/share/mimelnk/application/x-scubalog-logbook.kdelnk
 /usr/share/icons/scubalog.xpm
 /usr/share/icons/mini/scubalog.xpm
 %doc AUTHORS
