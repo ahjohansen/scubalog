@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -130,13 +128,13 @@ operator <<(QDataStream& cStream, const EquipmentLog& cLog) throw(IOException)
   unsigned int nChunkSize =
     3 * sizeof(unsigned int)
     + sizeof(unsigned int)
-    + sizeof(unsigned int) + cLog.m_cType.size()
-    + sizeof(unsigned int) + cLog.m_cName.size()
-    + sizeof(unsigned int) + cLog.m_cSerial.size()
-    + sizeof(unsigned int) + cLog.m_cServiceRequirements.size();
+    + sizeof(unsigned int) + cLog.m_cType.length()
+    + sizeof(unsigned int) + cLog.m_cName.length()
+    + sizeof(unsigned int) + cLog.m_cSerial.length()
+    + sizeof(unsigned int) + cLog.m_cServiceRequirements.length();
   for ( ; iHistoryEntry.current(); ++iHistoryEntry )
     nChunkSize += 2 * sizeof(unsigned int) +
-      iHistoryEntry.current()->comment().size();
+      iHistoryEntry.current()->comment().length();
 
   // Write the header
   unsigned int nChunkVersion = (unsigned int)EquipmentLog::e_ChunkVersion;

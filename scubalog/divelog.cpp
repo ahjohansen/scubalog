@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -28,23 +26,23 @@
 //*****************************************************************************
 
 DiveLog::DiveLog()
+  : m_nLogNumber(0),
+    m_cDiveDate(QDate::currentDate()),
+    m_cDiveStart(QTime()),
+    m_cLocation(""),
+    m_cBuddyName(""),
+    m_vMaxDepth(0.0F),
+    m_cDiveTime(QTime()),
+    m_cBottomTime(QTime()),
+    m_cGasType("Air"),
+    m_nNumLitresUsed(0),
+    m_vAirTemperature(0.0F),
+    m_vSurfaceTemperature(0.0F),
+    m_vWaterTemperature(0.0F),
+    m_ePlanType(e_SingleLevel),
+    m_cDiveType(i18n("Nature")),
+    m_cDiveDescription("")
 {
-  m_nLogNumber          = 0;
-  m_cDiveDate           = QDate::currentDate();
-  m_cDiveStart          = QTime();
-  m_cLocation           = "";
-  m_cBuddyName          = "";
-  m_vMaxDepth           = 0.0F;
-  m_cDiveTime           = QTime();
-  m_cBottomTime         = QTime();
-  m_cGasType            = "Air";
-  m_nNumLitresUsed      = 0;
-  m_vAirTemperature     = 0.0F;
-  m_vSurfaceTemperature = 0.0F;
-  m_vWaterTemperature   = 0.0F;
-  m_ePlanType           = e_SingleLevel;
-  m_cDiveType           = i18n("Nature");
-  m_cDiveDescription    = "";
 }
 
 
@@ -143,19 +141,19 @@ operator <<(QDataStream& cStream, const DiveLog& cLog)
     + sizeof(unsigned int)
     + sizeof(unsigned int)
     + sizeof(unsigned int)
-    + sizeof(unsigned int) + cLog.m_cLocation.size()
-    + sizeof(unsigned int) + cLog.m_cBuddyName.size()
+    + sizeof(unsigned int) + cLog.m_cLocation.length()
+    + sizeof(unsigned int) + cLog.m_cBuddyName.length()
     + sizeof(float)
     + sizeof(unsigned int)
     + sizeof(unsigned int)
-    + sizeof(unsigned int) + cLog.m_cGasType.size()
+    + sizeof(unsigned int) + cLog.m_cGasType.length()
     + sizeof(unsigned int)
     + sizeof(float)
     + sizeof(float)
     + sizeof(float)
     + sizeof(unsigned char)
-    + sizeof(unsigned int) + cLog.m_cDiveType.size()
-    + sizeof(unsigned int) + cLog.m_cDiveDescription.size();
+    + sizeof(unsigned int) + cLog.m_cDiveType.length()
+    + sizeof(unsigned int) + cLog.m_cDiveDescription.length();
   const unsigned char nPlanType = (unsigned char)cLog.m_ePlanType;
   cStream << MAKE_CHUNK_ID('S', 'L', 'D', 'L')
           << nChunkSize

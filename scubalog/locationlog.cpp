@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -77,7 +75,9 @@ void
 LocationLog::setName(const QString& cName)
 {
   m_cName = cName;
+#if QT_VERSION < 200
   m_cName.detach();
+#endif // QT_VERSION
 }
 
 
@@ -108,7 +108,9 @@ void
 LocationLog::setDescription(const QString& cDescription)
 {
   m_cDescription = cDescription;
+#if QT_VERSION < 200
   m_cDescription.detach();
+#endif // QT_VERSION
 }
 
 
@@ -179,8 +181,8 @@ operator <<(QDataStream& cStream, const LocationLog& cLog)
   // Calculate the chunk size
   unsigned int nChunkSize =
     3 * sizeof(unsigned int)
-    + sizeof(unsigned int) + cLog.m_cName.size()
-    + sizeof(unsigned int) + cLog.m_cDescription.size();
+    + sizeof(unsigned int) + cLog.m_cName.length()
+    + sizeof(unsigned int) + cLog.m_cDescription.length();
 
   // Write the header
   unsigned int nChunkVersion = (unsigned int)LocationLog::e_ChunkVersion;

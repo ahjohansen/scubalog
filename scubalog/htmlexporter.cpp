@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -134,7 +132,9 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
 
     // Process the dive description
     QString cDescription(pcCurrentLog->diveDescription());
+#if QT_VERSION < 200
     cDescription.detach();
+#endif // QT_VERSION
     createLinks(cDescription);
     createParagraphs(cDescription);
 
@@ -380,7 +380,9 @@ HTMLExporter::exportLocations(const LogBook& cLogBook,
     }
 
     QString cDescription(pcLog->getDescription());
+#if QT_VERSION < 200
     cDescription.detach();
+#endif // QT_VERSION
     createParagraphs(cDescription);
     createLinks(cDescription);
 
@@ -451,7 +453,9 @@ QString
 HTMLExporter::getLocationExportName(const QString& cLocationName) const
 {
   QString cExportName(cLocationName);
+#if QT_VERSION < 200
   cExportName.detach();
+#endif // QT_VERSION
   QRegExp cExpression("[\\s!\"#\\c$%%&'()\\c*\\c+,-./:<=>?@"
                       "\\^`{|}~\\c[\\x5d]");
   assert(cExpression.isValid());

@@ -275,10 +275,10 @@ LogBook::saveLogBook(const QString& cFileName) throw()
     // Write personal information
     nChunkSize =
       3 * sizeof(unsigned int)
-      + sizeof(unsigned int) + m_cDiverName.size()
-      + sizeof(unsigned int) + m_cEmailAddress.size()
-      + sizeof(unsigned int) + m_cWwwUrl.size()
-      + sizeof(unsigned int) + m_cComments.size();
+      + sizeof(unsigned int) + m_cDiverName.length()
+      + sizeof(unsigned int) + m_cEmailAddress.length()
+      + sizeof(unsigned int) + m_cWwwUrl.length()
+      + sizeof(unsigned int) + m_cComments.length();
     nChunkVersion = 1;
     cStream << MAKE_CHUNK_ID('S', 'L', 'P', 'I')
             << nChunkSize

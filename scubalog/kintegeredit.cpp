@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -111,7 +109,7 @@ void
 KIntegerEdit::setMinValue(int nMin)
 {
   KIntegerValidator* pcValidator =
-    dynamic_cast<KIntegerValidator*>(validator());
+    dynamic_cast<KIntegerValidator*>(const_cast<QValidator*>(validator()));
   pcValidator->setMinValue(nMin);
 }
 
@@ -130,7 +128,7 @@ void
 KIntegerEdit::setMaxValue(int nMax)
 {
   KIntegerValidator* pcValidator =
-    dynamic_cast<KIntegerValidator*>(validator());
+    dynamic_cast<KIntegerValidator*>(const_cast<QValidator*>(validator()));
   pcValidator->setMaxValue(nMax);
 }
 
