@@ -46,11 +46,14 @@ class ScubaLog : public KTMainWindow {
   Q_OBJECT
 public:
   ScubaLog(const char* pzName = 0);
-  ~ScubaLog();
+  virtual ~ScubaLog();
 
 public slots:
   void gotoLog();
   void saveConfig();
+
+protected:
+  virtual bool queryExit();
 
 private slots:
   void openRecent(int nRecentProjectNumber);

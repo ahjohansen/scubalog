@@ -212,6 +212,25 @@ ScubaLog::~ScubaLog()
 
 //*****************************************************************************
 /*!
+  Prevent KTMainWindow to delete the widget.
+  Notice that this function is only called when the window is closed
+  through the window manager, not from `Quit'!
+
+  Always returns `false'.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+bool
+ScubaLog::queryExit()
+{
+  return false;
+}
+
+
+//*****************************************************************************
+/*!
   The program is about to exit, save the settings.
 
   \author André Johansen.
@@ -257,6 +276,8 @@ ScubaLog::openRecent(int nRecentNumber)
   if ( pcProjectName ) {
     *m_pcProjectName = pcProjectName->copy();
 
+    statusBar()->message("Reading log book...");
+
     LogBook* pcLogBook = new LogBook();
     if ( pcLogBook->readLogBook(*m_pcProjectName) ) {
       // Insert the new logbook
@@ -272,12 +293,15 @@ ScubaLog::openRecent(int nRecentNumber)
       setCaption(cCaption);
 
       updateRecentProjects(*pcProjectName);
+      setUnsavedData(false);
+
+      statusBar()->message("Reading log book...Done", 3000);
     }
     else {
       delete pcLogBook;
-    }
 
-    setUnsavedData(false);
+      statusBar()->message("Reading log book...Failed!", 3000);
+    }
   }
 }
 
@@ -302,36 +326,44 @@ ScubaLog::openProject()
     0
   };
 
+  statusBar()->message("Reading log book...");
+
   QFileDialog cDialog(qApp->mainWidget(), "openDialog", true);
   cDialog.setCaption("[ScubaLog] Open log book");
   cDialog.setMode(QFileDialog::ExistingFile);
   cDialog.setFilters(apzFilters);
-  if ( cDialog.exec() ) {
-    QString cProjectName = cDialog.selectedFile();
-    if ( false == cProjectName.isEmpty() ) {
-      *m_pcProjectName = cProjectName.copy();
+  if ( cDialog.exec() &&
+       false == cDialog.selectedFile().isNull() ) {
+    const QString cProjectName = cDialog.selectedFile();
+    *m_pcProjectName = cProjectName.copy();
 
-      LogBook* pcLogBook = new LogBook();
-      if ( pcLogBook->readLogBook(*m_pcProjectName) ) {
-        // Insert the new logbook
-        m_pcLogListView->setLogList(&pcLogBook->diveList());
-        m_pcLogView->setLogList(&pcLogBook->diveList());
-        m_pcLocationView->setLogBook(pcLogBook);
-        m_pcPersonalInfoView->setLogBook(pcLogBook);
-        m_pcEquipmentView->setLogBook(pcLogBook);
-        delete m_pcLogBook;
-        m_pcLogBook = pcLogBook;
+    LogBook* pcLogBook = new LogBook();
+    if ( pcLogBook->readLogBook(*m_pcProjectName) ) {
+      // Insert the new logbook
+      m_pcLogListView->setLogList(&pcLogBook->diveList());
+      m_pcLogView->setLogList(&pcLogBook->diveList());
+      m_pcLocationView->setLogBook(pcLogBook);
+      m_pcPersonalInfoView->setLogBook(pcLogBook);
+      m_pcEquipmentView->setLogBook(pcLogBook);
+      delete m_pcLogBook;
+      m_pcLogBook = pcLogBook;
 
-        const QString cCaption("ScubaLog [" + cProjectName + "]");
-        setCaption(cCaption);
+      const QString cCaption("ScubaLog [" + cProjectName + "]");
+      setCaption(cCaption);
 
-        updateRecentProjects(cProjectName);
-        setUnsavedData(false);
-      }
-      else {
-        delete pcLogBook;
-      }
+      updateRecentProjects(cProjectName);
+      setUnsavedData(false);
+
+      statusBar()->message("Reading log book...Done", 3000);
     }
+    else {
+      delete pcLogBook;
+
+      statusBar()->message("Reading log book...Failed!", 3000);
+    }
+  }
+  else {
+    statusBar()->message("Reading log book...Aborted", 3000);
   }
 }
 
@@ -352,9 +384,16 @@ ScubaLog::saveProject()
   if ( m_pcProjectName->isEmpty() )
     saveProjectAs();
   else {
+    statusBar()->message("Writing log book...");
+
     bool isOk = m_pcLogBook->saveLogBook(*m_pcProjectName);
-    if ( isOk )
+    if ( isOk ) {
       setUnsavedData(false);
+      statusBar()->message("Writing log book...Done", 3000);
+    }
+    else {
+      statusBar()->message("Writing log book...Failed!", 3000);
+    }
   }
 }
 
@@ -379,25 +418,33 @@ ScubaLog::saveProjectAs()
     0
   };
 
+  statusBar()->message("Writing log book...");
+
   QFileDialog cDialog(qApp->mainWidget(), "saveDialog", true);
   cDialog.setCaption("[ScubaLog] Save log book");
   cDialog.setMode(QFileDialog::AnyFile);
   cDialog.setFilters(apzFilters);
-  if ( cDialog.exec() ) {
+  if ( cDialog.exec() &&
+       false == cDialog.selectedFile().isNull() ) {
     QString cProjectName = cDialog.selectedFile();
-    if ( false == cProjectName.isEmpty() ) {
-      if ( -1 == cProjectName.find(".slb") )
-        cProjectName += ".slb";
-      *m_pcProjectName = cProjectName.copy();
-      bool isOk = m_pcLogBook->saveLogBook(*m_pcProjectName);
-      if ( isOk ) {
-        setUnsavedData(false);
-        updateRecentProjects(cProjectName);
+    if ( -1 == cProjectName.find(".slb") )
+      cProjectName += ".slb";
+    *m_pcProjectName = cProjectName.copy();
+    bool isOk = m_pcLogBook->saveLogBook(*m_pcProjectName);
+    if ( isOk ) {
+      setUnsavedData(false);
+      updateRecentProjects(cProjectName);
 
-        const QString cCaption("ScubaLog [" + cProjectName + "]");
-        setCaption(cCaption);
-      }
+      const QString cCaption("ScubaLog [" + cProjectName + "]");
+      setCaption(cCaption);
+      statusBar()->message("Writing log book...Done", 3000);
     }
+    else {
+      statusBar()->message("Writing log book...Failed!", 3000);
+    }
+  }
+  else {
+    statusBar()->message("Writing log book...Aborted", 3000);
   }
 }
 
@@ -472,15 +519,21 @@ ScubaLog::exportLogBook()
   if ( 0 == m_pcLogBook )
     return;
 
+  statusBar()->message("Exporting log book...");
+
   QFileDialog cOutputDialog(qApp->mainWidget(), "outputDialog", true);
   cOutputDialog.setCaption("[ScubaLog] Select output directory");
   cOutputDialog.setMode(QFileDialog::Directory);
-  if ( cOutputDialog.exec() ) {
-    QString cDirName(cOutputDialog.selectedFile());
-    if ( cDirName.isNull() )
-      return;
+  if ( cOutputDialog.exec() &&
+       false == cOutputDialog.selectedFile().isNull() ) {
+    const QString cDirName(cOutputDialog.selectedFile());
     HTMLExporter cExporter;
     cExporter.exportLogBook(*m_pcLogBook, cDirName);
+
+    statusBar()->message("Exporting log book...Done", 3000);
+  }
+  else {
+    statusBar()->message("Exporting log book...Aborted", 3000);
   }
 }
 
