@@ -1,4 +1,4 @@
-#! /usr/local/bin/perl
+#!/usr/bin/perl
 
 # Changes Makefile.in to work correctly with moc files. When called
 # without parameters, automoc works recursively on all Makefile.in in
