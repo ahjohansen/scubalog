@@ -17,6 +17,7 @@
 #include <qlineedit.h>
 #include <qmultilinedit.h>
 #include <qlayout.h>
+#include "divelist.h"
 #include "logbook.h"
 #include "personalinfoview.h"
 #include "personalinfoview.moc"

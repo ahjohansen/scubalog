@@ -20,6 +20,8 @@
 #include <qtextstream.h>
 #include <qmessagebox.h>
 #include <qapplication.h>
+#include "divelist.h"
+#include "divelog.h"
 #include "logbook.h"
 #include "htmlexporter.h"
 

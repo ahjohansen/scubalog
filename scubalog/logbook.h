@@ -17,8 +17,8 @@
 #define LOGBOOK_H
 
 #include <qstring.h>
-#include "divelist.h"
 
+class DiveList;
 class EquipmentLog;
 template <class T> class QList<T>;
 
@@ -100,8 +100,8 @@ public:
   QString emailAddress() const { return m_cEmailAddress; }
   QString wwwUrl() const { return m_cWwwUrl; }
   QString comments() const { return m_cComments; }
-  DiveList& diveList() { return m_cDiveList; }
-  const DiveList& diveList() const { return m_cDiveList; }
+  DiveList& diveList();
+  const DiveList& diveList() const;
   QList<EquipmentLog>& equipmentLog() const { return *m_pcEquipment; }
 
   void setDiverName(const QString& cName) { m_cDiverName = cName; }
@@ -116,15 +116,15 @@ private:
   LogBook& operator =(const LogBook&);
 
   //! The name of the diver.
-  QString  m_cDiverName;
+  QString   m_cDiverName;
   //! The email address of the diver.
-  QString  m_cEmailAddress;
+  QString   m_cEmailAddress;
   //! A www-url pointing to the divers homepage or divelog.
-  QString  m_cWwwUrl;
+  QString   m_cWwwUrl;
   //! Other information, like comments and medical information.
-  QString  m_cComments;
+  QString   m_cComments;
   //! The dive list.
-  DiveList m_cDiveList;
+  DiveList* m_pcDiveList;
   //! The eqipment with history.
   QList<EquipmentLog>* m_pcEquipment;
 };

@@ -18,6 +18,7 @@
 #include <qmessagebox.h>
 #include "debug.h"
 #include "chunkio.h"
+#include "divelist.h"
 #include "equipmentlog.h"
 #include "logbook.h"
 
@@ -32,6 +33,7 @@
 
 LogBook::LogBook()
 {
+  m_pcDiveList  = new DiveList();
   m_pcEquipment = new QList<EquipmentLog>();
 }
 
@@ -46,6 +48,8 @@ LogBook::LogBook()
 
 LogBook::~LogBook()
 {
+  delete m_pcDiveList;
+  m_pcDiveList = 0;
   delete m_pcEquipment;
   m_pcEquipment = 0;
 }
@@ -121,7 +125,10 @@ LogBook::readLogBook(const QString& cFileName)
         delete pcLog;
         continue;
       }
-      m_cDiveList.append(pcLog);
+      if ( pcLog ) {
+        DBG(("Read log %d\n", pcLog->logNumber()));
+        m_pcDiveList->inSort(pcLog);
+      }
     }
 
     // Read an equipment entry
@@ -210,8 +217,8 @@ LogBook::saveLogBook(const QString& cFileName)
 
     // Write all the dive logs
     nChunkVersion = 1;
-    const DiveLog* pcLog;
-    for ( pcLog = m_cDiveList.first(); pcLog; pcLog = m_cDiveList.next() ) {
+    const DiveLog* pcLog = m_pcDiveList->first();
+    for ( ; pcLog; pcLog = m_pcDiveList->next() ) {
       cStream << *pcLog;
     }
 
@@ -242,6 +249,36 @@ LogBook::saveLogBook(const QString& cFileName)
     QFile::remove(cFileName);
 
   return isOk;
+}
+
+
+//*****************************************************************************
+/*!
+  Get the divelist.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+DiveList&
+LogBook::diveList()
+{
+  return *m_pcDiveList;
+}
+
+
+//*****************************************************************************
+/*!
+  Get the divelist.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+const DiveList&
+LogBook::diveList() const
+{
+  return *m_pcDiveList;
 }
 
 

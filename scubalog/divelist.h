@@ -17,6 +17,7 @@
 #define DIVELIST_H
 
 #include <qlist.h>
+#include "debug.h"
 #include "divelog.h"
 
 
@@ -35,12 +36,18 @@ class DiveList : public QList<DiveLog> {
 public:
   //! Initialize the list.
   DiveList() : QList<DiveLog>::QList<DiveLog>() {
+    DBG(("DiveList::DiveList()\n"));
     setAutoDelete(true);
   }
 
 protected:
-  //! Compare the two items \a pcLog1 and \a pcLog2 in the list.
-  virtual int compareItems(DiveLog* pcLog1, DiveLog* pcLog2) {
+  //! Compare the two items \a pcItem1 and \a pcItem2 in the list.
+  virtual int compareItems(GCI pcItem1, GCI pcItem2) {
+    DiveLog* pcLog1 = static_cast<DiveLog*>(pcItem1);
+    DiveLog* pcLog2 = static_cast<DiveLog*>(pcItem2);
+    DBG(("compareItems(): %d and %d => %d\n",
+         pcLog1->logNumber(), pcLog2->logNumber(),
+         pcLog1->logNumber() - pcLog2->logNumber()));
     return ( pcLog1->logNumber() - pcLog2->logNumber() );
   }
 
