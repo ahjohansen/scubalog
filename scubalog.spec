@@ -3,15 +3,15 @@
 #
 
 Name:		scubalog
-Version:	0.2.3
-Release:	1
+Version:	0.2.4
+Release:	0.1
 Copyright:	GPL
 Group:		Applications/Productivity
 Prefix:		/usr
 Source:		http://home.tiscali.no/andrej/scubalog/%{name}-%{version}.tar.bz2
 URL:		http://home.tiscali.no/andrej/scubalog/
-Packager:	André Johansen <andrejoh@c2i.net>
-Vendor:		André Johansen
+Packager:	AndrÃ© Johansen <andrejoh@c2i.net>
+Vendor:		AndrÃ© Johansen
 Summary:	Dive logging application
 BuildRoot:	/var/tmp/%{name}-root
 Requires:	kdelibs >= 3
@@ -26,7 +26,7 @@ It uses KDE and Qt, and integrates nicely into the K Desktop Environment.
 %setup -q
 
 %build
-./configure --prefix=$RPM_BUILD_ROOT/usr
+./configure --prefix=$RPM_BUILD_ROOT/%{_prefix}
 make
 
 %install
@@ -60,8 +60,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/16x16/apps/scubalog.png
 %{_datadir}/icons/hicolor/32x32/apps/scubalog.png
 %{_datadir}/icons/hicolor/48x48/apps/scubalog.png
-%{_datadir}/locale/es/LC_MESSAGES/scubalog.mo
-%{_datadir}/locale/no/LC_MESSAGES/scubalog.mo
+%{_datadir}/locale/*/LC_MESSAGES/scubalog.mo
 %doc AUTHORS
 %doc ChangeLog
 %doc COPYING
@@ -73,15 +72,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Apr 26 2003 André Johansen <andrejoh@c2i.net> 0.2.3-1
+* Sat Apr 26 2003 AndrÃ© Johansen <andrejoh@c2i.net> 0.2.3-1
 - ported to Red Hat Linux 9.
 
-* Tue Jun 04 2002 André Johansen <andrej@tiscali.no>
+* Tue Jun 04 2002 AndrÃ© Johansen <andrejoh@c2i.net>
 - Ported to KDE v3 on Red Hat 7.3.
 
-* Sat Nov 24 2001 André Johansen <andrej@world-online.no>
+* Sat Nov 24 2001 AndrÃ© Johansen <andrejoh@c2i.net>
 - Updated to work with KDE v2 in Red Hat 7.2.
 - Removed code documentation package.
 
-* Thu Feb 17 2000 André Johansen <andrej@ifi.uio.no>
+* Thu Feb 17 2000 AndrÃ© Johansen <andrejoh@c2i.net>
 - Changed default prefix to /usr to comply with Red Hat 6.1.

@@ -36,7 +36,7 @@ dnl Perform program name transformation
 AC_ARG_PROGRAM
 
 dnl Automake doc recommends to do this only here. (Janos)
-AM_INIT_AUTOMAKE(scubalog, "0.2.3") dnl searches for some needed programs
+AM_INIT_AUTOMAKE(scubalog, "0.2.4") dnl searches for some needed programs
 
 KDE_SET_PREFIX
 
@@ -61,7 +61,7 @@ AC_CONFIG_FILES([ Makefile ])
 AC_CONFIG_FILES([ admin/Makefile ])
 AC_CONFIG_FILES([ po/Makefile ])
 AC_CONFIG_FILES([ scubalog/Makefile ])
-AC_CONFIG_FILES([ scubalog/pics/Makefile ])
+dnl AC_CONFIG_FILES([ scubalog/pics/Makefile ])
 AC_OUTPUT
 if test "$all_tests" = "bad"; then
   if test ! "$cache_file" = "/dev/null"; then
