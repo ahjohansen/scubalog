@@ -44,6 +44,13 @@ public:
                              const QString& cFileName) const;
 
 protected:
+  bool exportIndex(const LogBook& cLogBook, const QString& cDirName) const;
+  bool exportLocations(const LogBook& cLogBook, const QString& cDirName) const;
+
+  bool hasLocation(const LogBook& cLogBook,
+                   const QString& cLocationName) const;
+  QString getLocationExportName(const QString& cLocationName) const;
+
   void createParagraphs(QString& cText) const;
   void createLinks(QString& cText) const;
 
