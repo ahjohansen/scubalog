@@ -3,14 +3,14 @@
 #
 
 Name:      scubalog
-Version:   0.2.0
+Version:   0.2.2
 Release:   1
 Copyright: GPL
 Group:     Applications
 Prefix:    /usr
-Source:    http://www.stud.ifi.uio.no/~andrej/scubalog/scubalog-0.2.0.tar.gz
-URL:       http://www.stud.ifi.uio.no/~andrej/scubalog/
-Packager:  André Johansen <andrej@ifi.uio.no>
+Source:    http://home.tiscali.no/andrej/scubalog/scubalog-0.2.2.tar.bz2
+URL:       http://home.tiscali.no/andrej/scubalog/
+Packager:  André Johansen <andrej@tiscali.no>
 Summary:   Dive logging application
 BuildRoot: /var/tmp/%{name}-root
 
@@ -32,13 +32,13 @@ make install
 rm -rf $RPM_BUILD_ROOT
 
 %files
-/usr/bin/scubalog
-/usr/share/applnk/Applications/scubalog.desktop
-/usr/share/doc/HTML/en/scubalog
-/usr/share/icons/locolor/16x16/apps/scubalog.png
-/usr/share/icons/locolor/32x32/apps/scubalog.png
-/usr/share/locale/es/LC_MESSAGES/scubalog.mo
-/usr/share/locale/no/LC_MESSAGES/scubalog.mo
+%{prefix}/bin/scubalog
+%{prefix}/share/applnk/Applications/scubalog.desktop
+%{prefix}/share/doc/HTML/en/scubalog
+%{prefix}/share/icons/locolor/16x16/apps/scubalog.png
+%{prefix}/share/icons/locolor/32x32/apps/scubalog.png
+%{prefix}/share/locale/es/LC_MESSAGES/scubalog.mo
+%{prefix}/share/locale/no/LC_MESSAGES/scubalog.mo
 %doc AUTHORS
 %doc ChangeLog
 %doc COPYING
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Jun 04 2002 André Johansen <andrej@tiscali.no>
+- Ported to KDE v3 on Red Hat 7.3.
+
 * Sat Nov 24 2001 André Johansen <andrej@world-online.no>
 - Updated to work with KDE v2 in Red Hat 7.2.
 - Removed code documentation package.
