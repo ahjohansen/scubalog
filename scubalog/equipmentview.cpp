@@ -34,6 +34,8 @@
 /*!
   Create the view with \a pcParent as parent widget and \a pzName as
   the widget name.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -144,6 +146,8 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
 //*****************************************************************************
 /*!
   Destroy the view.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -158,6 +162,8 @@ EquipmentView::~EquipmentView()
 
   This function will update the view. If a null-pointer is passed,
   the view will be cleared and the widgets will be disabled.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -166,6 +172,7 @@ EquipmentView::setLogBook(LogBook* pcLogBook)
 {
   m_pcLogBook = pcLogBook;
   if ( pcLogBook ) {
+    m_pcItemView->clear();
     m_pcItemView->setAutoUpdate(false);
     QList<EquipmentLog>& cEquipment = pcLogBook->equipmentLog();
     EquipmentLog* pcItem = cEquipment.first();
@@ -201,6 +208,8 @@ EquipmentView::setLogBook(LogBook* pcLogBook)
   The item with index \a nItemNumber has been selected.
 
   Update the rest of the GUI.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -233,6 +242,8 @@ EquipmentView::itemSelected(int nItemNumber)
 //*****************************************************************************
 /*!
   Create a new equipment item.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -263,6 +274,8 @@ EquipmentView::newItem()
 //*****************************************************************************
 /*!
   Delete the current equipment item.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -298,6 +311,8 @@ EquipmentView::deleteItem()
 //*****************************************************************************
 /*!
   Move the currently selected item up in the item list.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -329,6 +344,8 @@ EquipmentView::moveCurrentUp()
 //*****************************************************************************
 /*!
   Move the currently selected item down in the item list.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -362,6 +379,8 @@ EquipmentView::moveCurrentDown()
 //*****************************************************************************
 /*!
   Change the name of the current equipemnt item.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -385,6 +404,8 @@ EquipmentView::changeItemName()
 //*****************************************************************************
 /*!
   Edit the name of the item \a nItemNumber.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -406,6 +427,8 @@ EquipmentView::editItemName(int nItemNumber)
   The item type has been changed to \a pzType.
 
   Save the text in the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -426,6 +449,8 @@ EquipmentView::itemTypeChanged(const char* pzType)
   The item serial number has been changed to \a pzSerial.
 
   Save the text in the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -446,6 +471,8 @@ EquipmentView::itemSerialChanged(const char* pzSerial)
   The item service requirements has been changed to \a pzService.
 
   Save the text in the log.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -466,6 +493,8 @@ EquipmentView::itemServiceChanged(const char* pzService)
   The log entry in cell (\a nRow, \a nCol) has been changed to \a cText.
 
   Save the text for later use.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
