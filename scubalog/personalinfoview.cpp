@@ -6,24 +6,21 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
 //*****************************************************************************
 
-#include <qlabel.h>
-#include <qlineedit.h>
-#include <qmultilinedit.h>
-#include <qlayout.h>
-#include <kapp.h>
-#include <klocale.h>
-#include "divelist.h"
-#include "logbook.h"
 #include "personalinfoview.h"
+#include "logbook.h"
+#include "divelist.h"
 
-
+#include <klocale.h>
+#include <kapp.h>
+#include <qlayout.h>
+#include <qmultilinedit.h>
+#include <qlineedit.h>
+#include <qlabel.h>
 
 //*****************************************************************************
 /*!
@@ -36,7 +33,11 @@
 
 PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
   : QWidget(pcParent, pzName),
-    m_pcName(0), m_pcEmailAddress(0), m_pcWwwUrl(0), m_pcComments(0),
+    m_pcName(0),
+    m_pcEmailAddress(0),
+    m_pcWwwUrl(0),
+    m_pcLoggedDiveTime(0),
+    m_pcComments(0),
     m_pcLogBook(0)
 {
   //

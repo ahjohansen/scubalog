@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -39,17 +37,16 @@
 
 KTimeValidator::KTimeValidator(QTime cFirst, QTime cDefault, QTime cLast,
                                QWidget* pcParent, const char* pzName)
-  : QValidator(pcParent, pzName)
+  : QValidator(pcParent, pzName),
+    m_cFirst(cFirst),
+    m_cLast(cLast),
+    m_cDefault(cDefault)
 {
   assert(cFirst.isValid());
   assert(cDefault.isValid());
   assert(cLast.isValid());
   assert(cFirst <= cDefault);
   assert(cDefault <= cLast);
-
-  m_cFirst   = cFirst;
-  m_cDefault = cDefault;
-  m_cLast    = cLast;
 }
 
 

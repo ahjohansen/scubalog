@@ -6,37 +6,34 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
 //*****************************************************************************
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <limits.h>
-#include <assert.h>
-#include <new>
-#include <qlabel.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-#include <qcombobox.h>
-#include <qmultilinedit.h>
-#include <qpushbutton.h>
-#include <qmessagebox.h>
-#include <klocale.h>
-#include <kapp.h>
-#include "debug.h"
-#include "kintegeredit.h"
-#include "kdateedit.h"
-#include "ktimeedit.h"
+#include "logview.h"
 #include "logbook.h"
 #include "divelist.h"
 #include "logbook.h"
-#include "logview.h"
+#include "ktimeedit.h"
+#include "kdateedit.h"
+#include "kintegeredit.h"
+#include "debug.h"
 
-
+#include <kapp.h>
+#include <klocale.h>
+#include <qmessagebox.h>
+#include <qpushbutton.h>
+#include <qmultilinedit.h>
+#include <qcombobox.h>
+#include <qlayout.h>
+#include <qpushbutton.h>
+#include <qlabel.h>
+#include <new>
+#include <assert.h>
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 //*****************************************************************************
 /*!
@@ -50,7 +47,24 @@
 LogView::LogView(QWidget* pcParent, const char* pzName)
   : QWidget(pcParent, pzName),
     m_pcLogBook(0),
-    m_pcCurrentLog(0)
+    m_pcCurrentLog(0),
+    m_pcDiveNumber(0),
+    m_pcDiveDate(0),
+    m_pcDiveStart(0),
+    m_pcDiveTime(0),
+    m_pcGasType(0),
+    m_pcAirTemp(0),
+    m_pcWaterTemp(0),
+    m_pcLocation(0),
+    m_pcEditLocation(0),
+    m_pcPlanSelector(0),
+    m_pcBottomTime(0),
+    m_pcMaxDepth(0),
+    m_pcBuddy(0),
+    m_pcDiveTypeSelector(0),
+    m_pcDescription(0),
+    m_pcPreviousLog(0),
+    m_pcNextLog(0)
 {
   QLabel* pcDiveNumLabel = new QLabel(this, "diveNumberText");
   pcDiveNumLabel->setText(i18n("Dive &number:"));

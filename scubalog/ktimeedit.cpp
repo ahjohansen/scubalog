@@ -6,19 +6,16 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
 //*****************************************************************************
 
-#include <string.h>
-#include <stdio.h>
-#include "ktimevalidator.h"
 #include "ktimeedit.h"
+#include "ktimevalidator.h"
 
-
+#include <stdio.h>
+#include <string.h>
 
 //*****************************************************************************
 /*!
@@ -30,9 +27,10 @@
 //*****************************************************************************
 
 KTimeEdit::KTimeEdit(QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName)
+  : QLineEdit(pcParent, pzName),
+    m_cTime(QTime::currentTime()),
+    m_pcValidator(0)
 {
-  m_cTime = QTime::currentTime();
   setText(m_cTime.toString());
   m_pcValidator = new KTimeValidator(QTime(), m_cTime, QTime(23,59,59));
   setValidator(m_pcValidator);
@@ -50,9 +48,10 @@ KTimeEdit::KTimeEdit(QWidget* pcParent, const char* pzName)
 
 KTimeEdit::KTimeEdit(QTime cFirst, QTime cDefault, QTime cLast,
                      QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName)
+  : QLineEdit(pcParent, pzName),
+    m_cTime(cDefault),
+    m_pcValidator(0)
 {
-  m_cTime = cDefault;
   setText(m_cTime.toString());
   m_pcValidator = new KTimeValidator(cFirst, cDefault, cLast);
   setValidator(m_pcValidator);

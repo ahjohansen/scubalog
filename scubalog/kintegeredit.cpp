@@ -11,10 +11,11 @@
 */
 //*****************************************************************************
 
-#include <limits.h>
-#include <assert.h>
-#include "kintegervalidator.h"
 #include "kintegeredit.h"
+#include "kintegervalidator.h"
+
+#include <assert.h>
+#include <limits.h>
 
 //*****************************************************************************
 /*!
@@ -29,7 +30,9 @@
 //*****************************************************************************
 
 KIntegerEdit::KIntegerEdit(QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName), m_pcValidator(0)
+  : QLineEdit(pcParent, pzName),
+    m_pcValidator(0),
+    m_nInteger(0)
 {
   m_pcValidator = new KIntegerValidator(INT_MIN, 0, INT_MAX);
   setValidator(m_pcValidator);
@@ -51,7 +54,9 @@ KIntegerEdit::KIntegerEdit(QWidget* pcParent, const char* pzName)
 
 KIntegerEdit::KIntegerEdit(int nMin, int nDefault, int nMax,
                            QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName), m_pcValidator(0)
+  : QLineEdit(pcParent, pzName),
+    m_pcValidator(0),
+    m_nInteger(0)
 {
   m_pcValidator = new KIntegerValidator(nMin, nDefault, nMax);
   setValidator(m_pcValidator);

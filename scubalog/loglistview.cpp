@@ -6,28 +6,25 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
 //*****************************************************************************
 
-#include <assert.h>
-#include <new>
-#include <qframe.h>
-#include <qlistview.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-#include <qmessagebox.h>
-#include <kapp.h>
-#include <klocale.h>
-#include "debug.h"
-#include "divelist.h"
-#include "divelogitem.h"
 #include "loglistview.h"
+#include "divelogitem.h"
+#include "divelist.h"
+#include "debug.h"
 
-
+#include <klocale.h>
+#include <kapp.h>
+#include <qmessagebox.h>
+#include <qlayout.h>
+#include <qpushbutton.h>
+#include <qlistview.h>
+#include <qframe.h>
+#include <new>
+#include <assert.h>
 
 //*****************************************************************************
 /*!
@@ -39,7 +36,12 @@
 //*****************************************************************************
 
 LogListView::LogListView(QWidget* pcParent, const char* pzName)
-  : QWidget(pcParent, pzName)
+  : QWidget(pcParent, pzName),
+    m_pcDiveListView(0),
+    m_pcNewLog(0),
+    m_pcDeleteLog(0),
+    m_pcViewLog(0),
+    m_pcDiveLogList(0)
 {
   m_pcDiveListView = new QListView(this, "dives");
   m_pcDiveListView->setFrameStyle(QFrame::WinPanel|QFrame::Sunken);
@@ -84,8 +86,6 @@ LogListView::LogListView(QWidget* pcParent, const char* pzName)
   pcDLVButtonLayout->addStretch(10);
   pcDLVButtonLayout->addWidget(m_pcViewLog);
   pcDLVTopLayout->activate();
-
-  m_pcDiveLogList = 0;
 }
 
 

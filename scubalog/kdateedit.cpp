@@ -27,7 +27,8 @@
 //*****************************************************************************
 
 KDateEdit::KDateEdit(QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName)
+  : QLineEdit(pcParent, pzName),
+    m_pcValidator(0)
 {
   m_cDate = QDate::currentDate();
   setText(m_cDate.toString());
@@ -47,7 +48,8 @@ KDateEdit::KDateEdit(QWidget* pcParent, const char* pzName)
 
 KDateEdit::KDateEdit(QDate cFirst, QDate cDefault, QDate cLast,
                      QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName)
+  : QLineEdit(pcParent, pzName),
+    m_pcValidator(0)
 {
   m_cDate = cDefault;
   setText(m_cDate.toString());

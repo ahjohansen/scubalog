@@ -44,7 +44,18 @@
 
 EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   : QWidget(pcParent, pzName),
-    m_pcLogBook(0), m_pcLogView(0)
+    m_pcLogBook(0),
+    m_pcItemView(0),
+    m_pcNew(0),
+    m_pcDelete(0),
+    m_pcMoveUp(0),
+    m_pcMoveDown(0),
+    m_pcItemName(0),
+    m_pcType(0),
+    m_pcSerial(0),
+    m_pcService(0),
+    m_pcLogView(0),
+    m_pcLogEntryMenu(0)
 {
   QSplitter* pcSplitter =
     new QSplitter(QSplitter::Vertical, this, "splitter");

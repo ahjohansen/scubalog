@@ -12,57 +12,57 @@
 //*****************************************************************************
 
 #include "scubalog.h"
-
-#include <limits.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <new>
-#include <qcolor.h>
-#include <qframe.h>
-#include <qpushbutton.h>
-#include <qmenubar.h>
-#include <qpopupmenu.h>
-#include <qkeycode.h>
-#include <qstring.h>
-#include <qstrlist.h>
-#include <qregexp.h>
-#include <qfiledialog.h>
-#include <qlistview.h>
-#include <qmessagebox.h>
-#include <qlist.h>
-#include <qpaintdevicemetrics.h>
-#include <qprinter.h>
-#include <qpainter.h>
-#include <qtabwidget.h>
-#include <kapp.h>
-#include <kstdaccel.h>
-#include <kstatusbar.h>
-#include <kpopupmenu.h>
-#include <kiconloader.h>
-#include <ktoolbar.h>
-#include <kurl.h>
-#include <kglobal.h> // global values in kde2
-#include <kconfig.h>
-#include <klocale.h>
-#include <kmenubar.h>
-#include <kio/job.h>
-#include <kio/netaccess.h>
-#include <qdragobject.h>
-#include <kstdaction.h>
-#include "config.h"
-#include "debug.h"
-#include "integerdialog.h"
-#include "divelist.h"
-#include "logbook.h"
-#include "divelogitem.h"
-#include "loglistview.h"
-#include "logview.h"
-#include "locationview.h"
-#include "personalinfoview.h"
-#include "equipmentview.h"
-#include "htmlexporter.h"
-#include "udcfexporter.h"
 #include "scubalogproject.h"
+#include "udcfexporter.h"
+#include "htmlexporter.h"
+#include "equipmentview.h"
+#include "personalinfoview.h"
+#include "locationview.h"
+#include "logview.h"
+#include "loglistview.h"
+#include "divelogitem.h"
+#include "logbook.h"
+#include "divelist.h"
+#include "integerdialog.h"
+#include "debug.h"
+#include "config.h"
+
+#include <kstdaction.h>
+#include <qdragobject.h>
+#include <kio/netaccess.h>
+#include <kio/job.h>
+#include <kmenubar.h>
+#include <klocale.h>
+#include <kconfig.h>
+#include <kglobal.h> // global values in kde2
+#include <kurl.h>
+#include <ktoolbar.h>
+#include <kiconloader.h>
+#include <kpopupmenu.h>
+#include <kstatusbar.h>
+#include <kstdaccel.h>
+#include <kapp.h>
+#include <qtabwidget.h>
+#include <qpainter.h>
+#include <qprinter.h>
+#include <qpaintdevicemetrics.h>
+#include <qlist.h>
+#include <qmessagebox.h>
+#include <qlistview.h>
+#include <qfiledialog.h>
+#include <qregexp.h>
+#include <qstrlist.h>
+#include <qstring.h>
+#include <qkeycode.h>
+#include <qpopupmenu.h>
+#include <qmenubar.h>
+#include <qpushbutton.h>
+#include <qframe.h>
+#include <qcolor.h>
+#include <new>
+#include <stdlib.h>
+#include <assert.h>
+#include <limits.h>
 
 //*****************************************************************************
 /*!
@@ -78,8 +78,15 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
   : KMainWindow(0, pzName),
     m_pcProjectName(0),
     m_pcLogBook(0),
+    m_pcRecentMenu(0),
+    m_pcViews(0),
+    m_pcLogListView(0),
+    m_pcLocationView(0),
+    m_pcPersonalInfoView(0),
+    m_pcEquipmentView(0),
     m_pcKfmUrl(0),
-    m_pcKfmFileName(0)
+    m_pcKfmFileName(0),
+    m_bReadLastUsedProject(true)
 {
   KApplication* pcApp = KApplication::kApplication();
   connect(pcApp, SIGNAL(saveYourself()), SLOT(saveConfig()));
