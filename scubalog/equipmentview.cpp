@@ -192,6 +192,12 @@ EquipmentView::setLogBook(LogBook* pcLogBook)
     m_pcType->setEnabled(bItemsExist);
     m_pcSerial->setEnabled(bItemsExist);
     m_pcService->setEnabled(bItemsExist);
+    if ( false == bItemsExist ) {
+      m_pcType->setText("");
+      m_pcSerial->setText("");
+      m_pcService->setText("");
+      m_pcLogView->clear();
+    }
   }
   else {
     m_pcItemView->clear();
@@ -199,6 +205,10 @@ EquipmentView::setLogBook(LogBook* pcLogBook)
     m_pcDelete->setEnabled(false);
     m_pcMoveUp->setEnabled(false);
     m_pcMoveDown->setEnabled(false);
+    m_pcType->setText("");
+    m_pcSerial->setText("");
+    m_pcService->setText("");
+    m_pcLogView->clear();
   }
 }
 
@@ -438,9 +448,10 @@ EquipmentView::itemTypeChanged(const char* pzType)
   assert(m_pcLogBook);
   QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.at(m_pcItemView->currentItem());
-  assert(pcLog);
-  QString cType(pzType);
-  pcLog->setType(cType);
+  if ( pcLog ) {
+    QString cType(pzType);
+    pcLog->setType(cType);
+  }
 }
 
 
@@ -460,9 +471,10 @@ EquipmentView::itemSerialChanged(const char* pzSerial)
   assert(m_pcLogBook);
   QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.at(m_pcItemView->currentItem());
-  assert(pcLog);
-  QString cSerial(pzSerial);
-  pcLog->setSerialNumber(cSerial);
+  if ( pcLog ) {
+    QString cSerial(pzSerial);
+    pcLog->setSerialNumber(cSerial);
+  }
 }
 
 
@@ -482,9 +494,10 @@ EquipmentView::itemServiceChanged(const char* pzService)
   assert(m_pcLogBook);
   QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.at(m_pcItemView->currentItem());
-  assert(pcLog);
-  QString cServiceRequirements(pzService);
-  pcLog->setServiceRequirements(cServiceRequirements);
+  if ( pcLog ) {
+    QString cServiceRequirements(pzService);
+    pcLog->setServiceRequirements(cServiceRequirements);
+  }
 }
 
 
