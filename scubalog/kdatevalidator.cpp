@@ -1,6 +1,6 @@
 //*****************************************************************************
 /*!
-  \file kdateedit.cpp
+  \file kdatevalidator.cpp
   \brief This file contains the implementation of the KDateValidator class.
 
   This file is part of ScubaLog, a dive logging application for KDE.
