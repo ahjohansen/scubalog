@@ -6,8 +6,6 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
   André Johansen.
 */
@@ -15,6 +13,7 @@
 
 #include <assert.h>
 #include <qwidget.h>
+#include <qsplitter.h>
 #include <qlabel.h>
 #include <qlistbox.h>
 #include <qlineedit.h>
@@ -30,7 +29,6 @@
 #include "equipmentview.h"
 
 
-
 //*****************************************************************************
 /*!
   Create the view with \a pcParent as parent widget and \a pzName as
@@ -44,63 +42,61 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   : QWidget(pcParent, pzName),
     m_pcLogBook(0), m_pcLogView(0)
 {
-  m_pcItemView = new QListBox(this, "equipmentList");
+  QSplitter* pcSplitter =
+    new QSplitter(QSplitter::Vertical, this, "splitter");
+
+  QWidget* pcTop = new QWidget(pcSplitter);
+
+  m_pcItemView = new QListBox(pcTop, "equipmentList");
   connect(m_pcItemView, SIGNAL(highlighted(int)), SLOT(itemSelected(int)));
   connect(m_pcItemView, SIGNAL(selected(int)), SLOT(editItemName(int)));
 
-  m_pcNew = new QPushButton(this, "new");
+  m_pcNew = new QPushButton(pcTop, "new");
   m_pcNew->setText(i18n("&New"));
   m_pcNew->setEnabled(false);
   connect(m_pcNew, SIGNAL(clicked()), SLOT(newItem()));
 
-  m_pcDelete = new QPushButton(this, "delete");
+  m_pcDelete = new QPushButton(pcTop, "delete");
   m_pcDelete->setText(i18n("Delete"));
   m_pcDelete->setEnabled(false);
   connect(m_pcDelete, SIGNAL(clicked()), SLOT(deleteItem()));
 
-  m_pcMoveUp = new QPushButton(this, "moveUp");
+  m_pcMoveUp = new QPushButton(pcTop, "moveUp");
   m_pcMoveUp->setText(i18n("Move &up"));
   m_pcMoveUp->setEnabled(false);
   connect(m_pcMoveUp, SIGNAL(clicked()), SLOT(moveCurrentUp()));
 
-  m_pcMoveDown = new QPushButton(this, "moveDown");
+  m_pcMoveDown = new QPushButton(pcTop, "moveDown");
   m_pcMoveDown->setText(i18n("Move &down"));
   m_pcMoveDown->setEnabled(false);
   connect(m_pcMoveDown, SIGNAL(clicked()), SLOT(moveCurrentDown()));
 
-  m_pcItemName = new QLineEdit(this, "itemName");
-  m_pcItemName->setMinimumSize(m_pcItemName->sizeHint());
+  m_pcItemName = new QLineEdit(pcTop, "itemName");
   m_pcItemName->hide();
   connect(m_pcItemName, SIGNAL(returnPressed()), SLOT(changeItemName()));
 
-  QLabel* pcTypeText = new QLabel(this, "itemTypeText");
+  QLabel* pcTypeText = new QLabel(pcTop, "itemTypeText");
   pcTypeText->setText(i18n("Type: "));
-  pcTypeText->setMinimumSize(pcTypeText->sizeHint());
 
-  m_pcType = new QLineEdit(this, "itemType");
-  m_pcType->setMinimumSize(m_pcType->sizeHint());
+  m_pcType = new QLineEdit(pcTop, "itemType");
   connect(m_pcType, SIGNAL(textChanged(const char*)),
           SLOT(itemTypeChanged(const char*)));
 
-  QLabel* pcSerialText = new QLabel(this, "itemSerialText");
+  QLabel* pcSerialText = new QLabel(pcTop, "itemSerialText");
   pcSerialText->setText(i18n("Serial number: "));
-  pcSerialText->setMinimumSize(pcSerialText->sizeHint());
 
-  m_pcSerial = new QLineEdit(this, "serial");
-  m_pcSerial->setMinimumSize(m_pcSerial->sizeHint());
+  m_pcSerial = new QLineEdit(pcTop, "serial");
   connect(m_pcSerial, SIGNAL(textChanged(const char*)),
           SLOT(itemSerialChanged(const char*)));
 
-  QLabel* pcServiceText = new QLabel(this, "serviceText");
+  QLabel* pcServiceText = new QLabel(pcTop, "serviceText");
   pcServiceText->setText(i18n("Service: "));
-  pcServiceText->setMinimumSize(pcServiceText->sizeHint());
 
-  m_pcService = new QLineEdit(this, "service");
-  m_pcService->setMinimumSize(m_pcService->sizeHint());
+  m_pcService = new QLineEdit(pcTop, "service");
   connect(m_pcService, SIGNAL(textChanged(const char*)),
           SLOT(itemServiceChanged(const char*)));
 
-  m_pcLogView = new KCellEditView(2, this, "equipmentLog");
+  m_pcLogView = new KCellEditView(2, pcSplitter, "equipmentLog");
   m_pcLogView->setColEditor(0, new KDateEdit(m_pcLogView, "dateEditor"));
   m_pcLogView->setColEditor(1, new QLineEdit(m_pcLogView, "eventEditor"));
   m_pcLogView->setColumnName(0, i18n("Date"));
@@ -108,18 +104,29 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   connect(m_pcLogView, SIGNAL(textChanged(int, int, const QString&)),
           SLOT(logEntryChanged(int, int, const QString&)));
 
-  QSize cSize(m_pcMoveDown->sizeHint());
-  m_pcNew->setMinimumSize(cSize);
-  m_pcDelete->setMinimumSize(cSize);
-  m_pcMoveUp->setMinimumSize(cSize);
-  m_pcMoveDown->setMinimumSize(cSize);
-
 
   //
-  // Geometry management using layout engines
+  // Geometry management
   //
 
-  QVBoxLayout* pcTopLayout    = new QVBoxLayout(this, 5);
+  QSize cButtonSize(m_pcMoveDown->sizeHint());
+  m_pcItemName->setMinimumSize(m_pcItemName->sizeHint());
+  m_pcNew->setMinimumSize(cButtonSize);
+  m_pcDelete->setMinimumSize(cButtonSize);
+  m_pcMoveUp->setMinimumSize(cButtonSize);
+  m_pcMoveDown->setMinimumSize(cButtonSize);
+  pcTypeText->setMinimumSize(pcTypeText->sizeHint());
+  m_pcType->setMinimumSize(m_pcType->sizeHint());
+  pcSerialText->setMinimumSize(pcSerialText->sizeHint());
+  m_pcSerial->setMinimumSize(m_pcSerial->sizeHint());
+  pcServiceText->setMinimumSize(pcServiceText->sizeHint());
+  m_pcService->setMinimumSize(m_pcService->sizeHint());
+
+  QBoxLayout* pcSplitLayout = new QVBoxLayout(this, 5);
+  pcSplitLayout->addWidget(pcSplitter);
+  pcSplitLayout->activate();
+
+  QVBoxLayout* pcTopLayout    = new QVBoxLayout(pcTop, 5);
   QHBoxLayout* pcButtonLayout = new QHBoxLayout();
   QGridLayout* pcInfoLayout   = new QGridLayout(2, 4);
   pcTopLayout->addWidget(m_pcItemView, 2);
@@ -139,7 +146,6 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   pcInfoLayout->addWidget(m_pcSerial,     0, 3);
   pcInfoLayout->addWidget(pcServiceText,  1, 0);
   pcInfoLayout->addMultiCellWidget(m_pcService, 1, 1, 1, 3);
-  pcTopLayout->addWidget(m_pcLogView, 3);
   pcTopLayout->activate();
 }
 
