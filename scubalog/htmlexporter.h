@@ -44,6 +44,9 @@ public:
                              const QString& cFileName) const;
 
 protected:
+  void createParagraphs(QString& cText) const;
+  void createLinks(QString& cText) const;
+
   void errorMessage(const QString& cMessage) const;
 };
 

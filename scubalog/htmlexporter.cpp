@@ -13,6 +13,7 @@
 */
 //*****************************************************************************
 
+#include <limits.h>
 #include <assert.h>
 #include <qlist.h>
 #include <qdir.h>
@@ -20,6 +21,8 @@
 #include <qtextstream.h>
 #include <qmessagebox.h>
 #include <qapplication.h>
+#include <qregexp.h>
+#include "debug.h"
 #include "divelist.h"
 #include "divelog.h"
 #include "logbook.h"
@@ -29,6 +32,8 @@
 //*****************************************************************************
 /*!
   Initialize the exporter object.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -40,6 +45,8 @@ HTMLExporter::HTMLExporter()
 //*****************************************************************************
 /*!
   Destroy the exporter object.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -54,12 +61,14 @@ HTMLExporter::~HTMLExporter()
   Returns `true' if successful, else `false'.
 
   \warning This function is not yet implemented.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
 bool
-HTMLExporter::exportLog(const DiveLog& cLog,
-                        const QString& cFileName) const
+HTMLExporter::exportLog(const DiveLog& /*cLog*/,
+                        const QString& /*cFileName*/) const
 {
   return false;
 }
@@ -69,6 +78,8 @@ HTMLExporter::exportLog(const DiveLog& cLog,
 /*!
   Export the logbook \a cLogBook to the directory \a cDirName.
   Returns `true' on success, `false' on failure.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -132,7 +143,9 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
              << "</BODY>\n"
              << "</HTML>\n";
 
+  //
   // Export the dive logs
+  //
   for ( iLog.toFirst(); iLog.current(); ++iLog ) {
     const DiveLog* pcCurrentLog = iLog.current();
     QString cLogNumber;
@@ -149,6 +162,14 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
       errorMessage(cMessage);
       return false;
     }
+
+    // Process the dive description
+    QString cDescription(pcCurrentLog->diveDescription());
+    cDescription.detach();
+    createLinks(cDescription);
+    createParagraphs(cDescription);
+
+    // Output
     QTextStream cStream(&cFile);
     cStream << "<HTML>"
             << "<HEAD>\n"
@@ -180,8 +201,8 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
             << pcCurrentLog->diveTime().toString()
             << "<BR>\n"
             << "<P>\n"
-            << pcCurrentLog->diveDescription()
-            << "</P>\n";
+            << cDescription
+            << "\n<HR>\n";
     if ( false == iLog.atFirst() ) {
       QListIterator<DiveLog> iPreviousLog = iLog;
       --iPreviousLog;
@@ -194,10 +215,10 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
       ++iNextLog;
       cStream << "<A HREF=\""
               << (iNextLog.current())->logNumber()
-              << ".html\">Next log</A>";
+              << ".html\">Next log</A> ";
     }
-    cStream << "\n"
-            << "<HR>\n"
+    cStream << "<A HREF=\"logbook.html\">Index</A>\n"
+            << "<P>\n"
             << "Dive log exported from "
             << "<A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
             << "ScubaLog</A> "
@@ -223,7 +244,64 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
 
 //*****************************************************************************
 /*!
+  Create paragraphs in the output by replacing double newlines in \a cText
+  with an HTML paragraph marker.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+HTMLExporter::createParagraphs(QString& cText) const
+{
+  cText.replace(QRegExp("\n\n"), "\n<P>\n");
+}
+
+
+//*****************************************************************************
+/*!
+  Search for http URLs in the input \a cText and create real links.
+  The link-text will be the link itself.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+HTMLExporter::createLinks(QString& cText) const
+{
+  const QRegExp cWS("\\s");
+  bool isDone = false;
+  int nSearchPos = 0;
+  do {
+    int nStartPos = cText.find("http://", nSearchPos);
+    if ( -1 == nStartPos ) {
+      isDone = true;
+      continue;
+    }
+    int nEndPos = cText.find(cWS, nStartPos);
+    if ( -1 == nEndPos )
+      nEndPos = cText.length();
+    int nLength = nEndPos - nStartPos;
+
+    const QString cAddress = cText.mid(nStartPos, nLength);
+    DBG(("Found URL `%s' starting at %d, length %d\n",
+         cAddress.data(), nStartPos, nLength));
+
+    QString cLink;
+    cLink = "<A HREF=\"" + cAddress + "\">" + cAddress + "</A>";
+
+    cText.replace(nStartPos, nLength, cLink);
+    nSearchPos = nStartPos + cLink.length();
+  } while ( false == isDone );
+}
+
+
+//*****************************************************************************
+/*!
   Display the error-message \a cMessage.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
