@@ -1,9 +1,14 @@
-// $Id$
-//
-// This code is copyrighted by (c) André Johansen 1999.
-// The class is published under the GPL, version 2.
-//
+//*****************************************************************************
+/*!
+  \file ScubaLog/widgets/kintegervalidator.h
+  \brief This file contains the definition of the KIntegerValidator class.
 
+  $Id$
+
+  \par Copyright:
+  André Johansen.
+*/
+//*****************************************************************************
 
 #ifndef KINTEGERVALIDATOR_H
 #define KINTEGERVALIDATOR_H
@@ -13,20 +18,27 @@
 class QString;
 
 
+//*****************************************************************************
 /*!
   \class KIntegerValidator
   \brief The KIntegerValidator extends QIntValidator.
 
   This class has a default value that will be used whenever the widget
   is left with an invalid value.
+
+  \author André Johansen.
 */
+//*****************************************************************************
 
 class KIntegerValidator : public QIntValidator {
   Q_OBJECT
 public:
   KIntegerValidator(int nMin, int nDefault, int nMax,
-		    QWidget* pcParent = 0, const char* pzName = 0);
+                    QWidget* pcParent = 0, const char* pzName = 0);
   ~KIntegerValidator();
+
+  void setMinValue(int nMin);
+  void setMaxValue(int nMax);
 
   void fixup(QString& cInput);
 
@@ -46,4 +58,5 @@ protected:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

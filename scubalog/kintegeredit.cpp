@@ -27,6 +27,8 @@
   This widget will accept all valid integers.
 
   The parent widget is \a pcParent, the name is \a pzName.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -46,6 +48,8 @@ KIntegerEdit::KIntegerEdit(QWidget* pcParent, const char* pzName)
   If the widget is left with an invalid integer, \a nDefault will be used.
 
   The parent widget is \a pcParent, the name is \a pzName.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -61,6 +65,8 @@ KIntegerEdit::KIntegerEdit(int nMin, int nDefault, int nMax,
 //*****************************************************************************
 /*!
   Destroy the widget.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -73,17 +79,19 @@ KIntegerEdit::~KIntegerEdit()
 
 //*****************************************************************************
 /*!
-  Set the number to \a nNumber.
+  Set the value to \a nValue.
   If the input is invalid according to the specifications for this widget,
   the default will be used.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
 void
-KIntegerEdit::setNumber(int nNumber)
+KIntegerEdit::setValue(int nValue)
 {
   QString cText;
-  cText.sprintf("%d", nNumber);
+  cText.setNum(nValue);
   m_pcValidator->fixup(cText);
   setText(cText);
 }
@@ -91,8 +99,65 @@ KIntegerEdit::setNumber(int nNumber)
 
 //*****************************************************************************
 /*!
+  Set the minimum acceptable integer to \a nMin.
+
+  \sa setMaxValue(), KIntegerValidator::setMinValue().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+KIntegerEdit::setMinValue(int nMin)
+{
+  KIntegerValidator* pcValidator =
+    dynamic_cast<KIntegerValidator*>(validator());
+  pcValidator->setMinValue(nMin);
+}
+
+
+//*****************************************************************************
+/*!
+  Set the maximum acceptable integer to \a nMax.
+
+  \sa setMinValue(), KIntegerValidator::setMaxValue().
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+KIntegerEdit::setMaxValue(int nMax)
+{
+  KIntegerValidator* pcValidator =
+    dynamic_cast<KIntegerValidator*>(validator());
+  pcValidator->setMaxValue(nMax);
+}
+
+
+//*****************************************************************************
+/*!
+  Get the current integer.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+int
+KIntegerEdit::getValue() const
+{
+  QString cText(text());
+  int nNumber = cText.toInt();
+  return nNumber;
+}
+
+
+//*****************************************************************************
+/*!
   Ensure the value is valid when leaving the widget.
   If the number changed, emit the integerChanged() signal.
+
+  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -111,7 +176,6 @@ KIntegerEdit::focusOutEvent(QFocusEvent* pcEvent)
     emit integerChanged(nNumber);
   }
 }
-
 
 
 // Local Variables:

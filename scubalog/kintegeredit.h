@@ -1,8 +1,14 @@
-// $Id$
-//
-// This code is copyrighted by (c) André Johansen 1999.
-// This code is distributed under the GPL, version 2.
-//
+//*****************************************************************************
+/*!
+  \file ScubaLog/widgets/kintegeredit.h
+  \brief This file contains the definition of the KIntegerEdit class.
+
+  $Id$
+
+  \par Copyright:
+  André Johansen.
+*/
+//*****************************************************************************
 
 #ifndef KINTEGEREDIT_H
 #define KINTEGEREDIT_H
@@ -12,21 +18,30 @@
 class KIntegerValidator;
 
 
+//*****************************************************************************
 /*!
   \class KIntegerEdit
   \brief The KIntegerEdit class is used to edit integers.
+
+  \author André Johansen.
 */
+//*****************************************************************************
 
 class KIntegerEdit : public QLineEdit {
   Q_OBJECT
 public:
   KIntegerEdit(QWidget* pcParent = 0, const char* pzName = 0);
   KIntegerEdit(int nMin, int nDefault, int nMax,
-	       QWidget* pcParent = 0, const char* pzName = 0);
+               QWidget* pcParent = 0, const char* pzName = 0);
   ~KIntegerEdit();
 
+  void setMinValue(int nMin);
+  void setMaxValue(int nMax);
+
+  int getValue() const;
+
 public slots:
-  void setNumber(int nNumber);
+  void setValue(int nValue);
 
 protected:
   void focusOutEvent(QFocusEvent* pcEvent);
@@ -55,4 +70,5 @@ signals:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:
