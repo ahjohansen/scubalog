@@ -14,6 +14,9 @@
 # this is where the kdelnk file will go 
 APPSDIR = $(kde_appsdir)/Applications
 
+# this is where the mime-type file will go
+MIMEDIR = $(kde_mimedir)/application
+
 # set the include path for X, qt and KDE
 INCLUDES= $(all_includes)
 
@@ -24,7 +27,7 @@ SUBDIRS = doc pics
 # this is where the source documentation will be installed
 SRCDOC_DEST=$(kde_htmldir)/en/scubalog
 
-EXTRA_DIST = scubalog.kdelnk
+EXTRA_DIST = scubalog.kdelnk x-scubalog-logbook.kdelnk
 
 ####### This part is very scubalog specific
 # this is the program that gets installed
@@ -118,6 +121,8 @@ srcdoc:
 install-data-local: 
 	$(mkinstalldirs) $(APPSDIR)
 	$(INSTALL_DATA) scubalog.kdelnk $(APPSDIR)
+	$(mkinstalldirs) $(MIMEDIR)
+	$(INSTALL_DATA) x-scubalog-logbook.kdelnk $(MIMEDIR)
 	$(mkinstalldirs) $(kde_icondir)
 	$(INSTALL_DATA) pics/scubalog.xpm $(kde_icondir)
 	$(mkinstalldirs) $(kde_minidir)
@@ -126,5 +131,6 @@ install-data-local:
 # remove ALL you have installed in install-data-local or install-exec-local
 uninstall-local:
 	-rm -f $(APPSDIR)/scubalog.kdelnk
+	-rm -f $(MIMEDIR)/x-scubalog-logbook.kdelnk
 	-rm -f $(kde_icondir)/scubalog.xpm
 	-rm -f $(kde_minidir)/scubalog.xpm
