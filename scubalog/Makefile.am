@@ -66,7 +66,7 @@ DISTCLEANFILES = $(scubalog_METASOURCES)
 # make messages.po. Move this one to ../po/ and "make merge" in po
 # the -x is for skipping messages already translated in kdelibs
 messages:
-	$(XGETTEXT) -C -ki18n -x $(includedir)/kde.pot $(scubalog_SOURCES) && mv messages.po ../po/scubalog.pot
+	$(XGETTEXT) -C -ki18n -x $(includedir)/kde/kde.pot $(scubalog_SOURCES) && mv messages.po ../po/scubalog.pot
 
 # generate source documentation
 srcdoc:
