@@ -4,12 +4,12 @@
 #
 
 Name:      scubalog
-Version:   19990918
+Version:   0.1.0
 Release:   1
 Copyright: GPL
 Group:     Applications
 Prefix:    /opt/kde
-Source:    http://www.stud.ifi.uio.no/~andrej/scubalog/scubalog-19990918.tar.gz
+Source:    http://www.stud.ifi.uio.no/~andrej/scubalog/scubalog-0.1.0.tar.gz
 URL:       http://www.stud.ifi.uio.no/~andrej/scubalog/
 Packager:  André Johansen <andrej@ifi.uio.no>
 Summary:   Dive logging application
@@ -41,11 +41,17 @@ make install
 
 %files
 /opt/kde/bin/scubalog
-/opt/kde/share/applnk/Applications/ScubaLog.kdelnk
-/opt/kde/share/icons/ScubaLog.xpm
-/opt/kde/share/icons/mini/ScubaLog.xpm
-%doc README
+/opt/kde/share/applnk/Applications/scubalog.kdelnk
+/opt/kde/share/icons/scubalog.xpm
+/opt/kde/share/icons/mini/scubalog.xpm
+%doc AUTHORS
 %doc COPYING
+%doc INSTALL
+%doc README
+%doc NEWS
+%doc TODO
+%doc VERSION
+%doc ChangeLog
 
 %files codedoc
 %doc documentation
