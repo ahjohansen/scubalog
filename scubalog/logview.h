@@ -20,7 +20,7 @@
 #include <qdatetime.h>
 
 class DiveLog;
-class DiveList;
+class LogBook;
 class QComboBox;
 class QLineEdit;
 class QMultiLineEdit;
@@ -47,8 +47,7 @@ public:
   LogView(QWidget* pcParent = 0, const char* pzName = 0);
   virtual ~LogView();
 
-  //! Set the dive log list to \a pcList.
-  void setLogList(DiveList* pcList) { m_pcDiveLogList = pcList; }
+  void setLogBook(LogBook* pcLogBook);
 
 public slots:
   void viewLog(DiveLog* pcLog);
@@ -74,8 +73,8 @@ private slots:
   void editLocation();
 
 private:
-  //! The list with dive logs.
-  DiveList*     m_pcDiveLogList;
+  //! The current log book.
+  LogBook*      m_pcLogBook;
   //! The current dive log.
   DiveLog*      m_pcCurrentLog;
 

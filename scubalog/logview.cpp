@@ -30,7 +30,9 @@
 #include "kintegeredit.h"
 #include "kdateedit.h"
 #include "ktimeedit.h"
+#include "logbook.h"
 #include "divelist.h"
+#include "logbook.h"
 #include "logview.h"
 #include "logview.moc"
 
@@ -45,7 +47,9 @@
 //*****************************************************************************
 
 LogView::LogView(QWidget* pcParent, const char* pzName)
-  : QWidget(pcParent, pzName), m_pcDiveLogList(0), m_pcCurrentLog(0)
+  : QWidget(pcParent, pzName),
+    m_pcLogBook(0),
+    m_pcCurrentLog(0)
 {
   QLabel* pcDiveNumLabel = new QLabel(this, "diveNumberText");
   pcDiveNumLabel->setText("Dive &number:");
@@ -291,6 +295,25 @@ LogView::~LogView()
 
 //*****************************************************************************
 /*!
+  Set the log book to \a pcLogBook.
+
+  This function will update the view. If a null-pointer is passed,
+  the view will be cleared and the widgets will be disabled.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
+
+void
+LogView::setLogBook(LogBook* pcLogBook)
+{
+  m_pcLogBook = pcLogBook;
+  viewLog(0);
+}
+
+
+//*****************************************************************************
+/*!
   Create a new log entry. The log view will be displayed.
 
   The signal newLog() will be emitted.
@@ -302,14 +325,15 @@ LogView::~LogView()
 void
 LogView::newLog()
 {
-  assert(m_pcDiveLogList);
+  assert(m_pcLogBook);
 
   try {
+    DiveList& cDiveList = m_pcLogBook->diveList();
     DiveLog* pcLog = new DiveLog();
-    DiveLog* pcLast = m_pcDiveLogList->last();
+    DiveLog* pcLast = cDiveList.last();
     int nNumber = ( pcLast ? pcLast->logNumber() + 1 : 1 );
     pcLog->setLogNumber(nNumber);
-    m_pcDiveLogList->append(pcLog);
+    cDiveList.append(pcLog);
     viewLog(pcLog);
     emit newLog(pcLog);
   }
@@ -385,8 +409,9 @@ LogView::viewLog(DiveLog* pcLog)
     // Check if a previous and next log exists
     bool isPreviousAvailable = false;
     bool isNextAvailable = false;
-    if ( m_pcDiveLogList ) {
-      QListIterator<DiveLog> iLog(*m_pcDiveLogList);
+    if ( m_pcLogBook ) {
+      DiveList& cDiveList = m_pcLogBook->diveList();
+      QListIterator<DiveLog> iLog(cDiveList);
       for ( ; iLog.current(); ++iLog ) {
         DiveLog* pcCurrent = iLog.current();
         if ( pcCurrent == m_pcCurrentLog ) {
@@ -668,11 +693,12 @@ LogView::diveDescriptionChanged()
 void
 LogView::gotoPreviousLog()
 {
-  assert(m_pcDiveLogList);
+  assert(m_pcLogBook);
 
   DiveLog* pcPrevious = 0;
   DiveLog* pcCurrent  = 0;
-  QListIterator<DiveLog> iLog(*m_pcDiveLogList);
+  const DiveList& cDiveList = m_pcLogBook->diveList();
+  QListIterator<DiveLog> iLog(cDiveList);
   for ( ; iLog.current(); ++iLog ) {
     pcCurrent = iLog.current();
     if ( pcCurrent == m_pcCurrentLog )
@@ -696,11 +722,12 @@ LogView::gotoPreviousLog()
 void
 LogView::gotoNextLog()
 {
-  assert(m_pcDiveLogList);
+  assert(m_pcLogBook);
 
   DiveLog* pcCurrent  = 0;
   DiveLog* pcNext     = 0;
-  QListIterator<DiveLog> iLog(*m_pcDiveLogList);
+  const DiveList& cDiveList = m_pcLogBook->diveList();
+  QListIterator<DiveLog> iLog(cDiveList);
   for ( ; iLog.current(); ++iLog ) {
     pcCurrent = iLog.current();
     if ( pcCurrent == m_pcCurrentLog ) {
@@ -729,8 +756,9 @@ LogView::deletingLog(const DiveLog* pcLog)
 {
   if ( m_pcCurrentLog && pcLog == m_pcCurrentLog ) {
     DiveLog* pcNewLog = 0;
-    if ( m_pcDiveLogList ) {
-      QListIterator<DiveLog> iLog(*m_pcDiveLogList);
+    if ( m_pcLogBook ) {
+      const DiveList& cDiveList = m_pcLogBook->diveList();
+      QListIterator<DiveLog> iLog(cDiveList);
       for ( ; iLog.current(); ++iLog ) {
         DiveLog* pcCurrentLog = iLog.current();
         if ( pcCurrentLog == pcLog ) {
