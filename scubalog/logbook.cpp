@@ -70,14 +70,15 @@ LogBook::~LogBook()
   Returns `true' if ok, else `false', in which case the log book might be
   invalid and should be deleted.
 
-  The error-checking should be much better!
+  Notice that out-of-memory exceptions (std::bad_alloc)
+  should be caught from the outside!
 
   \author André Johansen.
 */
 //*****************************************************************************
 
 bool
-LogBook::readLogBook(const QString& cFileName)
+LogBook::readLogBook(const QString& cFileName) throw(std::bad_alloc)
 {
   QFile cFile(cFileName);
   if ( false == cFile.open(IO_ReadOnly) ) {
@@ -222,14 +223,12 @@ LogBook::readLogBook(const QString& cFileName)
   Returns `true' if ok, else `false'. Only I/O errors like permission denied
   and out of space should result in errors.
 
-  The error-checking should be much better!
-
   \author André Johansen.
 */
 //*****************************************************************************
 
 bool
-LogBook::saveLogBook(const QString& cFileName)
+LogBook::saveLogBook(const QString& cFileName) throw()
 {
   QFile cFile(cFileName);
   if ( false == cFile.open(IO_WriteOnly) ) {

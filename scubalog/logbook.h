@@ -94,8 +94,8 @@ public:
   LogBook();
   ~LogBook();
 
-  bool readLogBook(const QString& cFileName);
-  bool saveLogBook(const QString& cFileName);
+  bool readLogBook(const QString& cFileName) throw(std::bad_alloc);
+  bool saveLogBook(const QString& cFileName) throw();
 
   QString diverName() const { return m_cDiverName; }
   QString emailAddress() const { return m_cEmailAddress; }

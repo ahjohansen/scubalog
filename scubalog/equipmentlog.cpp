@@ -54,11 +54,14 @@ EquipmentLog::~EquipmentLog()
   Read a log from the stream \a cStream into \a cLog.
   Returns a reference to the stream.
   On error, the exception IOException is thrown.
+  Notice that the OOM exception (std::bad_alloc) must be handled
+  on the outside too!
 */
 //*****************************************************************************
 
 QDataStream&
 operator >>(QDataStream& cStream, EquipmentLog& cLog)
+  throw(IOException, std::bad_alloc)
 {
   // Save current IO position for checking at end
   const QIODevice& cDevice = *cStream.device();
@@ -113,7 +116,7 @@ operator >>(QDataStream& cStream, EquipmentLog& cLog)
 //*****************************************************************************
 
 QDataStream&
-operator <<(QDataStream& cStream, const EquipmentLog& cLog)
+operator <<(QDataStream& cStream, const EquipmentLog& cLog) throw(IOException)
 {
   // Save current IO position for checking at end
   const QIODevice& cDevice = *cStream.device();

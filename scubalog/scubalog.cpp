@@ -15,6 +15,7 @@
 
 #include <limits.h>
 #include <assert.h>
+#include <new>
 #include <qcolor.h>
 #include <qframe.h>
 #include <qpushbutton.h>
@@ -278,29 +279,35 @@ ScubaLog::openRecent(int nRecentNumber)
 
     statusBar()->message("Reading log book...");
 
-    LogBook* pcLogBook = new LogBook();
-    if ( pcLogBook->readLogBook(*m_pcProjectName) ) {
-      // Insert the new logbook
-      m_pcLogListView->setLogList(&pcLogBook->diveList());
-      m_pcLogView->setLogList(&pcLogBook->diveList());
-      m_pcLocationView->setLogBook(pcLogBook);
-      m_pcPersonalInfoView->setLogBook(pcLogBook);
-      m_pcEquipmentView->setLogBook(pcLogBook);
-      delete m_pcLogBook;
-      m_pcLogBook = pcLogBook;
+    LogBook* pcLogBook = 0;
+    try {
+      pcLogBook = new LogBook();
+      if ( pcLogBook->readLogBook(*m_pcProjectName) ) {
+        // Insert the new logbook
+        m_pcLogListView->setLogList(&pcLogBook->diveList());
+        m_pcLogView->setLogList(&pcLogBook->diveList());
+        m_pcLocationView->setLogBook(pcLogBook);
+        m_pcPersonalInfoView->setLogBook(pcLogBook);
+        m_pcEquipmentView->setLogBook(pcLogBook);
+        delete m_pcLogBook;
+        m_pcLogBook = pcLogBook;
 
-      const QString cCaption("ScubaLog [" + *pcProjectName + "]");
-      setCaption(cCaption);
+        const QString cCaption("ScubaLog [" + *pcProjectName + "]");
+        setCaption(cCaption);
 
-      updateRecentProjects(*pcProjectName);
-      setUnsavedData(false);
+        updateRecentProjects(*pcProjectName);
+        setUnsavedData(false);
 
-      statusBar()->message("Reading log book...Done", 3000);
+        statusBar()->message("Reading log book...Done", 3000);
+      }
+      else {
+        delete pcLogBook;
+        statusBar()->message("Reading log book...Failed!", 3000);
+      }
     }
-    else {
+    catch ( std::bad_alloc ) {
+      statusBar()->message("Reading log book...Out of memory!", 3000);
       delete pcLogBook;
-
-      statusBar()->message("Reading log book...Failed!", 3000);
     }
   }
 }
@@ -337,29 +344,35 @@ ScubaLog::openProject()
     const QString cProjectName = cDialog.selectedFile();
     *m_pcProjectName = cProjectName.copy();
 
-    LogBook* pcLogBook = new LogBook();
-    if ( pcLogBook->readLogBook(*m_pcProjectName) ) {
-      // Insert the new logbook
-      m_pcLogListView->setLogList(&pcLogBook->diveList());
-      m_pcLogView->setLogList(&pcLogBook->diveList());
-      m_pcLocationView->setLogBook(pcLogBook);
-      m_pcPersonalInfoView->setLogBook(pcLogBook);
-      m_pcEquipmentView->setLogBook(pcLogBook);
-      delete m_pcLogBook;
-      m_pcLogBook = pcLogBook;
+    LogBook* pcLogBook = 0;
+    try {
+      pcLogBook = new LogBook();
+      if ( pcLogBook->readLogBook(*m_pcProjectName) ) {
+        // Insert the new logbook
+        m_pcLogListView->setLogList(&pcLogBook->diveList());
+        m_pcLogView->setLogList(&pcLogBook->diveList());
+        m_pcLocationView->setLogBook(pcLogBook);
+        m_pcPersonalInfoView->setLogBook(pcLogBook);
+        m_pcEquipmentView->setLogBook(pcLogBook);
+        delete m_pcLogBook;
+        m_pcLogBook = pcLogBook;
 
-      const QString cCaption("ScubaLog [" + cProjectName + "]");
-      setCaption(cCaption);
+        const QString cCaption("ScubaLog [" + cProjectName + "]");
+        setCaption(cCaption);
 
-      updateRecentProjects(cProjectName);
-      setUnsavedData(false);
+        updateRecentProjects(cProjectName);
+        setUnsavedData(false);
 
-      statusBar()->message("Reading log book...Done", 3000);
+        statusBar()->message("Reading log book...Done", 3000);
+      }
+      else {
+        delete pcLogBook;
+        statusBar()->message("Reading log book...Failed!", 3000);
+      }
     }
-    else {
+    catch ( std::bad_alloc ) {
       delete pcLogBook;
-
-      statusBar()->message("Reading log book...Failed!", 3000);
+      statusBar()->message("Reading log book...Out of memory!", 3000);
     }
   }
   else {

@@ -16,9 +16,11 @@
 #ifndef EQUIPMENTLOG_H
 #define EQUIPMENTLOG_H
 
+#include <new>
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qlist.h>
+#include "chunkio.h"
 
 class QDataStream;
 
@@ -77,8 +79,10 @@ private:
 
 class EquipmentLog {
 public:
-  friend QDataStream& operator >>(QDataStream&, EquipmentLog&);
-  friend QDataStream& operator <<(QDataStream&, const EquipmentLog&);
+  friend QDataStream& operator >>(QDataStream&, EquipmentLog&)
+    throw (IOException, std::bad_alloc);
+  friend QDataStream& operator <<(QDataStream&, const EquipmentLog&)
+    throw (IOException);
 
   enum {
     //! The current version of the chunk.

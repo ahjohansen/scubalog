@@ -13,6 +13,8 @@
 */
 //*****************************************************************************
 
+#include <new>
+#include <iostream>
 #include <kapp.h>
 #include "scubalog.h"
 
@@ -30,14 +32,24 @@
 int
 main(int nArgumentCount, char** apzArguments)
 {
-  KApplication cApplication(nArgumentCount, apzArguments, "ScubaLog");
-  ScubaLog* pcMainGUI = new ScubaLog("scubaLog");
-  cApplication.setMainWidget(pcMainGUI);
-  pcMainGUI->show();
-  int nReturnValue = cApplication.exec();
-  pcMainGUI->saveConfig();
-  delete pcMainGUI;
-  return nReturnValue;
+  try {
+    KApplication cApplication(nArgumentCount, apzArguments, "ScubaLog");
+    ScubaLog* pcMainGUI = new ScubaLog("scubaLog");
+    cApplication.setMainWidget(pcMainGUI);
+    pcMainGUI->show();
+    int nReturnValue = cApplication.exec();
+    pcMainGUI->saveConfig();
+    delete pcMainGUI;
+    return nReturnValue;
+  }
+  catch ( std::bad_alloc ) {
+    std::cerr << "Out of memory -- exiting ScubaLog...\n";
+    throw;
+  }
+  catch ( ... ) {
+    std::cerr << "Caught unhandled exception -- exiting ScubaLog...\n";
+    throw;
+  }
 }
 
 

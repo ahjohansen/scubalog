@@ -14,6 +14,7 @@
 //*****************************************************************************
 
 #include <assert.h>
+#include <new>
 #include <qframe.h>
 #include <qlistview.h>
 #include <qpushbutton.h>
@@ -159,12 +160,20 @@ LogListView::createNewLog()
   if ( pcLastItem )
     nDiveNumber = pcLastItem->log()->logNumber() + 1;
 
-  DiveLog* pcLog = new DiveLog();
-  pcLog->setLogNumber(nDiveNumber);
-  m_pcDiveLogList->append(pcLog);
-  (void)new DiveLogItem(m_pcDiveListView, pcLastItem, pcLog);
-  
-  emit displayLog(pcLog);
+  DiveLog* pcLog = 0;
+  try {
+    pcLog = new DiveLog();
+    pcLog->setLogNumber(nDiveNumber);
+    m_pcDiveLogList->append(pcLog);
+    (void)new DiveLogItem(m_pcDiveListView, pcLastItem, pcLog);
+    emit displayLog(pcLog);
+  }
+  catch ( std::bad_alloc ) {
+    // In case the divelogitem causes OOM, delete the log to be sure...
+    delete pcLog;
+    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] New dive log",
+                         "Out of memory when creating a new dive log!");
+  }
 }
 
 

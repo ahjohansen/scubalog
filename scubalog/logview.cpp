@@ -17,12 +17,15 @@
 #include <stdio.h>
 #include <limits.h>
 #include <assert.h>
+#include <new>
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qlayout.h>
 #include <qcombobox.h>
 #include <qmultilinedit.h>
 #include <qpushbutton.h>
+#include <qapplication.h>
+#include <qmessagebox.h>
 #include "debug.h"
 #include "kintegeredit.h"
 #include "kdateedit.h"
@@ -301,13 +304,19 @@ LogView::newLog()
 {
   assert(m_pcDiveLogList);
 
-  DiveLog* pcLog = new DiveLog();
-  DiveLog* pcLast = m_pcDiveLogList->last();
-  int nNumber = ( pcLast ? pcLast->logNumber() + 1 : 1 );
-  pcLog->setLogNumber(nNumber);
-  m_pcDiveLogList->append(pcLog);
-  viewLog(pcLog);
-  emit newLog(pcLog);
+  try {
+    DiveLog* pcLog = new DiveLog();
+    DiveLog* pcLast = m_pcDiveLogList->last();
+    int nNumber = ( pcLast ? pcLast->logNumber() + 1 : 1 );
+    pcLog->setLogNumber(nNumber);
+    m_pcDiveLogList->append(pcLog);
+    viewLog(pcLog);
+    emit newLog(pcLog);
+  }
+  catch ( std::bad_alloc ) {
+    QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] New dive log",
+                         "Out of memory when creating a new dive log!");
+  }
 }
 
 

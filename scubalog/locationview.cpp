@@ -14,6 +14,7 @@
 //*****************************************************************************
 
 #include <assert.h>
+#include <new>
 #include <qwidget.h>
 #include <qlistbox.h>
 #include <qpushbutton.h>
@@ -248,7 +249,7 @@ LocationView::editLocation(const QString& cLocationName)
   try {
     pcLog = new LocationLog();
   }
-  catch ( ... ) {
+  catch ( std::bad_alloc ) {
     QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] New location",
                          "Out of memory when creating a new location log!");
     return;
@@ -289,7 +290,7 @@ LocationView::newLocation()
   try {
     pcLog = new LocationLog();
   }
-  catch ( ... ) {
+  catch ( std::bad_alloc ) {
     QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] New location",
                          "Out of memory when creating a new location log!");
     return;
