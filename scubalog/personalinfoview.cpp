@@ -1,15 +1,17 @@
+//*****************************************************************************
 /*!
-  \file personalinfoview.cpp
+  \file ScubaLog/personalinfoview.cpp
   \brief This file contains the implementation of the PersonalInfoView class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #include <qlabel.h>
 #include <qlineedit.h>
@@ -20,12 +22,14 @@
 #include "personalinfoview.moc"
 
 
+//*****************************************************************************
 /*!
   Create the personal info view class with \a pcParent as parent widget
   and \a pzName as widget name.
 
   \author André Johansen.
 */
+//*****************************************************************************
 
 PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
   : QWidget(pcParent, pzName),
@@ -43,7 +47,7 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
   m_pcName = new QLineEdit(this, "diverName");
   m_pcName->setMinimumSize(m_pcName->sizeHint());
   connect(m_pcName, SIGNAL(textChanged(const char*)),
-	  SLOT(diverNameChanged(const char*)));
+          SLOT(diverNameChanged(const char*)));
   pcNameLabel->setBuddy(m_pcName);
 
   QLabel* pcEmailLabel = new QLabel(this, "emailText");
@@ -53,7 +57,7 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
   m_pcEmailAddress = new QLineEdit(this, "emailAddress");
   m_pcEmailAddress->setMinimumSize(m_pcEmailAddress->sizeHint());
   connect(m_pcEmailAddress, SIGNAL(textChanged(const char*)),
-	  SLOT(emailAddressChanged(const char*)));
+          SLOT(emailAddressChanged(const char*)));
   pcEmailLabel->setBuddy(m_pcEmailAddress);
 
   QLabel* pcWwwUrlLabel = new QLabel(this, "wwwUrlText");
@@ -63,7 +67,7 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
   m_pcWwwUrl = new QLineEdit(this, "wwwUrl");
   m_pcWwwUrl->setMinimumSize(m_pcWwwUrl->sizeHint());
   connect(m_pcWwwUrl, SIGNAL(textChanged(const char*)),
-	  SLOT(wwwUrlChanged(const char*)));
+          SLOT(wwwUrlChanged(const char*)));
   pcWwwUrlLabel->setBuddy(m_pcWwwUrl);
 
   m_pcLoggedDiveTime = new QLabel(this, "LoggedDiveTime");
@@ -104,23 +108,27 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the view.
 
   \author André Johansen.
 */
+//*****************************************************************************
 
 PersonalInfoView::~PersonalInfoView()
 {
 }
 
 
+//*****************************************************************************
 /*!
   Set the log book to \a pcLogBook. The view will be updated.
   If a null-pointer is passed, the view will be cleared.
 
   \author André Johansen.
 */
+//*****************************************************************************
 
 void
 PersonalInfoView::setLogBook(LogBook* pcLogBook)
@@ -151,10 +159,12 @@ PersonalInfoView::setLogBook(LogBook* pcLogBook)
 }
 
 
+//*****************************************************************************
 /*!
   The diver name was changed to \a pzName.
   Update the current log book, if any.
 */
+//*****************************************************************************
 
 void
 PersonalInfoView::diverNameChanged(const char* pzName)
@@ -164,10 +174,12 @@ PersonalInfoView::diverNameChanged(const char* pzName)
 }
 
 
+//*****************************************************************************
 /*!
   The email address was changed to \a pzEmailAddress.
   Update the current log book, if any.
 */
+//*****************************************************************************
 
 void
 PersonalInfoView::emailAddressChanged(const char* pzEmailAddress)
@@ -177,10 +189,12 @@ PersonalInfoView::emailAddressChanged(const char* pzEmailAddress)
 }
 
 
+//*****************************************************************************
 /*!
   The www url was changed to \a pzWwwUrl.
   Update the current log book, if any.
 */
+//*****************************************************************************
 
 void
 PersonalInfoView::wwwUrlChanged(const char* pzWwwUrl)
@@ -190,12 +204,14 @@ PersonalInfoView::wwwUrlChanged(const char* pzWwwUrl)
 }
 
 
+//*****************************************************************************
 /*!
   Update the logged dive time.
 
   This is done by going through all the logged dives in the current logbook,
   summing the dive time.
 */
+//*****************************************************************************
 
 void
 PersonalInfoView::updateLoggedDiveTime()
@@ -208,16 +224,18 @@ PersonalInfoView::updateLoggedDiveTime()
       nNumMins += pcLog->diveTime().hour() * 60 + pcLog->diveTime().minute();
 
     cLoggedTimeText.sprintf("Total logged dive time: %dh %dmin",
-			    nNumMins/60, nNumMins%60);
+                            nNumMins/60, nNumMins%60);
   }
   m_pcLoggedDiveTime->setText(cLoggedTimeText);
 }
 
 
+//*****************************************************************************
 /*!
   The comments was changed.
   Update the current log book, if any.
 */
+//*****************************************************************************
 
 void
 PersonalInfoView::commentsChanged()
@@ -231,4 +249,5 @@ PersonalInfoView::commentsChanged()
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

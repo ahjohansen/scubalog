@@ -1,12 +1,17 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/chunkio.h
   \brief This file contains some helpers for the I/O system.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #ifndef CHUNKIO_H
 #define CHUNKIO_H
@@ -14,22 +19,27 @@
 #include <qstring.h>
 
 
+//*****************************************************************************
 /*!
   \def MAKE_CHUNK_ID(a,b,c,d)
 
   Create a chunk-id (unsigned 32 bit integer) from the arguments
   \a a, \a b, \a c and \a d.
 */
+//*****************************************************************************
 
 #define MAKE_CHUNK_ID(a,b,c,d) \
         ((unsigned int)((a)<<24 | (b)<<16 | (c)<<8 | (d)))
 
 
+//*****************************************************************************
 /*!
-  The exception class that is thrown when the I/O system fails.
+  \class IOException
+  \brief The exception class that is thrown when the I/O system fails.
 
   \author André Johansen.
 */
+//*****************************************************************************
 
 class IOException {
 public:
@@ -49,4 +59,5 @@ private:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

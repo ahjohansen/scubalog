@@ -1,14 +1,17 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/equipmentlog.h
   \brief This file contains the definition of the EquipmentLog class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
-  \par Copyright: André Johansen.
+  \par Copyright:
+  André Johansen.
 */
+//*****************************************************************************
 
 #ifndef EQUIPMENTLOG_H
 #define EQUIPMENTLOG_H
@@ -20,6 +23,7 @@
 class QDataStream;
 
 
+//*****************************************************************************
 /*!
   \class EquipmentHistoryEntry
   \brief The EquipmentHistoryEntry is used to hold equipment history events.
@@ -32,6 +36,7 @@ class QDataStream;
 
   \author André Johansen.
 */
+//*****************************************************************************
 
 class EquipmentHistoryEntry {
 public:
@@ -57,6 +62,8 @@ private:
   QString m_cComment;
 };
 
+
+//*****************************************************************************
 /*!
   \class EquipmentLog
   \brief The EquipmentLog class is used to hold information about equipment.
@@ -66,6 +73,7 @@ private:
 
   \author André Johansen.
 */
+//*****************************************************************************
 
 class EquipmentLog {
 public:
@@ -121,4 +129,5 @@ private:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

@@ -1,12 +1,17 @@
+//*****************************************************************************
 /*!
-  \file widget/kcelledit.cpp
+  \file ScubaLog/widget/kcelledit.cpp
   \brief This file contains the implementation of KCellEdit
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #include <stdio.h>
 #include <assert.h>
@@ -23,12 +28,14 @@
 
 class KCellEdit::StringContainer : public std::vector<QString> {};
 
+//*****************************************************************************
 /*!
   Create a view with \a nNumCols columns, \a pcParent as parent widget
   and \a pzName as widget name.
 
   Initially, the view will have no rows.
 */
+//*****************************************************************************
 
 KCellEdit::KCellEdit(int nNumCols, QWidget* pcParent, const char* pzName)
   : QTableView(pcParent, pzName), m_panColWidths(0), m_papcEditors(0),
@@ -50,14 +57,14 @@ KCellEdit::KCellEdit(int nNumCols, QWidget* pcParent, const char* pzName)
 
   const QScrollBar* pcHScrollBar = horizontalScrollBar();
   connect(pcHScrollBar, SIGNAL(valueChanged(int)),
-	  SLOT(horizontalScroll(int)));
+          SLOT(horizontalScroll(int)));
   connect(pcHScrollBar, SIGNAL(sliderMoved(int)),
-	  SLOT(horizontalScroll(int)));
+          SLOT(horizontalScroll(int)));
   const QScrollBar* pcVScrollBar = verticalScrollBar();
   connect(pcVScrollBar, SIGNAL(valueChanged(int)),
-	  SLOT(verticalScroll(int)));
+          SLOT(verticalScroll(int)));
   connect(pcVScrollBar, SIGNAL(sliderMoved(int)),
-	  SLOT(verticalScroll(int)));
+          SLOT(verticalScroll(int)));
 
   // Set cell size
   setCellWidth(0);
@@ -71,12 +78,14 @@ KCellEdit::KCellEdit(int nNumCols, QWidget* pcParent, const char* pzName)
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the widget and delete all allocated resources.
 
   Notice that the cell editors obtained with setColEditor() will
   be destoyed with this widget.
 */
+//*****************************************************************************
 
 KCellEdit::~KCellEdit()
 {
@@ -86,11 +95,13 @@ KCellEdit::~KCellEdit()
 }
 
 
+//*****************************************************************************
 /*!
   Clear the view. All the saved texts will be cleared.
 
   Notice that the number of rows will be set to 0;
 */
+//*****************************************************************************
 
 void
 KCellEdit::clear()
@@ -101,9 +112,11 @@ KCellEdit::clear()
 }
 
 
+//*****************************************************************************
 /*!
   Add a row to the view. The new cells will start out as empty.
 */
+//*****************************************************************************
 
 void
 KCellEdit::addRow()
@@ -114,6 +127,7 @@ KCellEdit::addRow()
 }
 
 
+//*****************************************************************************
 /*!
   Set the editor to be used for the column \a nCol to \a pcEditor.
   If that column already had an editor, it is deleted.
@@ -122,6 +136,7 @@ KCellEdit::addRow()
 
   This widget will take ownership of the editor.
 */
+//*****************************************************************************
 
 void
 KCellEdit::setColEditor(int nCol, QLineEdit* pcEditor)
@@ -136,6 +151,7 @@ KCellEdit::setColEditor(int nCol, QLineEdit* pcEditor)
 }
 
 
+//*****************************************************************************
 /*!
  Set the string for the cell at (\a nRow, \a nCol) to be \a cCellText.
  If \a bUpdateCell is `true', the cell will be redrawn, if not,
@@ -146,10 +162,11 @@ KCellEdit::setColEditor(int nCol, QLineEdit* pcEditor)
  Notice that this call might generate new rows -- if the row is not available,
  all missing rows will be inserted as empty.
 */
+//*****************************************************************************
 
 void
 KCellEdit::setCellText(int nRow, int nCol, const QString& cText,
-		       bool bUpdateCell)
+                       bool bUpdateCell)
 {
   assert(nRow >= 0 && nCol >= 0 && nCol < numCols());
 
@@ -176,6 +193,7 @@ KCellEdit::setCellText(int nRow, int nCol, const QString& cText,
 }
 
 
+//*****************************************************************************
 /*!
   Handle keypress events. The event information is taken from \a pcEvent.
 
@@ -190,14 +208,15 @@ KCellEdit::setCellText(int nRow, int nCol, const QString& cText,
 
   Rows will be added as needed.
 */
+//*****************************************************************************
 
 void
 KCellEdit::keyPressEvent(QKeyEvent* pcEvent)
 {
   assert(0 != pcEvent);
   assert((-1 == m_nActiveRow && -1 == m_nActiveCol) ||
-	 (0 <= m_nActiveRow && numRows() > m_nActiveRow &&
-	  0 <= m_nActiveCol && numCols() > m_nActiveCol));
+         (0 <= m_nActiveRow && numRows() > m_nActiveRow &&
+          0 <= m_nActiveCol && numCols() > m_nActiveCol));
 
   const int nOldRow = m_nActiveRow;
   const int nOldCol = m_nActiveCol;
@@ -212,7 +231,7 @@ KCellEdit::keyPressEvent(QKeyEvent* pcEvent)
     // Go to the first cell
     if ( -1 == m_nActiveRow && -1 == m_nActiveCol ) {
       if ( 0 == numRows() )
-	addRow();
+        addRow();
       m_nActiveRow = m_nActiveCol = 0;
     }
     // Move one column left
@@ -229,7 +248,7 @@ KCellEdit::keyPressEvent(QKeyEvent* pcEvent)
     // Go to the first cell
     if ( -1 == m_nActiveRow && -1 == m_nActiveCol ) {
       if ( 0 == numRows() )
-	addRow();
+        addRow();
       m_nActiveRow = m_nActiveCol = 0;
     }
     // Move one column right
@@ -238,7 +257,7 @@ KCellEdit::keyPressEvent(QKeyEvent* pcEvent)
     // Move to first column one row down
     else {
       while ( m_nActiveRow + 1 >= numRows() )
-	addRow();
+        addRow();
       m_nActiveCol = 0;
       m_nActiveRow++;
     }
@@ -248,7 +267,7 @@ KCellEdit::keyPressEvent(QKeyEvent* pcEvent)
     // Go to the first cell
     if ( -1 == m_nActiveRow && -1 == m_nActiveCol ) {
       if ( 0 == numRows() )
-	addRow();
+        addRow();
       m_nActiveRow = m_nActiveCol = 0;
     }
     // Move one row up
@@ -260,13 +279,13 @@ KCellEdit::keyPressEvent(QKeyEvent* pcEvent)
     // Go to the first cell
     if ( -1 == m_nActiveRow && -1 == m_nActiveCol ) {
       if ( 0 == numRows() )
-	addRow();
+        addRow();
       m_nActiveRow = m_nActiveCol = 0;
     }
     // Move one row down
     else {
       while ( m_nActiveRow + 1 >= numRows() )
-	addRow();
+        addRow();
       m_nActiveCol = 0;
       m_nActiveRow++;
     }
@@ -296,6 +315,7 @@ KCellEdit::keyPressEvent(QKeyEvent* pcEvent)
 }
 
 
+//*****************************************************************************
 /*!
   Handle mouse double click events.
   The event information is taken from \a pcEvent.
@@ -303,6 +323,7 @@ KCellEdit::keyPressEvent(QKeyEvent* pcEvent)
   If the left mousebutton is doubleclicked, the current cell will be put
   in edit mode if possible.
 */
+//*****************************************************************************
 
 void
 KCellEdit::mouseDoubleClickEvent(QMouseEvent* pcEvent)
@@ -328,6 +349,7 @@ KCellEdit::mouseDoubleClickEvent(QMouseEvent* pcEvent)
 }
 
 
+//*****************************************************************************
 /*!
   Handle mouse press events.
   The event information is taken from \a pcEvent.
@@ -335,6 +357,7 @@ KCellEdit::mouseDoubleClickEvent(QMouseEvent* pcEvent)
   If the left mousebutton is clicked, the cell under the cursor will be
   the new current cell.
 */
+//*****************************************************************************
 
 void
 KCellEdit::mousePressEvent(QMouseEvent* pcEvent)
@@ -363,9 +386,11 @@ KCellEdit::mousePressEvent(QMouseEvent* pcEvent)
 }
 
 
+//*****************************************************************************
 /*!
   Edit the current cell.
 */
+//*****************************************************************************
 
 void
 KCellEdit::editCell()
@@ -379,10 +404,10 @@ KCellEdit::editCell()
     colXPos(m_nActiveCol, &nX);
     pcEditor->installEventFilter(this);
     pcEditor->setGeometry(nX, nY, m_panColWidths[m_nActiveCol],
-			  cellHeight());
+                          cellHeight());
     QString cText;
     if ( (unsigned)m_nActiveRow*numCols()+m_nActiveCol <
-	 m_pcCellStrings->size() )
+         m_pcCellStrings->size() )
       cText = (*m_pcCellStrings)[m_nActiveRow*numCols()+m_nActiveCol];
     pcEditor->setText(cText);
     pcEditor->setFocus();
@@ -392,10 +417,12 @@ KCellEdit::editCell()
 }
 
 
+//*****************************************************************************
 /*!
   Finish editing the cell.
   Keep the result if \a bKeepResult is `true'.
 */
+//*****************************************************************************
 
 void
 KCellEdit::finishEdit(bool bKeepResult)
@@ -414,15 +441,17 @@ KCellEdit::finishEdit(bool bKeepResult)
 }
 
 
+//*****************************************************************************
 /*!
   Paint the cell (\a nRow, \a nCol) using the open painter \a pcPainter.
 */
+//*****************************************************************************
 
 void
 KCellEdit::paintCell(QPainter* pcPainter, int nRow, int nCol)
 {
   assert(0 != pcPainter &&
-	 nRow >= 0 && nRow < numRows() && nCol >= 0 && nCol < numCols());
+         nRow >= 0 && nRow < numRows() && nCol >= 0 && nCol < numCols());
   int nW = cellWidth(nCol);
   int nH = cellHeight(nRow);
 
@@ -444,10 +473,12 @@ KCellEdit::paintCell(QPainter* pcPainter, int nRow, int nCol)
 }
 
 
+//*****************************************************************************
 /*!
   Set the width of the column \a nColumn to \a nNewWidth.
   The old width was \a nOldWidth.
 */
+//*****************************************************************************
 
 void
 KCellEdit::setColumnWidth(int nColumn, int nOldWidth, int nNewWidth)
@@ -462,14 +493,16 @@ KCellEdit::setColumnWidth(int nColumn, int nOldWidth, int nNewWidth)
     rowYPos(m_nActiveRow, &nY);
     colXPos(m_nActiveCol, &nX);
     pcEditor->setGeometry(nX, nY, m_panColWidths[m_nActiveCol],
-			  pcEditor->height());
+                          pcEditor->height());
   }
 }
 
 
+//*****************************************************************************
 /*!
   Get the width of the cell \a nColumn.
 */
+//*****************************************************************************
 
 int
 KCellEdit::cellWidth(int nColumn)
@@ -480,9 +513,11 @@ KCellEdit::cellWidth(int nColumn)
 }
 
 
+//*****************************************************************************
 /*!
   Get the total width of the view.
 */
+//*****************************************************************************
 
 int
 KCellEdit::totalWidth()
@@ -496,6 +531,7 @@ KCellEdit::totalWidth()
 }
 
 
+//*****************************************************************************
 /*!
   Filter eventes. The receiver of the event \a pcEvent is \a pcReceiver.
 
@@ -504,6 +540,7 @@ KCellEdit::totalWidth()
   \arg Tab - end editing, move to next cell if any.
   \arg Esc - cancel editing.
 */
+//*****************************************************************************
 
 bool
 KCellEdit::eventFilter(QObject* pcReceiver, QEvent* pcEvent)
@@ -530,15 +567,15 @@ KCellEdit::eventFilter(QObject* pcReceiver, QEvent* pcEvent)
       // End editing, save result, edit next if possible
       finishEdit(true);
       if ( m_nActiveCol + 1 < numCols() ) {
-	updateCell(m_nActiveRow, m_nActiveCol);
-	m_nActiveCol++;
-	editCell();
+        updateCell(m_nActiveRow, m_nActiveCol);
+        m_nActiveCol++;
+        editCell();
       }
       else if ( m_nActiveRow + 1 < numRows() ) {
-	updateCell(m_nActiveRow, m_nActiveCol);
-	m_nActiveCol = 0;
-	m_nActiveRow++;
-	editCell();
+        updateCell(m_nActiveRow, m_nActiveCol);
+        m_nActiveCol = 0;
+        m_nActiveRow++;
+        editCell();
       }
       isEventEaten = true;
       break;
@@ -555,10 +592,12 @@ KCellEdit::eventFilter(QObject* pcReceiver, QEvent* pcEvent)
 }
 
 
+//*****************************************************************************
 /*!
   The view has been scrolled to \a nNewX in the horizontal direction.
   Update the GUI.
 */
+//*****************************************************************************
 
 void
 KCellEdit::horizontalScroll(int nNewX)
@@ -573,10 +612,12 @@ KCellEdit::horizontalScroll(int nNewX)
 }
 
 
+//*****************************************************************************
 /*!
   The view has been scrolled to \a nNewY in the vertical direction.
   Update the GUI.
 */
+//*****************************************************************************
 
 void
 KCellEdit::verticalScroll(int nNewY)
@@ -594,4 +635,5 @@ KCellEdit::verticalScroll(int nNewY)
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

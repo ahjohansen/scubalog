@@ -1,14 +1,17 @@
+//*****************************************************************************
 /*!
-  \file equipmentview.h
+  \file ScubaLog/equipmentview.h
   \brief This file contains the definition of the EquipmentView class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
-  \par Copyright: André Johansen.
+  \par Copyright:
+  André Johansen.
 */
+//*****************************************************************************
 
 #ifndef EQUIPMENTVIEW_H
 #define EQUIPMENTVIEW_H
@@ -23,6 +26,7 @@ class LogBook;
 class KCellEditView;
 
 
+//*****************************************************************************
 /*!
   \class EquipmentView
   \brief The EquipmentView class is used to edit equipment related parts.
@@ -32,6 +36,7 @@ class KCellEditView;
 
   \author André Johansen.
 */
+//*****************************************************************************
 
 class EquipmentView : public QWidget {
   Q_OBJECT
@@ -86,4 +91,5 @@ private:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

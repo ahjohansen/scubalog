@@ -1,7 +1,10 @@
 //*****************************************************************************
 /*!
-  \file exporter.h
+  \file ScubaLog/exporter.h
   \brief This file contains the export interface for ScubaLog.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 

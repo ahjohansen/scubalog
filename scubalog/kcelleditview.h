@@ -1,12 +1,17 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/widgets/kcelleditview.h
   \brief This file contains the definition of KCellEditView.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #ifndef KCELLEDITVIEW_H
 #define KCELLEDITVIEW_H
@@ -18,6 +23,15 @@ class QLineEdit;
 class QHeader;
 class KCellEdit;
 
+
+//*****************************************************************************
+/*!
+  \class KCellEditView
+  \brief The KCellEditView class is used to edit cells.
+
+  \author André Johansen.
+*/
+//*****************************************************************************
 
 class KCellEditView : public QFrame {
   Q_OBJECT
@@ -55,4 +69,5 @@ signals:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

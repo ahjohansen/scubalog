@@ -1,12 +1,17 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/logview.cpp
   \brief This file contains the implementation of LogView.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -26,10 +31,12 @@
 #include "logview.moc"
 
 
+//*****************************************************************************
 /*!
   Initialize the log view with \a pcParent as the parent widget
   and \a pzName as the widget name.
 */
+//*****************************************************************************
 
 LogView::LogView(QWidget* pcParent, const char* pzName)
   : QWidget(pcParent, pzName), m_pcDiveLogList(0), m_pcCurrentLog(0)
@@ -43,7 +50,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcDiveNumber->setMinimumSize(m_pcDiveNumber->sizeHint());
   pcDiveNumLabel->setBuddy(m_pcDiveNumber);
   connect(m_pcDiveNumber, SIGNAL(integerChanged(int)),
-	  SLOT(diveNumberChanged(int)));
+          SLOT(diveNumberChanged(int)));
 
   QLabel* pcDiveDateLabel = new QLabel(this, "diveDateText");
   pcDiveDateLabel->setText("Dive &date:");
@@ -53,7 +60,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcDiveDate->setMinimumSize(m_pcDiveDate->sizeHint());
   pcDiveDateLabel->setBuddy(m_pcDiveDate);
   connect(m_pcDiveDate, SIGNAL(dateChanged(QDate)),
-	  SLOT(diveDateChanged(QDate)));
+          SLOT(diveDateChanged(QDate)));
 
   QLabel* pcDiveStartLabel = new QLabel(this, "diveStartText");
   pcDiveStartLabel->setText("Dive &start:");
@@ -63,7 +70,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcDiveStart->setMinimumSize(m_pcDiveStart->sizeHint());
   pcDiveStartLabel->setBuddy(m_pcDiveStart);
   connect(m_pcDiveStart, SIGNAL(timeChanged(QTime)),
-	  SLOT(diveStartChanged(QTime)));
+          SLOT(diveStartChanged(QTime)));
 
   QLabel* pcDiveTimeLabel = new QLabel(this, "diveTimeText");
   pcDiveTimeLabel->setText("Dive &time:");
@@ -73,7 +80,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcDiveTime->setMinimumSize(m_pcDiveTime->sizeHint());
   pcDiveTimeLabel->setBuddy(m_pcDiveTime);
   connect(m_pcDiveTime, SIGNAL(timeChanged(QTime)),
-	  SLOT(diveTimeChanged(QTime)));
+          SLOT(diveTimeChanged(QTime)));
 
   QLabel* pcGasLabel = new QLabel(this, "gasText");
   pcGasLabel->setText("&Gas:");
@@ -83,7 +90,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcGasType->setMinimumSize(m_pcGasType->sizeHint());
   pcGasLabel->setBuddy(m_pcGasType);
   connect(m_pcGasType, SIGNAL(textChanged(const char*)),
-	  SLOT(gasTypeChanged(const char*)));
+          SLOT(gasTypeChanged(const char*)));
 
   QLabel* pcAirTempLabel = new QLabel(this, "airTempText");
   pcAirTempLabel->setText("&Air temperature:");
@@ -93,7 +100,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcAirTemp->setMinimumSize(m_pcAirTemp->sizeHint());
   pcAirTempLabel->setBuddy(m_pcAirTemp);
   connect(m_pcAirTemp, SIGNAL(integerChanged(int)),
-	  SLOT(airTemperatureChanged(int)));
+          SLOT(airTemperatureChanged(int)));
 
   QLabel* pcLocationLabel = new QLabel(this, "locationText");
   pcLocationLabel->setText("L&ocation:");
@@ -103,7 +110,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcLocation->setMinimumSize(m_pcLocation->sizeHint());
   pcLocationLabel->setBuddy(m_pcLocation);
   connect(m_pcLocation, SIGNAL(textChanged(const char*)),
-	  SLOT(locationChanged(const char*)));
+          SLOT(locationChanged(const char*)));
 
   QLabel* pcPlanLabel = new QLabel(this, "planText");
   pcPlanLabel->setText("&Plan type:");
@@ -122,7 +129,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcBottomTime->setMinimumSize(m_pcBottomTime->sizeHint());
   pcBottomTimeLabel->setBuddy(m_pcBottomTime);
   connect(m_pcBottomTime, SIGNAL(timeChanged(QTime)),
-	  SLOT(bottomTimeChanged(QTime)));
+          SLOT(bottomTimeChanged(QTime)));
 
   QLabel* pcMaxDepthLabel = new QLabel(this, "maxDepthText");
   pcMaxDepthLabel->setText("&Max depth:");
@@ -132,7 +139,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcMaxDepth->setMinimumSize(m_pcMaxDepth->sizeHint());
   pcMaxDepthLabel->setBuddy(m_pcMaxDepth);
   connect(m_pcMaxDepth, SIGNAL(textChanged(const char*)),
-	  SLOT(maxDepthChanged(const char*)));
+          SLOT(maxDepthChanged(const char*)));
 
   QLabel* pcBuddyLabel = new QLabel(this, "buddyText");
   pcBuddyLabel->setText("B&uddy:");
@@ -142,7 +149,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcBuddy->setMinimumSize(m_pcBuddy->sizeHint());
   pcBuddyLabel->setBuddy(m_pcBuddy);
   connect(m_pcBuddy, SIGNAL(textChanged(const char*)),
-	  SLOT(buddyChanged(const char*)));
+          SLOT(buddyChanged(const char*)));
 
   QLabel* pcDiveTypeLabel = new QLabel(this, "diveTypeText");
   pcDiveTypeLabel->setText("Dive t&ype:");
@@ -161,7 +168,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcDiveTypeSelector->insertItem("Course");
   m_pcDiveTypeSelector->setMinimumSize(m_pcDiveTypeSelector->sizeHint());
   connect(m_pcDiveTypeSelector, SIGNAL(activated(const char*)),
-	  SLOT(diveTypeChanged(const char*)));
+          SLOT(diveTypeChanged(const char*)));
   pcDiveTypeLabel->setBuddy(m_pcDiveTypeSelector);
 
   QLabel* pcWaterTempLabel = new QLabel(this, "waterTempText");
@@ -172,7 +179,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
   m_pcWaterTemp->setMinimumSize(m_pcWaterTemp->sizeHint());
   pcWaterTempLabel->setBuddy(m_pcWaterTemp);
   connect(m_pcWaterTemp, SIGNAL(integerChanged(int)),
-	  SLOT(waterTemperatureChanged(int)));
+          SLOT(waterTemperatureChanged(int)));
 
   QLabel* pcDescriptionLabel = new QLabel(this, "descriptionText");
   pcDescriptionLabel->setText("Dive des&cription:");
@@ -180,7 +187,7 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
 
   m_pcDescription = new QMultiLineEdit(this, "description");
   connect(m_pcDescription,  SIGNAL(textChanged()),
-	  SLOT(diveDescriptionChanged()));
+          SLOT(diveDescriptionChanged()));
   pcDescriptionLabel->setBuddy(m_pcDescription);
 
   //
@@ -228,23 +235,27 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the log view. All resources will be freed.
 
   Notice that this class is not the owner of the log-list, thus it will
   not be freed here.
 */
+//*****************************************************************************
 
 LogView::~LogView()
 {
 }
 
 
+//*****************************************************************************
 /*!
   Create a new log entry. The log view will be displayed.
 
   The signal newLog() will be emitted.
 */
+//*****************************************************************************
 
 void
 LogView::newLog()
@@ -261,12 +272,14 @@ LogView::newLog()
 }
 
 
+//*****************************************************************************
 /*!
   Show the log \a pcLog. If a null-pointer is passed, the view is cleared.
 
   Notice that this function will not make the view visible if it is not,
   that should be done after this function is called.
 */
+//*****************************************************************************
 
 void
 LogView::viewLog(DiveLog* pcLog)
@@ -301,11 +314,11 @@ LogView::viewLog(DiveLog* pcLog)
     QString cDiveType(pcLog->diveType());
     bool bDiveTypeFound = false;
     for ( int iDiveType = 0; iDiveType < m_pcDiveTypeSelector->count();
-	  ++iDiveType ) {
+          ++iDiveType ) {
       if ( cDiveType == m_pcDiveTypeSelector->text(iDiveType) ) {
-	m_pcDiveTypeSelector->setCurrentItem(iDiveType);
-	bDiveTypeFound = true;
-	break;
+        m_pcDiveTypeSelector->setCurrentItem(iDiveType);
+        bDiveTypeFound = true;
+        break;
       }
     }
     if ( false == bDiveTypeFound ) {
@@ -353,9 +366,11 @@ LogView::viewLog(DiveLog* pcLog)
 }
 
 
+//*****************************************************************************
 /*!
   The dive number changed to \a nNumber. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::diveNumberChanged(int nNumber)
@@ -365,9 +380,11 @@ LogView::diveNumberChanged(int nNumber)
 }
 
 
+//*****************************************************************************
 /*!
   The dive date changed to \a cDate. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::diveDateChanged(QDate cDate)
@@ -377,9 +394,11 @@ LogView::diveDateChanged(QDate cDate)
 }
 
 
+//*****************************************************************************
 /*!
   The dive start changed to \a cStart. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::diveStartChanged(QTime cStart)
@@ -389,9 +408,11 @@ LogView::diveStartChanged(QTime cStart)
 }
 
 
+//*****************************************************************************
 /*!
   The dive time changed to \a cTime. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::diveTimeChanged(QTime cTime)
@@ -401,9 +422,11 @@ LogView::diveTimeChanged(QTime cTime)
 }
 
 
+//*****************************************************************************
 /*!
   The gas type changed to \a pzGasType. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::gasTypeChanged(const char* pzGasType)
@@ -413,9 +436,11 @@ LogView::gasTypeChanged(const char* pzGasType)
 }
 
 
+//*****************************************************************************
 /*!
   The bottom time changed to \a cTime. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::bottomTimeChanged(QTime cTime)
@@ -425,9 +450,11 @@ LogView::bottomTimeChanged(QTime cTime)
 }
 
 
+//*****************************************************************************
 /*!
   The air temperature changed to \a nTemp. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::airTemperatureChanged(int nTemp)
@@ -437,9 +464,11 @@ LogView::airTemperatureChanged(int nTemp)
 }
 
 
+//*****************************************************************************
 /*!
   The water temperature changed to \a nTemp. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::waterTemperatureChanged(int nTemp)
@@ -449,9 +478,11 @@ LogView::waterTemperatureChanged(int nTemp)
 }
 
 
+//*****************************************************************************
 /*!
   The location changed to \a pzLocation. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::locationChanged(const char* pzLocation)
@@ -462,9 +493,11 @@ LogView::locationChanged(const char* pzLocation)
 }
 
 
+//*****************************************************************************
 /*!
   The maximum depth changed to \a pzDepth. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::maxDepthChanged(const char* pzDepth)
@@ -476,9 +509,11 @@ LogView::maxDepthChanged(const char* pzDepth)
 }
 
 
+//*****************************************************************************
 /*!
   The buddy changed to \a pzBuddy. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::buddyChanged(const char* pzBuddy)
@@ -489,9 +524,11 @@ LogView::buddyChanged(const char* pzBuddy)
 }
 
 
+//*****************************************************************************
 /*!
   The dive type changed to \a pzDiveType. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::diveTypeChanged(const char* pzDiveType)
@@ -501,9 +538,11 @@ LogView::diveTypeChanged(const char* pzDiveType)
 }
 
 
+//*****************************************************************************
 /*!
   The dive description changed. Update the log.
 */
+//*****************************************************************************
 
 void
 LogView::diveDescriptionChanged()
@@ -518,4 +557,5 @@ LogView::diveDescriptionChanged()
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

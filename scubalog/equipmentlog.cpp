@@ -1,15 +1,17 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/equipmentlog.cpp
   \brief This file contains the implementation of the EquipmentLog class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #include <qstring.h>
 #include <qdatetime.h>
@@ -20,34 +22,40 @@
 #include "equipmentlog.h"
 
 
+//*****************************************************************************
 /*!
   Create a log.
 */
+//*****************************************************************************
 
 EquipmentLog::EquipmentLog()
 {
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the log.
 */
+//*****************************************************************************
 
 EquipmentLog::~EquipmentLog()
 {
   // Delete the history entries
   for ( EquipmentHistoryEntry* pcEntry = m_cHistory.first();
-	pcEntry; pcEntry = m_cHistory.next() ) {
+        pcEntry; pcEntry = m_cHistory.next() ) {
     delete pcEntry;
   }
 }
 
 
+//*****************************************************************************
 /*!
   Read a log from the stream \a cStream into \a cLog.
   Returns a reference to the stream.
   On error, the exception IOException is thrown.
 */
+//*****************************************************************************
 
 QDataStream&
 operator >>(QDataStream& cStream, EquipmentLog& cLog)
@@ -69,9 +77,9 @@ operator >>(QDataStream& cStream, EquipmentLog& cLog)
 
   // Read the body of the data
   cStream >> cLog.m_cType
-	  >> cLog.m_cName
-	  >> cLog.m_cSerial
-	  >> cLog.m_cServiceRequirements;
+          >> cLog.m_cName
+          >> cLog.m_cSerial
+          >> cLog.m_cServiceRequirements;
 
   // Read the history entries
   unsigned int nNumEntries;
@@ -87,8 +95,8 @@ operator >>(QDataStream& cStream, EquipmentLog& cLog)
   if ( nNextChunkPos != cDevice.at() ) {
     QString cText;
     cText.sprintf("Unexpected position after reading equipment log!\n"
-		  "Current position is %d; expected %d...",
-		  cDevice.at(), nNextChunkPos);
+                  "Current position is %d; expected %d...",
+                  cDevice.at(), nNextChunkPos);
     throw IOException(cText);
   }
 
@@ -96,11 +104,13 @@ operator >>(QDataStream& cStream, EquipmentLog& cLog)
 }
 
 
+//*****************************************************************************
 /*!
   Write the log \a cLog to the stream \a cStream.
   Returns a reference to the stream.
   On error, the exception IOException is thrown.
 */
+//*****************************************************************************
 
 QDataStream&
 operator <<(QDataStream& cStream, const EquipmentLog& cLog)
@@ -126,15 +136,15 @@ operator <<(QDataStream& cStream, const EquipmentLog& cLog)
   // Write the header
   unsigned int nChunkVersion = (unsigned int)EquipmentLog::e_ChunkVersion;
   cStream << MAKE_CHUNK_ID('S', 'L', 'E', 'L')
-	  << nChunkSize
-	  << nChunkVersion;
+          << nChunkSize
+          << nChunkVersion;
 
   // Write the body
   cStream << cLog.m_cType
-	  << cLog.m_cName
-	  << cLog.m_cSerial
-	  << cLog.m_cServiceRequirements
-	  << cLog.m_cHistory.count();
+          << cLog.m_cName
+          << cLog.m_cSerial
+          << cLog.m_cServiceRequirements
+          << cLog.m_cHistory.count();
 
   // Write the history entries
   iHistoryEntry.toFirst();
@@ -148,8 +158,8 @@ operator <<(QDataStream& cStream, const EquipmentLog& cLog)
   if ( nNextChunkPos != cDevice.at() ) {
     QString cText;
     cText.sprintf("Unexpected position after writing equipment log!\n"
-		  "Current position is %d; expected %d...",
-		  cDevice.at(), nNextChunkPos);
+                  "Current position is %d; expected %d...",
+                  cDevice.at(), nNextChunkPos);
     throw IOException(cText);
   }
 
@@ -157,24 +167,29 @@ operator <<(QDataStream& cStream, const EquipmentLog& cLog)
 }
 
 
-
+//*****************************************************************************
 /*!
   Create an history entry.
 */
+//*****************************************************************************
 
 EquipmentHistoryEntry::EquipmentHistoryEntry()
 {
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the history entry.
 */
+//*****************************************************************************
 
 EquipmentHistoryEntry::~EquipmentHistoryEntry()
 {
 }
 
+
+//*****************************************************************************
 /*!
   Read an entry from the stream \a cStream into \a cEntry.
 
@@ -182,28 +197,31 @@ EquipmentHistoryEntry::~EquipmentHistoryEntry()
 
   This function needs better error-handling. Use exceptions!
 */
+//*****************************************************************************
 
 QDataStream&
 operator >>(QDataStream& cStream, EquipmentHistoryEntry& cEntry)
 {
   cStream >> cEntry.m_cDate
-	  >> cEntry.m_cComment;
+          >> cEntry.m_cComment;
 
   return cStream;
 }
 
 
+//*****************************************************************************
 /*!
   Write the entry \a cEntry to the stream \a cStream.
 
   Returns a reference to the stream.
 */
+//*****************************************************************************
 
 QDataStream&
 operator <<(QDataStream& cStream, const EquipmentHistoryEntry& cEntry)
 {
   cStream << cEntry.m_cDate
-	  << cEntry.m_cComment;
+          << cEntry.m_cComment;
 
   return cStream;
 }
@@ -213,4 +231,5 @@ operator <<(QDataStream& cStream, const EquipmentHistoryEntry& cEntry)
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

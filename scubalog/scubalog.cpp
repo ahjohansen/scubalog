@@ -3,8 +3,8 @@
   \file ScubaLog/scubalog.cpp
   \brief This file contains the implementation of the ScubaLog class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
@@ -44,7 +44,7 @@
 
 //*****************************************************************************
 /*!
-  Initialize the Scuba Log application GUI. Use \a pzName as the widget name.
+  Initialize the ScubaLog application GUI. Use \a pzName as the widget name.
 */
 //*****************************************************************************
 
@@ -106,7 +106,7 @@ ScubaLog::ScubaLog(const char* pzName)
   pcMenuBar->insertItem("&Project", pcMenu);
 
   QString cAboutText;
-  cAboutText.sprintf("Scuba Log is a scuba dive logging program,\n"
+  cAboutText.sprintf("ScubaLog is a scuba dive logging program,\n"
                      "written for the K Desktop Environment.\n\n"
                      "This program is free software, licensed\n"
                      "under the GNU General Public License.\n\n"
@@ -158,7 +158,7 @@ ScubaLog::ScubaLog(const char* pzName)
   enableStatusBar();
   setView(m_pcViews);
 
-  statusBar()->message("Welcome to Scuba Log");
+  statusBar()->message("Welcome to ScubaLog");
 }
 
 
@@ -249,7 +249,7 @@ ScubaLog::openRecent(int nRecentNumber)
       cText += "`";
       cText += *pcProjectName;
       cText += "'";
-      QMessageBox::warning(this, "Scuba Log error", cText, 1, 0);
+      QMessageBox::warning(this, "ScubaLog error", cText, 1, 0);
       delete pcLogBook;
     }
 
@@ -292,7 +292,7 @@ ScubaLog::openProject()
       cText += "`";
       cText += cProjectName;
       cText += "'";
-      QMessageBox::warning(this, "Scuba Log error", cText, 1, 0);
+      QMessageBox::warning(this, "ScubaLog error", cText, 1, 0);
       delete pcLogBook;
     }
 

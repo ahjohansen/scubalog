@@ -1,15 +1,17 @@
+//*****************************************************************************
 /*!
-  \file widgets/kintegeredit.cpp
+  \file ScubaLog/widgets/kintegeredit.cpp
   \brief This file contains the implementation of the KIntegerEdit class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #include <limits.h>
 #include <assert.h>
@@ -18,6 +20,7 @@
 #include "kintegeredit.moc"
 
 
+//*****************************************************************************
 /*!
   Initialize this integer edit widget.
 
@@ -25,6 +28,7 @@
 
   The parent widget is \a pcParent, the name is \a pzName.
 */
+//*****************************************************************************
 
 KIntegerEdit::KIntegerEdit(QWidget* pcParent, const char* pzName)
   : QLineEdit(pcParent, pzName), m_pcValidator(0)
@@ -34,6 +38,7 @@ KIntegerEdit::KIntegerEdit(QWidget* pcParent, const char* pzName)
 }
 
 
+//*****************************************************************************
 /*!
   Initialize this integer edit widget.
 
@@ -42,19 +47,22 @@ KIntegerEdit::KIntegerEdit(QWidget* pcParent, const char* pzName)
 
   The parent widget is \a pcParent, the name is \a pzName.
 */
+//*****************************************************************************
 
 KIntegerEdit::KIntegerEdit(int nMin, int nDefault, int nMax,
-			   QWidget* pcParent, const char* pzName)
+                           QWidget* pcParent, const char* pzName)
   : QLineEdit(pcParent, pzName), m_pcValidator(0)
 {
   m_pcValidator = new KIntegerValidator(nMin, nDefault, nMax);
   setValidator(m_pcValidator);
 }
-			   
 
+
+//*****************************************************************************
 /*!
   Destroy the widget.
 */
+//*****************************************************************************
 
 KIntegerEdit::~KIntegerEdit()
 {
@@ -63,11 +71,13 @@ KIntegerEdit::~KIntegerEdit()
 }
 
 
+//*****************************************************************************
 /*!
   Set the number to \a nNumber.
   If the input is invalid according to the specifications for this widget,
   the default will be used.
 */
+//*****************************************************************************
 
 void
 KIntegerEdit::setNumber(int nNumber)
@@ -79,10 +89,12 @@ KIntegerEdit::setNumber(int nNumber)
 }
 
 
+//*****************************************************************************
 /*!
   Ensure the value is valid when leaving the widget.
   If the number changed, emit the integerChanged() signal.
 */
+//*****************************************************************************
 
 void
 KIntegerEdit::focusOutEvent(QFocusEvent* pcEvent)
@@ -106,4 +118,5 @@ KIntegerEdit::focusOutEvent(QFocusEvent* pcEvent)
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

@@ -1,22 +1,31 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/debug.h
   \brief This file contains debugging helpers.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #ifndef DEBUG_H
 #define DEBUG_H
 
+
+//*****************************************************************************
 /*!
   \def DEBUG_ON
 
   This define is used to turn on debugging.
 */
+//*****************************************************************************
 
+//*****************************************************************************
 /*!
   \def DBG(x)
 
@@ -30,6 +39,7 @@
   DBG(("Testing the DBG() macro at line %d!\n", __LINE__));
   \endexample
 */
+//*****************************************************************************
 
 #if defined(DEBUG_ON)
 # include <stdio.h>
@@ -46,4 +56,5 @@
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

@@ -1,15 +1,15 @@
 //*****************************************************************************
 /*!
-  \file divelist.h
+  \file ScubaLog/divelist.h
   \brief This file contains the definition of the DiveList class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
-  André Johansen 1999.
+  André Johansen.
 */
 //*****************************************************************************
 

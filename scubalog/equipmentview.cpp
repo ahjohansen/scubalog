@@ -1,15 +1,17 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/equipmentview.cpp
   \brief This file contains the implementation of the EquipmentView class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #include <assert.h>
 #include <qwidget.h>
@@ -28,10 +30,12 @@
 #include "equipmentview.moc"
 
 
+//*****************************************************************************
 /*!
   Create the view with \a pcParent as parent widget and \a pzName as
   the widget name.
 */
+//*****************************************************************************
 
 EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   : QWidget(pcParent, pzName),
@@ -73,7 +77,7 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   m_pcType = new QLineEdit(this, "itemType");
   m_pcType->setMinimumSize(m_pcType->sizeHint());
   connect(m_pcType, SIGNAL(textChanged(const char*)),
-	  SLOT(itemTypeChanged(const char*)));
+          SLOT(itemTypeChanged(const char*)));
 
   QLabel* pcSerialText = new QLabel(this, "itemSerialText");
   pcSerialText->setText("Serial number: ");
@@ -82,7 +86,7 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   m_pcSerial = new QLineEdit(this, "serial");
   m_pcSerial->setMinimumSize(m_pcSerial->sizeHint());
   connect(m_pcSerial, SIGNAL(textChanged(const char*)),
-	  SLOT(itemSerialChanged(const char*)));
+          SLOT(itemSerialChanged(const char*)));
 
   QLabel* pcServiceText = new QLabel(this, "serviceText");
   pcServiceText->setText("Service: ");
@@ -91,7 +95,7 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   m_pcService = new QLineEdit(this, "service");
   m_pcService->setMinimumSize(m_pcService->sizeHint());
   connect(m_pcService, SIGNAL(textChanged(const char*)),
-	  SLOT(itemServiceChanged(const char*)));
+          SLOT(itemServiceChanged(const char*)));
 
   m_pcLogView = new KCellEditView(2, this, "equipmentLog");
   m_pcLogView->setColEditor(0, new KDateEdit(m_pcLogView, "dateEditor"));
@@ -99,7 +103,7 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   m_pcLogView->setColumnName(0, "Date");
   m_pcLogView->setColumnName(1, "Event");
   connect(m_pcLogView, SIGNAL(textChanged(int, int, const QString&)),
-	  SLOT(logEntryChanged(int, int, const QString&)));
+          SLOT(logEntryChanged(int, int, const QString&)));
 
   QSize cSize(m_pcMoveDown->sizeHint());
   m_pcNew->setMinimumSize(cSize);
@@ -137,21 +141,25 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the view.
 */
+//*****************************************************************************
 
 EquipmentView::~EquipmentView()
 {
 }
 
 
+//*****************************************************************************
 /*!
   Set the log book to \a pcLogBook.
 
   This function will update the view. If a null-pointer is passed,
   the view will be cleared and the widgets will be disabled.
 */
+//*****************************************************************************
 
 void
 EquipmentView::setLogBook(LogBook* pcLogBook)
@@ -188,11 +196,13 @@ EquipmentView::setLogBook(LogBook* pcLogBook)
 }
 
 
+//*****************************************************************************
 /*!
   The item with index \a nItemNumber has been selected.
 
   Update the rest of the GUI.
 */
+//*****************************************************************************
 
 void
 EquipmentView::itemSelected(int nItemNumber)
@@ -211,7 +221,7 @@ EquipmentView::itemSelected(int nItemNumber)
   QList<EquipmentHistoryEntry>& cHistory = pcLog->history();
   int iRow = 0;
   for ( EquipmentHistoryEntry* pcEntry = cHistory.first();
-	pcEntry; pcEntry = cHistory.next() ) {
+        pcEntry; pcEntry = cHistory.next() ) {
     QString cDateText(pcEntry->date().toString());
     m_pcLogView->setCellText(iRow, 0, cDateText, true);
     m_pcLogView->setCellText(iRow, 1, pcEntry->comment(), true);
@@ -220,9 +230,11 @@ EquipmentView::itemSelected(int nItemNumber)
 }
 
 
+//*****************************************************************************
 /*!
   Create a new equipment item.
 */
+//*****************************************************************************
 
 void
 EquipmentView::newItem()
@@ -248,9 +260,11 @@ EquipmentView::newItem()
 }
 
 
+//*****************************************************************************
 /*!
   Delete the current equipment item.
 */
+//*****************************************************************************
 
 void
 EquipmentView::deleteItem()
@@ -281,9 +295,11 @@ EquipmentView::deleteItem()
 }
 
 
+//*****************************************************************************
 /*!
   Move the currently selected item up in the item list.
 */
+//*****************************************************************************
 
 void
 EquipmentView::moveCurrentUp()
@@ -292,7 +308,7 @@ EquipmentView::moveCurrentUp()
   assert(m_pcItemView->count() >= 2);
   int nCurrentItem = m_pcItemView->currentItem();
   assert(nCurrentItem >= 1 &&
-	 (unsigned)nCurrentItem < m_pcItemView->count());
+         (unsigned)nCurrentItem < m_pcItemView->count());
 
   QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.take(nCurrentItem);
@@ -310,9 +326,11 @@ EquipmentView::moveCurrentUp()
 }
 
 
+//*****************************************************************************
 /*!
   Move the currently selected item down in the item list.
 */
+//*****************************************************************************
 
 void
 EquipmentView::moveCurrentDown()
@@ -321,7 +339,7 @@ EquipmentView::moveCurrentDown()
   assert(m_pcItemView->count() >= 2);
   int nCurrentItem = m_pcItemView->currentItem();
   assert(nCurrentItem >= 0 &&
-	 (unsigned)nCurrentItem < m_pcItemView->count()-1);
+         (unsigned)nCurrentItem < m_pcItemView->count()-1);
 
   QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.take(nCurrentItem);
@@ -337,13 +355,15 @@ EquipmentView::moveCurrentDown()
 
   m_pcMoveUp->setEnabled(true);
   m_pcMoveDown->setEnabled((unsigned int)nCurrentItem+1 <
-			   m_pcItemView->count()-1);
+                           m_pcItemView->count()-1);
 }
 
 
+//*****************************************************************************
 /*!
   Change the name of the current equipemnt item.
 */
+//*****************************************************************************
 
 void
 EquipmentView::changeItemName()
@@ -362,9 +382,11 @@ EquipmentView::changeItemName()
 }
 
 
+//*****************************************************************************
 /*!
   Edit the name of the item \a nItemNumber.
 */
+//*****************************************************************************
 
 void
 EquipmentView::editItemName(int nItemNumber)
@@ -379,11 +401,13 @@ EquipmentView::editItemName(int nItemNumber)
 }
 
 
+//*****************************************************************************
 /*!
   The item type has been changed to \a pzType.
 
   Save the text in the log.
 */
+//*****************************************************************************
 
 void
 EquipmentView::itemTypeChanged(const char* pzType)
@@ -397,11 +421,13 @@ EquipmentView::itemTypeChanged(const char* pzType)
 }
 
 
+//*****************************************************************************
 /*!
   The item serial number has been changed to \a pzSerial.
 
   Save the text in the log.
 */
+//*****************************************************************************
 
 void
 EquipmentView::itemSerialChanged(const char* pzSerial)
@@ -415,11 +441,13 @@ EquipmentView::itemSerialChanged(const char* pzSerial)
 }
 
 
+//*****************************************************************************
 /*!
   The item service requirements has been changed to \a pzService.
 
   Save the text in the log.
 */
+//*****************************************************************************
 
 void
 EquipmentView::itemServiceChanged(const char* pzService)
@@ -433,11 +461,13 @@ EquipmentView::itemServiceChanged(const char* pzService)
 }
 
 
+//*****************************************************************************
 /*!
   The log entry in cell (\a nRow, \a nCol) has been changed to \a cText.
 
   Save the text for later use.
 */
+//*****************************************************************************
 
 void
 EquipmentView::logEntryChanged(int nRow, int nCol, const QString& cText)
@@ -462,7 +492,7 @@ EquipmentView::logEntryChanged(int nRow, int nCol, const QString& cText)
       cEntry.setDate(cDate);
     else
       DBG(("EquipmentView::logEntryChanged(): Invalid date `%s'\n",
-	   cText.data()));
+           cText.data()));
   }
   else
     cEntry.setComment(cText);
@@ -473,4 +503,5 @@ EquipmentView::logEntryChanged(int nRow, int nCol, const QString& cText)
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

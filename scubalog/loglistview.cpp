@@ -1,15 +1,17 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/loglistview.cpp
   \brief This file contains the implementation of the LogListView class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #include <assert.h>
 #include <qframe.h>
@@ -23,10 +25,12 @@
 #include "loglistview.moc"
 
 
+//*****************************************************************************
 /*!
   Create the log list view with \a pcParent as parent widget and \a pzName
   as widget name.
 */
+//*****************************************************************************
 
 LogListView::LogListView(QWidget* pcParent, const char* pzName)
   : QWidget(pcParent, pzName)
@@ -42,11 +46,11 @@ LogListView::LogListView(QWidget* pcParent, const char* pzName)
   m_pcDiveListView->setAllColumnsShowFocus(true);
   m_pcDiveListView->setSorting(0);
   connect(m_pcDiveListView, SIGNAL(doubleClicked(QListViewItem*)),
-	  SLOT(viewLog(QListViewItem*)));
+          SLOT(viewLog(QListViewItem*)));
   connect(m_pcDiveListView, SIGNAL(returnPressed(QListViewItem*)),
-	  SLOT(viewLog(QListViewItem*)));
+          SLOT(viewLog(QListViewItem*)));
   connect(m_pcDiveListView, SIGNAL(selectionChanged(QListViewItem*)),
-	  SLOT(selectedLogChanged(QListViewItem*)));
+          SLOT(selectedLogChanged(QListViewItem*)));
 
   m_pcNewLog = new QPushButton(this, "new");
   m_pcNewLog->setText("&New log entry");
@@ -79,15 +83,18 @@ LogListView::LogListView(QWidget* pcParent, const char* pzName)
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the log list view.
 */
+//*****************************************************************************
 
 LogListView::~LogListView()
 {
 }
 
 
+//*****************************************************************************
 /*!
   Use \a pcDiveList as the current dive log list.
   If a 0-pointer is passed, the view will be cleared, and no editing will
@@ -99,6 +106,7 @@ LogListView::~LogListView()
   Notice that this class does not take ownership of the list itself,
   but it can insert and delete logs from it.
 */
+//*****************************************************************************
 
 void
 LogListView::setLogList(DiveList* pcDiveList)
@@ -112,19 +120,21 @@ LogListView::setLogList(DiveList* pcDiveList)
     DiveLogItem* pcPreviousItem = 0;
     for (  pcLog = pcDiveList->first(); pcLog; pcLog = pcDiveList->next() ) {
       DiveLogItem* pcItem =
-	new DiveLogItem(m_pcDiveListView, pcPreviousItem, pcLog);
+        new DiveLogItem(m_pcDiveListView, pcPreviousItem, pcLog);
       pcPreviousItem = pcItem;
     }
   }
 }
 
 
+//*****************************************************************************
 /*!
   Create a new log entry. The log view will be displayed.
 
   The log number will be the last logs number plus one, or 1 if this is the
   first log.
 */
+//*****************************************************************************
 
 void
 LogListView::createNewLog()
@@ -148,6 +158,7 @@ LogListView::createNewLog()
 }
 
 
+//*****************************************************************************
 /*!
   Delete the current log if one is selected.
   Just before the log is deleted, the signal aboutToDeleteLog() will be
@@ -155,6 +166,7 @@ LogListView::createNewLog()
 
   The log wil be deleted from the log list.
 */
+//*****************************************************************************
 
 void
 LogListView::deleteLog()
@@ -173,9 +185,11 @@ LogListView::deleteLog()
 }
 
 
+//*****************************************************************************
 /*!
   Display the currently selected log, if any.
 */
+//*****************************************************************************
 
 void
 LogListView::viewLog()
@@ -187,9 +201,11 @@ LogListView::viewLog()
 }
 
 
+//*****************************************************************************
 /*!
   Display the log corresponding to \a pcItem.
 */
+//*****************************************************************************
 
 void
 LogListView::viewLog(QListViewItem* pcItem)
@@ -200,9 +216,11 @@ LogListView::viewLog(QListViewItem* pcItem)
 }
 
 
+//*****************************************************************************
 /*!
   The current selected log has changed to \a pcItem, update the GUI.
 */
+//*****************************************************************************
 
 void
 LogListView::selectedLogChanged(QListViewItem* pcItem)
@@ -219,4 +237,5 @@ LogListView::selectedLogChanged(QListViewItem* pcItem)
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

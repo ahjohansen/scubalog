@@ -1,21 +1,25 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/widgets/ktabcontrol.h
   \brief This file contains the definition of the KTabControl class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #ifndef KTABCONTROL_H
 #define KTABCONTROL_H
 
 #include <ktabctl.h>
 
+
+//*****************************************************************************
 /*!
   \class KTabControl
   \brief The KTabControl class is used to control pages with a tabbar.
@@ -26,6 +30,7 @@
 
   \author André Johansen.
 */  
+//*****************************************************************************
 
 class KTabControl : public KTabCtl {
 public:
@@ -45,4 +50,5 @@ public:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

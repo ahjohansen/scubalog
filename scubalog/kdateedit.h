@@ -1,11 +1,17 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/widgets/kdateedit.h
   \brief This file contains the definition of KDateEdit.
 
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
+
   $Id$
 
-  \par Copyright: André Johansen.
+  \par Copyright:
+  André Johansen.
 */
+//*****************************************************************************
 
 
 #ifndef KDATEEDIT_H
@@ -17,6 +23,7 @@
 class KDateValidator;
 
 
+//*****************************************************************************
 /*!
   \class KDateEdit
   \brief The KDateEdit class is a date input widget.
@@ -27,13 +34,14 @@ class KDateValidator;
 
   \author André Johansen <andrej@ifi.uio.no>.
 */
+//*****************************************************************************
 
 class KDateEdit : public QLineEdit {
   Q_OBJECT
 public:
   KDateEdit(QWidget* pcParent = 0, const char* pzName = 0);
   KDateEdit(QDate cFirst, QDate cDefault, QDate cLast,
-	    QWidget* pcParent = 0, const char* pzName = 0);
+            QWidget* pcParent = 0, const char* pzName = 0);
   virtual ~KDateEdit();
 
   QDate date() const;
@@ -64,4 +72,5 @@ signals:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

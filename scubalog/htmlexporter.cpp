@@ -3,10 +3,13 @@
   \file ScubaLog/htmlexporter.cpp
   \brief This file contains the implementation of HTMLExporter.
 
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
+
   $Id$
 
   \par Copyright:
-  André Johansen 1998 - 1999.
+  André Johansen.
 */
 //*****************************************************************************
 
@@ -54,7 +57,7 @@ HTMLExporter::~HTMLExporter()
 
 bool
 HTMLExporter::exportLog(const DiveLog& cLog,
-			const QString& cFileName) const
+                        const QString& cFileName) const
 {
   return false;
 }
@@ -69,7 +72,7 @@ HTMLExporter::exportLog(const DiveLog& cLog,
 
 bool
 HTMLExporter::exportLogBook(const LogBook& cLogBook,
-			    const QString& cDirName) const
+                            const QString& cDirName) const
 {
   QDir cOutputDir(cDirName);
   if ( false == cOutputDir.exists() ) {
@@ -98,34 +101,34 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
   }
   QTextStream cLogStream(&cLogFile);
   cLogStream << "<HTML>"
-	     << "<HEAD>\n"
-	     << "<TITLE>"
-	     << cLogBook.diverName()
-	     << " -- log index"
-	     << "</TITLE>\n"
-	     << "</HEAD>\n"
-	     << "<BODY>\n";
+             << "<HEAD>\n"
+             << "<TITLE>"
+             << cLogBook.diverName()
+             << " -- log index"
+             << "</TITLE>\n"
+             << "</HEAD>\n"
+             << "<BODY>\n";
   for ( iLog.toFirst(); iLog.current(); ++iLog ) {
     const DiveLog* pcCurrentLog = iLog.current();
     QString cLogNumber;
     cLogNumber.setNum(pcCurrentLog->logNumber());
     cLogStream << "<A HREF=\""
-	       << cLogNumber
-	       << ".html\">"
-	       << cLogNumber
-	       << ".</A> "
-	       << pcCurrentLog->diveLocation()
-	       << "<BR>\n";
+               << cLogNumber
+               << ".html\">"
+               << cLogNumber
+               << ".</A> "
+               << pcCurrentLog->diveLocation()
+               << "<BR>\n";
   }
   cLogStream << "\n"
-	     << "<HR>\n"
-	     << "Dive log exported from "
-	     << "<A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
-	     << "ScubaLog</A> "
-	     << cCurrentDate.toString()
-	     << "\n"
-	     << "</BODY>\n"
-	     << "</HTML>\n";
+             << "<HR>\n"
+             << "Dive log exported from "
+             << "<A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
+             << "ScubaLog</A> "
+             << cCurrentDate.toString()
+             << "\n"
+             << "</BODY>\n"
+             << "</HTML>\n";
 
   // Export the dive logs
   for ( iLog.toFirst(); iLog.current(); ++iLog ) {
@@ -146,60 +149,60 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
     }
     QTextStream cStream(&cFile);
     cStream << "<HTML>"
-	    << "<HEAD>\n"
-	    << "<TITLE>"
-	    << cLogBook.diverName()
-	    << " -- Log "
-	    << pcCurrentLog->logNumber()
-	    << "</TITLE>\n"
-	    << "</HEAD>\n"
-	    << "<BODY>\n"
-	    << "<B>Log number:</B> "
-	    << pcCurrentLog->logNumber()
-	    << "<BR>\n"
-	    << "<B>Date:</B> "
-	    << pcCurrentLog->diveDate().toString()
-	    << " "
-	    << pcCurrentLog->diveStart().toString()
-	    << "<BR>\n"
-	    << "<B>Location:</B> "
-	    << pcCurrentLog->diveLocation()
-	    << "<BR>\n"
-	    << "<B>Buddy:</B> "
-	    << pcCurrentLog->buddyName()
-	    << "<BR>\n"
-	    << "<B>Maximum depth:</B> "
-	    << pcCurrentLog->maxDepth()
-	    << "<BR>\n"
-	    << "<B>Dive time:</B> "
-	    << pcCurrentLog->diveTime().toString()
-	    << "<BR>\n"
-	    << "<P>\n"
-	    << pcCurrentLog->diveDescription()
-	    << "</P>\n";
+            << "<HEAD>\n"
+            << "<TITLE>"
+            << cLogBook.diverName()
+            << " -- Log "
+            << pcCurrentLog->logNumber()
+            << "</TITLE>\n"
+            << "</HEAD>\n"
+            << "<BODY>\n"
+            << "<B>Log number:</B> "
+            << pcCurrentLog->logNumber()
+            << "<BR>\n"
+            << "<B>Date:</B> "
+            << pcCurrentLog->diveDate().toString()
+            << " "
+            << pcCurrentLog->diveStart().toString()
+            << "<BR>\n"
+            << "<B>Location:</B> "
+            << pcCurrentLog->diveLocation()
+            << "<BR>\n"
+            << "<B>Buddy:</B> "
+            << pcCurrentLog->buddyName()
+            << "<BR>\n"
+            << "<B>Maximum depth:</B> "
+            << pcCurrentLog->maxDepth()
+            << "<BR>\n"
+            << "<B>Dive time:</B> "
+            << pcCurrentLog->diveTime().toString()
+            << "<BR>\n"
+            << "<P>\n"
+            << pcCurrentLog->diveDescription()
+            << "</P>\n";
     if ( false == iLog.atFirst() ) {
       QListIterator<DiveLog> iPreviousLog = iLog;
       --iPreviousLog;
       cStream << "<A HREF=\""
-	      << (iPreviousLog.current())->logNumber()
-	      << ".html\">Previous log</A> ";
+              << (iPreviousLog.current())->logNumber()
+              << ".html\">Previous log</A> ";
     }
     if ( false == iLog.atLast() ) {
       QListIterator<DiveLog> iNextLog = iLog;
       ++iNextLog;
       cStream << "<A HREF=\""
-	      << (iNextLog.current())->logNumber()
-	      << ".html\">Next log</A>";
+              << (iNextLog.current())->logNumber()
+              << ".html\">Next log</A>";
     }
     cStream << "\n"
-	    << "<HR>\n"
-	    << "Dive log exported from "
-	    << "<A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
-	    << "ScubaLog</A> "
-	    << cCurrentDate.toString()
-	    << "\n"
-	    << "</BODY>\n"
-	    << "</HTML>\n";
+            << "<HR>\n"
+            << "Dive log exported from "
+            << "<A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
+            << "ScubaLog</A> "
+            << cCurrentDate.toString()
+            << "\n"
+            << "</BODY>\n"
+            << "</HTML>\n";
 
     // Ensure output was successful
     if ( IO_Ok != cFile.status() ) {
@@ -226,7 +229,7 @@ void
 HTMLExporter::errorMessage(const QString& cMessage) const
 {
   QMessageBox::warning(qApp->mainWidget(), "[ScubaLog] Output error",
-		       cMessage);
+                       cMessage);
 }
 
 

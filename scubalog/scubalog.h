@@ -1,10 +1,10 @@
 //*****************************************************************************
 /*!
-  \file scubalog.h
+  \file ScubaLog/scubalog.h
   \brief This file contains the definition of the ScubaLog class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
@@ -33,7 +33,7 @@ class EquipmentView;
 //*****************************************************************************
 /*!
   \class ScubaLog
-  \brief The ScubaLog class is the Scuba Log application GUI.
+  \brief The ScubaLog class is the ScubaLog application GUI.
 
   This is a singleton class that should be created in main().
 

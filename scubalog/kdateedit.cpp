@@ -1,15 +1,17 @@
+//*****************************************************************************
 /*!
-  \file widgets/kdateedit.cpp
+  \file ScubaLog/widgets/kdateedit.cpp
   \brief This file contains the implementation of the KDateEdit class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #include <string.h>
 #include <stdio.h>
@@ -18,12 +20,14 @@
 #include "kdateedit.moc"
 
 
+//*****************************************************************************
 /*!
   Create a widget with \a pcParent as parent widget and \a pzName as
   the widget name.
   The valid date for this widget is 1.1.1900 to today, with today
   as the default.
 */
+//*****************************************************************************
 
 KDateEdit::KDateEdit(QWidget* pcParent, const char* pzName)
   : QLineEdit(pcParent, pzName)
@@ -35,15 +39,17 @@ KDateEdit::KDateEdit(QWidget* pcParent, const char* pzName)
 }
 
 
+//*****************************************************************************
 /*!
   Create a widget with \a pcParent as parent widget and \a pzName as
   the widget name.
   The valid date for this widget is from \a cFirst to \a cLast (inclusive),
   with \a cDefault as the default.
 */
+//*****************************************************************************
 
 KDateEdit::KDateEdit(QDate cFirst, QDate cDefault, QDate cLast,
-		     QWidget* pcParent, const char* pzName)
+                     QWidget* pcParent, const char* pzName)
   : QLineEdit(pcParent, pzName)
 {
   m_cDate = cDefault;
@@ -53,9 +59,11 @@ KDateEdit::KDateEdit(QDate cFirst, QDate cDefault, QDate cLast,
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the widget.
 */
+//*****************************************************************************
 
 KDateEdit::~KDateEdit()
 {
@@ -64,9 +72,11 @@ KDateEdit::~KDateEdit()
 }
 
 
+//*****************************************************************************
 /*!
   Get the current date.
 */
+//*****************************************************************************
 
 QDate
 KDateEdit::date() const
@@ -75,12 +85,14 @@ KDateEdit::date() const
 }
 
 
+//*****************************************************************************
 /*!
   Set the current date to \a cDate.
   No validation is done on the date given.
 
   If the date is different from the old one, dateChanged() is emitted.
 */
+//*****************************************************************************
 
 void
 KDateEdit::setDate(QDate cDate)
@@ -93,6 +105,7 @@ KDateEdit::setDate(QDate cDate)
 }
 
 
+//*****************************************************************************
 /*!
   Extract a date from \a cText.
 
@@ -100,6 +113,7 @@ KDateEdit::setDate(QDate cDate)
 
   If a date couldn't be created, the validator will be used to fix it.
 */
+//*****************************************************************************
 
 QDate
 KDateEdit::convertToDate(const QString& cText)
@@ -120,6 +134,7 @@ KDateEdit::convertToDate(const QString& cText)
 }
 
 
+//*****************************************************************************
 /*!
   Handle focus out event.
 
@@ -127,6 +142,7 @@ KDateEdit::convertToDate(const QString& cText)
   valid will be used as the new date. The widget will be updated with
   the date in "Sat Jan 16 1999" format.
 */
+//*****************************************************************************
 
 void
 KDateEdit::focusOutEvent(QFocusEvent*)
@@ -140,12 +156,14 @@ KDateEdit::focusOutEvent(QFocusEvent*)
 }
 
 
+//*****************************************************************************
 /*!
   Handle focus in event.
 
   The current date will be converted to a format on the form "16.1.1999",
   and the widget will be updated.
 */
+//*****************************************************************************
 
 void
 KDateEdit::focusInEvent(QFocusEvent*)
@@ -160,4 +178,5 @@ KDateEdit::focusInEvent(QFocusEvent*)
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

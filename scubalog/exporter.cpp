@@ -1,7 +1,10 @@
 //*****************************************************************************
 /*!
-  \file exporter.cpp
+  \file ScubaLog/exporter.cpp
   \brief This file contains the implementation of the Exporter interface.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 

@@ -1,15 +1,17 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/divelog.cpp
   \brief This file contains the implementation of the DiveLog class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #include <qstring.h>
 #include <qdatetime.h>
@@ -18,9 +20,11 @@
 #include "divelog.h"
 
 
+//*****************************************************************************
 /*!
   Initialize an empty log.
 */
+//*****************************************************************************
 
 DiveLog::DiveLog()
 {
@@ -43,9 +47,11 @@ DiveLog::DiveLog()
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the dive log. All resources will be freed.
 */
+//*****************************************************************************
 
 DiveLog::~DiveLog()
 {
@@ -55,11 +61,13 @@ DiveLog::~DiveLog()
 }
 
 
+//*****************************************************************************
 /*!
   Read a log from the stream \a cStream into \a cLog.
   Returns a reference to the stream.
   On error, the exception IOException is thrown.
 */
+//*****************************************************************************
 
 QDataStream&
 operator >>(QDataStream& cStream, DiveLog& cLog)
@@ -81,21 +89,21 @@ operator >>(QDataStream& cStream, DiveLog& cLog)
 
   unsigned char nPlanType;
   cStream >> cLog.m_nLogNumber
-  	  >> cLog.m_cDiveDate
-	  >> cLog.m_cDiveStart
-	  >> cLog.m_cLocation
-	  >> cLog.m_cBuddyName
-	  >> cLog.m_vMaxDepth
-	  >> cLog.m_cDiveTime
-	  >> cLog.m_cBottomTime
-	  >> cLog.m_cGasType
-	  >> cLog.m_nNumLitresUsed
-	  >> cLog.m_vAirTemperature
-	  >> cLog.m_vSurfaceTemperature
-	  >> cLog.m_vWaterTemperature
-	  >> nPlanType
-	  >> cLog.m_cDiveType
-	  >> cLog.m_cDiveDescription;
+          >> cLog.m_cDiveDate
+          >> cLog.m_cDiveStart
+          >> cLog.m_cLocation
+          >> cLog.m_cBuddyName
+          >> cLog.m_vMaxDepth
+          >> cLog.m_cDiveTime
+          >> cLog.m_cBottomTime
+          >> cLog.m_cGasType
+          >> cLog.m_nNumLitresUsed
+          >> cLog.m_vAirTemperature
+          >> cLog.m_vSurfaceTemperature
+          >> cLog.m_vWaterTemperature
+          >> nPlanType
+          >> cLog.m_cDiveType
+          >> cLog.m_cDiveDescription;
 
   cLog.setPlanType((DiveLog::PlanType_e)nPlanType);
 
@@ -104,8 +112,8 @@ operator >>(QDataStream& cStream, DiveLog& cLog)
   if ( nNextChunkPos != cDevice.at() ) {
     QString cText;
     cText.sprintf("Unexpected position after reading dive log!\n"
-		  "Current position is %d; expected %d...",
-		  cDevice.at(), nNextChunkPos);
+                  "Current position is %d; expected %d...",
+                  cDevice.at(), nNextChunkPos);
     throw IOException(cText);
   }
 
@@ -113,11 +121,13 @@ operator >>(QDataStream& cStream, DiveLog& cLog)
 }
 
 
+//*****************************************************************************
 /*!
   Write the log \a cLog to the stream \a cStream.
   Returns a reference to the stream.
   On error, the exception IOException is thrown.
 */
+//*****************************************************************************
 
 QDataStream&
 operator <<(QDataStream& cStream, const DiveLog& cLog)
@@ -147,24 +157,24 @@ operator <<(QDataStream& cStream, const DiveLog& cLog)
     + sizeof(unsigned int) + cLog.m_cDiveDescription.size();
   const unsigned char nPlanType = (unsigned char)cLog.m_ePlanType;
   cStream << MAKE_CHUNK_ID('S', 'L', 'D', 'L')
-	  << nChunkSize
-	  << nChunkVersion
-	  << cLog.m_nLogNumber
-	  << cLog.m_cDiveDate
-	  << cLog.m_cDiveStart
-	  << cLog.m_cLocation
-	  << cLog.m_cBuddyName
-	  << cLog.m_vMaxDepth
-	  << cLog.m_cDiveTime
-	  << cLog.m_cBottomTime
-	  << cLog.m_cGasType
-	  << cLog.m_nNumLitresUsed
-	  << cLog.m_vAirTemperature
-	  << cLog.m_vSurfaceTemperature
-	  << cLog.m_vWaterTemperature
-	  << nPlanType
-	  << cLog.m_cDiveType
-	  << cLog.m_cDiveDescription;
+          << nChunkSize
+          << nChunkVersion
+          << cLog.m_nLogNumber
+          << cLog.m_cDiveDate
+          << cLog.m_cDiveStart
+          << cLog.m_cLocation
+          << cLog.m_cBuddyName
+          << cLog.m_vMaxDepth
+          << cLog.m_cDiveTime
+          << cLog.m_cBottomTime
+          << cLog.m_cGasType
+          << cLog.m_nNumLitresUsed
+          << cLog.m_vAirTemperature
+          << cLog.m_vSurfaceTemperature
+          << cLog.m_vWaterTemperature
+          << nPlanType
+          << cLog.m_cDiveType
+          << cLog.m_cDiveDescription;
 
 
   // Ensure we're at the correct position in the stream
@@ -172,8 +182,8 @@ operator <<(QDataStream& cStream, const DiveLog& cLog)
   if ( nNextChunkPos != cDevice.at() ) {
     QString cText;
     cText.sprintf("Unexpected position after writing dive log!\n"
-		  "Current position is %d; expected %d...",
-		  cDevice.at(), nNextChunkPos);
+                  "Current position is %d; expected %d...",
+                  cDevice.at(), nNextChunkPos);
     throw IOException(cText);
   }
 
@@ -185,4 +195,5 @@ operator <<(QDataStream& cStream, const DiveLog& cLog)
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

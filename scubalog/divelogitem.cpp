@@ -1,15 +1,17 @@
+//*****************************************************************************
 /*!
   \file ScubaLog/divelogitem.cpp
   \brief This file contains the implementation of the DiveLogItem class.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #include <assert.h>
 #include <qstring.h>
@@ -18,13 +20,15 @@
 #include "divelogitem.h"
 
 
+//*****************************************************************************
 /*!
   Create an item in the listview \a pcListView, inserting it after
   the item \a pcPrevious using and \a pcLog as the log to be displayed.
 */
+//*****************************************************************************
 
 DiveLogItem::DiveLogItem(QListView* pcListView, QListViewItem* pcPrevious,
-			 DiveLog* pcLog)
+                         DiveLog* pcLog)
   : QListViewItem(pcListView, pcPrevious),
     m_pcLog(pcLog), m_pcDiveNumber(0), m_pcDiveDate(0), m_pcDiveStart(0)
 {
@@ -43,6 +47,7 @@ DiveLogItem::DiveLogItem(QListView* pcListView, QListViewItem* pcPrevious,
 }
 
 
+//*****************************************************************************
 /*!
   Destroy the item.
   All resources are freed.
@@ -50,6 +55,7 @@ DiveLogItem::DiveLogItem(QListView* pcListView, QListViewItem* pcPrevious,
   Since the log is not owned by this object, only used, it is not
   destroyed.
 */
+//*****************************************************************************
 
 DiveLogItem::~DiveLogItem()
 {
@@ -59,6 +65,7 @@ DiveLogItem::~DiveLogItem()
 }
 
 
+//*****************************************************************************
 /*!
   Get the sort key for column \a nColumn.
   \a isAscending indicated whether the sorting should be in ascending
@@ -67,6 +74,7 @@ DiveLogItem::~DiveLogItem()
   The returned key is saved in a static variable, due to poor design of the
   QListViewItem::key() interface in Qt 1.
 */
+//*****************************************************************************
 
 #if QT_VERSION >= 200
 QString
@@ -93,11 +101,13 @@ DiveLogItem::key(int nColumn, bool/* isAscending*/) const
 }
 
 
+//*****************************************************************************
 /*!
   Get the text to be used in column \a nColumn, counting from 0.
 
   The text is copied to the internal strings if needed.
 */
+//*****************************************************************************
 
 #if QT_VERSION >= 200
 QString
@@ -121,7 +131,7 @@ DiveLogItem::text(int nColumn) const
   else if ( 3 == nColumn ) {
     return m_pcLog->diveLocation();
   }
-  return 0;			// Unknown column
+  return 0;                     // Unknown column
 }
 
 
@@ -129,4 +139,5 @@ DiveLogItem::text(int nColumn) const
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

@@ -1,12 +1,17 @@
-//
-// $Id$
-//
-// This file is part of Scuba Log, a dive logging application for KDE.
-// Scuba Log is free software licensed under the GPL.
-//
-// Copyright 1998 André Johansen.
-//
+//*****************************************************************************
+/*!
+  \file ScubaLog/logview.h
+  \brief This file contains the definition of the LogView class.
 
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
+
+  $Id$
+
+  \par Copyright:
+  André Johansen.
+*/
+//*****************************************************************************
 
 #ifndef LOGVIEW_H
 #define LOGVIEW_H
@@ -24,6 +29,7 @@ class KDateEdit;
 class KTimeEdit;
 
 
+//*****************************************************************************
 /*!
   \class LogView
   \brief The LogView class handles editing a log.
@@ -32,6 +38,7 @@ class KTimeEdit;
 
   \author André Johansen.
 */
+//*****************************************************************************
 
 class LogView : public QWidget {
   Q_OBJECT
@@ -109,4 +116,5 @@ signals:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

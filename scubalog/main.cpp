@@ -1,20 +1,23 @@
+//*****************************************************************************
 /*!
-  \file scubalog.h
+  \file ScubaLog/main.cpp
   \brief This file contains the definition of the main() function.
 
-  This file is part of Scuba Log, a dive logging application for KDE.
-  Scuba Log is free software licensed under the GPL.
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
 
   $Id$
 
   \par Copyright:
   André Johansen.
 */
+//*****************************************************************************
 
 #include <kapp.h>
 #include "scubalog.h"
 
 
+//*****************************************************************************
 /*!
   \relates ScubaLog
 
@@ -22,6 +25,7 @@
 
   \author André Johansen.
 */
+//*****************************************************************************
 
 int
 main(int nArgumentCount, char** apzArguments)
@@ -40,4 +44,5 @@ main(int nArgumentCount, char** apzArguments)
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:

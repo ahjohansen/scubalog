@@ -1,11 +1,17 @@
-//
-// $Id$
-//
-// This file is part of Scuba Log, a dive logging application for KDE.
-// Scuba Log is free software licensed under the GPL.
-//
-// Copyright 1999 André Johansen.
-//
+//*****************************************************************************
+/*!
+  \file ScubaLog/divelogitem.h
+  \brief This file contains the definition of the DiveLogItem class.
+
+  This file is part of ScubaLog, a dive logging application for KDE.
+  ScubaLog is free software licensed under the GPL.
+
+  $Id$
+
+  \par Copyright:
+  André Johansen.
+*/
+//*****************************************************************************
 
 #ifndef DIVELOGITEM_H
 #define DIVELOGITEM_H
@@ -16,6 +22,7 @@ class DiveLog;
 class QString;
 
 
+//*****************************************************************************
 /*!
   \class DiveLogItem
   \brief The DiveLogItem is used to represent a item in the divelog listview.
@@ -31,11 +38,12 @@ class QString;
 
   \author André Johansen.
 */
+//*****************************************************************************
 
 class DiveLogItem : public QListViewItem {
 public:
   DiveLogItem(QListView* pcListView, QListViewItem* pcPrevious,
-	      DiveLog* pcLog);
+              DiveLog* pcLog);
   virtual ~DiveLogItem();
 #if QT_VERSION >= 200
   virtual QString text(int nColumn) const;
@@ -65,4 +73,5 @@ protected:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
+// indent-tabs-mode: nil
 // End:
