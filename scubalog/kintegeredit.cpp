@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -24,8 +24,6 @@
   This widget will accept all valid integers.
 
   The parent widget is \a pcParent, the name is \a pzName.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -47,8 +45,6 @@ KIntegerEdit::KIntegerEdit(QWidget* pcParent, const char* pzName)
   If the widget is left with an invalid integer, \a nDefault will be used.
 
   The parent widget is \a pcParent, the name is \a pzName.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -66,8 +62,6 @@ KIntegerEdit::KIntegerEdit(int nMin, int nDefault, int nMax,
 //*****************************************************************************
 /*!
   Destroy the widget.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -83,8 +77,6 @@ KIntegerEdit::~KIntegerEdit()
   Set the value to \a nValue.
   If the input is invalid according to the specifications for this widget,
   the default will be used.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -103,8 +95,6 @@ KIntegerEdit::setValue(int nValue)
   Set the minimum acceptable integer to \a nMin.
 
   \sa setMaxValue(), KIntegerValidator::setMinValue().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -122,8 +112,6 @@ KIntegerEdit::setMinValue(int nMin)
   Set the maximum acceptable integer to \a nMax.
 
   \sa setMinValue(), KIntegerValidator::setMaxValue().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -139,8 +127,6 @@ KIntegerEdit::setMaxValue(int nMax)
 //*****************************************************************************
 /*!
   Get the current integer.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -157,8 +143,6 @@ KIntegerEdit::getValue() const
 /*!
   Ensure the value is valid when leaving the widget.
   If the number changed, emit the integerChanged() signal.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -184,4 +168,5 @@ KIntegerEdit::focusOutEvent(QFocusEvent* pcEvent)
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

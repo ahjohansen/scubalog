@@ -6,10 +6,8 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -101,4 +99,5 @@ KTabControl::page(int nPageNumber) const
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

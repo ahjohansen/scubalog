@@ -6,10 +6,8 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -32,7 +30,7 @@ class KDateValidator;
   be shown as "Sat Jan 16 1999". When typing a date, a dotted numerical
   version is used: "16.1.1999".
 
-  \author André Johansen <andrej@ifi.uio.no>.
+  \author AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -73,4 +71,5 @@ signals:
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

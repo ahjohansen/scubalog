@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -40,7 +40,7 @@ class QPopupMenu;
   Notice that the pop-up menu is owned by this widget, it can be changed by
   users, but not deleted.
 
-  \author André Johansen.
+  \author AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -74,4 +74,5 @@ signals:
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

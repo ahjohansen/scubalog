@@ -4,7 +4,7 @@
   \brief This file contains the implementation of the ScubaLogProject class.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -30,8 +30,6 @@
 
   Notice that out-of-memory exceptions (std::bad_alloc)
   should be caught from the outside!
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -196,8 +194,6 @@ ScubaLogProject::importLogBook(const QString& cFileName) const
 
   Returns `true' if ok, else `false'. Only I/O errors like permission denied
   and out of space should result in errors.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -290,8 +286,6 @@ ScubaLogProject::exportLogBook(const LogBook& cLogBook,
   called.
 
   \exceptions IOException is thrown on input errors.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -328,8 +322,6 @@ ScubaLogProject::readPersonalInformation(QDataStream& cStream,
 //*****************************************************************************
 /*!
   Write personal information from \a cLogBook to the stream \a cStream.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -364,8 +356,6 @@ ScubaLogProject::writePersonalInformation(QDataStream&   cStream,
   Read a dive log from the stream \a cStream to \a cLog.
 
   \exception IOException is thrown on input errors.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -527,8 +517,6 @@ ScubaLogProject::writeDiveLog(QDataStream&   cStream,
   Read a location log from the stream \a cStream into \a cLog.
 
   \exception IOException is thrown on error.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -575,8 +563,6 @@ ScubaLogProject::readLocationLog(QDataStream& cStream, LocationLog& cLog) const
 /*!
   Write the location log \a cLog to the stream \a cStream.
   On error, the exception IOException is thrown.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -796,4 +782,5 @@ ScubaLogProject::writeEquipmentHistoryEntry(QDataStream& cStream,
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -39,8 +39,6 @@
 /*!
   Initialise the log view with \a pcParent as the parent widget
   and \a pzName as the widget name.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -298,8 +296,6 @@ LogView::LogView(QWidget* pcParent, const char* pzName)
 
   Notice that this class is not the owner of the log-list, thus it will
   not be freed here.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -314,8 +310,6 @@ LogView::~LogView()
 
   This function will update the view. If a null-pointer is passed,
   the view will be cleared and the widgets will be disabled.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -332,8 +326,6 @@ LogView::setLogBook(LogBook* pcLogBook)
   Create a new log entry. The log view will be displayed.
 
   The signal newLog() will be emitted.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -365,8 +357,6 @@ LogView::newLog()
 
   Notice that this function will not make the view visible if it is not,
   that should be done after this function is called.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -486,8 +476,6 @@ LogView::viewLog(DiveLog* pcLog)
 //*****************************************************************************
 /*!
   The dive number changed to \a nNumber. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -502,8 +490,6 @@ LogView::diveNumberChanged(int nNumber)
 //*****************************************************************************
 /*!
   The dive date changed to \a cDate. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -518,8 +504,6 @@ LogView::diveDateChanged(QDate cDate)
 //*****************************************************************************
 /*!
   The dive start changed to \a cStart. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -534,8 +518,6 @@ LogView::diveStartChanged(QTime cStart)
 //*****************************************************************************
 /*!
   The dive time changed to \a cTime. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -550,8 +532,6 @@ LogView::diveTimeChanged(QTime cTime)
 //*****************************************************************************
 /*!
   The gas type changed to \a cGasType. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -566,8 +546,6 @@ LogView::gasTypeChanged(const QString& cGasType)
 //*****************************************************************************
 /*!
   The bottom time changed to \a cTime. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -582,8 +560,6 @@ LogView::bottomTimeChanged(QTime cTime)
 //*****************************************************************************
 /*!
   The air temperature changed to \a nTemp. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -598,8 +574,6 @@ LogView::airTemperatureChanged(int nTemp)
 //*****************************************************************************
 /*!
   The water temperature changed to \a nTemp. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -614,8 +588,6 @@ LogView::waterTemperatureChanged(int nTemp)
 //*****************************************************************************
 /*!
   The location changed to \a cLocation. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -630,8 +602,6 @@ LogView::locationChanged(const QString& cLocation)
 //*****************************************************************************
 /*!
   The maximum depth changed to \a cDepth. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -647,8 +617,6 @@ LogView::maxDepthChanged(const QString& cDepth)
 //*****************************************************************************
 /*!
   The buddy changed to \a cBuddy. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -663,8 +631,6 @@ LogView::buddyChanged(const QString& cBuddy)
 //*****************************************************************************
 /*!
   The dive type changed to \a cDiveType. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -679,8 +645,6 @@ LogView::diveTypeChanged(const QString& cDiveType)
 //*****************************************************************************
 /*!
   The dive description changed. Update the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -697,8 +661,6 @@ LogView::diveDescriptionChanged()
 //*****************************************************************************
 /*!
   Goto the previous log in the log book.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -726,8 +688,6 @@ LogView::gotoPreviousLog()
 //*****************************************************************************
 /*!
   Goto the next log in the log book.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -758,8 +718,6 @@ LogView::gotoNextLog()
 //*****************************************************************************
 /*!
   The log \a pcLog is about to be deleted, make sure it is not used anymore.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -797,8 +755,6 @@ LogView::deletingLog(const DiveLog* pcLog)
   Edit the current location.
 
   This function will emit the signal editLocation().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -817,4 +773,5 @@ LogView::editLocation()
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

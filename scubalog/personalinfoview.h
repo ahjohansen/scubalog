@@ -6,10 +6,8 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -35,7 +33,7 @@ class LogBook;
 
   This class does not take ownership of the log book.
 
-  \author André Johansen.
+  \author AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -85,4 +83,5 @@ private:
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -69,8 +69,6 @@
   Initialise the ScubaLog application GUI. Use \a pzName as the widget name.
 
   If \a pzLogBook is non-null, it will be attempted loaded as a log-book.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -172,7 +170,7 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
                           "written for the K Desktop Environment.\n\n"
                           "This program is free software, licensed\n"
                           "under the GNU General Public License.\n\n"
-                          "Author: André Johansen <andrej@tiscali.no>\n\n"
+                          "Author: AndrÃ© Johansen <andrejoh@c2i.net>\n\n"
                           "Version: %s\n"
                           "Compilation date: %s"), VERSION, __DATE__);
   pcMenuBar->insertItem(i18n("&Help"), this->helpMenu());
@@ -292,8 +290,6 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
 //*****************************************************************************
 /*!
   Destroy the application GUI.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -325,8 +321,6 @@ ScubaLog::~ScubaLog()
   through the window manager, not from "Quit"!
 
   Always returns "false".
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -340,8 +334,6 @@ ScubaLog::queryExit()
 //*****************************************************************************
 /*!
   The program is about to exit, save the settings.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -372,8 +364,6 @@ ScubaLog::saveConfig()
   Open the recent project \a nRecentNumber.
 
   \sa openProject().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -390,8 +380,6 @@ ScubaLog::openRecent(int nRecentNumber)
 //*****************************************************************************
 /*!
   Create a new project.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -422,8 +410,6 @@ ScubaLog::newProject()
   project.
 
   \sa saveProject(), saveProjectAs().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -451,8 +437,6 @@ ScubaLog::openProject()
   Save the current project.
 
   \sa openProject(), saveProjectAs().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -486,8 +470,6 @@ ScubaLog::saveProject()
   the user for a filename.
 
   \sa openProject(), saveProject().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -549,8 +531,6 @@ ScubaLog::saveProjectAs()
   as it might have to be downloaded first.
 
   \sa readLogBook().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -559,14 +539,14 @@ ScubaLog::readLogBookUrl(const QString& cUrlName, DownloadMode_e eMode)
 {
   // Ensure the URL is valid, try local files in current directory too
   KURL cUrl(cUrlName);
-  if ( cUrl.isMalformed() ) {
+  if ( false == cUrl.isValid() ) {
     QString cLocalFile("file:");
     if ( cUrlName.find('/') ) {
       cLocalFile += QDir::currentDirPath() + "/";
     }
     cLocalFile += cUrlName;
     //cUrl.parse(cLocalFile);
-    if ( cUrl.isMalformed() ) {
+    if ( false == cUrl.isValid() ) {
       return false;
     }
   }
@@ -588,7 +568,7 @@ ScubaLog::readLogBookUrl(const QString& cUrlName, DownloadMode_e eMode)
   // Load remote file synchronously
   else if ( e_DownloadSynchronous == eMode ) {
     QString cProjectName;
-    const bool isDownloadOk = KIO::NetAccess::download(cUrlName, cProjectName);
+    const bool isDownloadOk = KIO::NetAccess::download(cUrlName, cProjectName, this);
     if ( false == isDownloadOk )
       return false;
     bool isOk = readLogBook(cProjectName);
@@ -623,8 +603,6 @@ ScubaLog::readLogBookUrl(const QString& cUrlName, DownloadMode_e eMode)
   except the "recent projects" menu and the caption.
 
   \sa LogBook::readLogBook().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -673,8 +651,6 @@ ScubaLog::readLogBook(const QString& cFileName)
   projects. If found longer down in the list, remove that entry.
 
   Only the five last entries will be remembered.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -726,8 +702,6 @@ ScubaLog::updateRecentProjects(const QString& cProjectName)
 
   Currently, a file dialog will be opened asking for an output directory.
   When more export formats are added, a dialog will be added.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -761,8 +735,6 @@ ScubaLog::exportLogBook()
 
   Currently, a file dialog will be opened asking for an output directory.
   When more export formats are added, a dialog will be added.
-
-  \author André Johansen, Jordi Cantón.
 */
 //*****************************************************************************
 
@@ -803,8 +775,6 @@ ScubaLog::exportLogBookUDCF()
 //*****************************************************************************
 /*!
   Switch to the log view, displaying the log \a pcLog.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -821,8 +791,6 @@ ScubaLog::viewLog(DiveLog* pcLog)
 //*****************************************************************************
 /*!
   Edit the location with the name \a cLocationName.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -838,8 +806,6 @@ ScubaLog::editLocation(const QString& cLocationName)
 //*****************************************************************************
 /*!
   Switch to the log list view.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -853,8 +819,6 @@ ScubaLog::viewLogList()
 //*****************************************************************************
 /*!
   Ask the user for a log to view.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -920,8 +884,6 @@ ScubaLog::gotoLog()
   \todo Create GUI to select different output formats.
   \todo Possibility to print a range of dive logs.
   \todo Possibility to print locations, equipment and personal info.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -1037,8 +999,6 @@ ScubaLog::print()
   The event will be accepted if it is a file name.
 
   \todo Ask user if current log book should be saved when it has been changed.
-
-  \author Jordi Cantón
 */
 //*****************************************************************************
 
@@ -1056,8 +1016,6 @@ ScubaLog::dragEnterEvent(QDragEnterEvent* pcEvent)
   The loogbook will be loades using readLogBookUrl() if it is possible.
 
   \sa readLogBookUrl(), dragEnterEvent().
-
-  \author Jordi Cantón.
 */
 //*****************************************************************************
 
@@ -1088,8 +1046,6 @@ ScubaLog::dropEvent(QDropEvent* pcEvent)
 /*!
   KFM is finished downloading the file, close the connection and try to load
   the log book.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -1121,4 +1077,5 @@ ScubaLog::handleDownloadFinished(KIO::Job* pcJob)
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

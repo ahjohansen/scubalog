@@ -2,7 +2,7 @@
                           udcfexporter.h  -  description
                              -------------------
     begin                : Tue Sep 11 2001
-    copyright            : (C) 2001 by Jordi Canton
+    copyright            : (C) 2001 by Jordi Cantón
     email                : JordiNitrox@virtual-sub.org
  ***************************************************************************/
 
@@ -23,7 +23,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  Jordi Cant�n
+  Jordi Cantón
 */
 //*****************************************************************************
 
@@ -44,7 +44,7 @@ class QDomElement;
   \class UDCFExporter
   \brief The UDCFExporter class is used to export to UDCF format.
 
-  \author Jordi Canton.
+  \author Jordi Cantón
 */
 //*****************************************************************************
 
@@ -75,4 +75,12 @@ private:
 
 };
 
-#endif
+#endif // UDCFEXPORTER_H
+
+// Local Variables:
+// mode: c++
+// tab-width: 8
+// c-basic-offset: 2
+// indent-tabs-mode: nil
+// coding: utf-8
+// End:

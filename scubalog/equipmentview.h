@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -32,7 +32,7 @@ class QPopupMenu;
   A log book may contain descriptions of the divers equipment, together
   with a history, service requirements etc.
 
-  \author André Johansen.
+  \author AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -98,4 +98,5 @@ private:
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

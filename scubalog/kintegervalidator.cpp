@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -23,8 +23,6 @@
   If the integer is invalid, \a nDefault will be used insted.
 
   \sa fixup().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -82,8 +80,6 @@ KIntegerValidator::fixup(QString& cInput)
   will be set to the minimum value as well.
 
   \sa setMaxValue(), setRange().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -104,8 +100,6 @@ KIntegerValidator::setMinValue(int nMin)
   will be set to the maximum value as well.
 
   \sa setMinValue(), setRange().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -124,4 +118,5 @@ KIntegerValidator::setMaxValue(int nMax)
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

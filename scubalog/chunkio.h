@@ -6,10 +6,8 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -37,7 +35,7 @@
   \class IOException
   \brief The exception class that is thrown when the I/O system fails.
 
-  \author André Johansen.
+  \author AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -60,4 +58,5 @@ private:
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

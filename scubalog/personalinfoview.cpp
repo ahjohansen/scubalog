@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -26,8 +26,6 @@
 /*!
   Create the personal info view class with \a pcParent as parent widget
   and \a pzName as widget name.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -115,8 +113,6 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
 //*****************************************************************************
 /*!
   Destroy the view.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -129,8 +125,6 @@ PersonalInfoView::~PersonalInfoView()
 /*!
   Set the log book to \a pcLogBook. The view will be updated.
   If a null-pointer is passed, the view will be cleared.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -254,4 +248,5 @@ PersonalInfoView::commentsChanged()
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

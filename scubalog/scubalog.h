@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  AndrÈ Johansen.
+  Andr√© Johansen
 */
 //*****************************************************************************
 
@@ -38,7 +38,7 @@ class EquipmentView;
 
   This is a singleton class that should be created in main().
 
-  \author AndrÈ Johansen <andrej@ifi.uio.no>.
+  \author Andr√© Johansen, Jordi Cant√≥n
 */
 //*****************************************************************************
 
@@ -128,4 +128,5 @@ private:
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

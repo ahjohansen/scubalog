@@ -4,7 +4,7 @@
   \brief This file contains the definition of the ScubaLogProject class.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -83,7 +83,7 @@ class EquipmentHistoryEntry;
   \arg U32   The date of entry (Julian format)
   \arg U8[]  The history event (zero-terminated)
 
-  \author André Johansen.
+  \author AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -142,4 +142,5 @@ private:
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -30,8 +30,6 @@
 /*!
   Create the log list view with \a pcParent as parent widget and \a pzName
   as widget name.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -92,8 +90,6 @@ LogListView::LogListView(QWidget* pcParent, const char* pzName)
 //*****************************************************************************
 /*!
   Destroy the log list view.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -113,8 +109,6 @@ LogListView::~LogListView()
 
   Notice that this class does not take ownership of the list itself,
   but it can insert and delete logs from it.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -143,8 +137,6 @@ LogListView::setLogList(DiveList* pcDiveList)
 
   The log number will be the last logs number plus one, or 1 if this is the
   first log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -185,8 +177,6 @@ LogListView::createNewLog()
   emitted.
 
   The log wil be deleted from the log list.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -220,8 +210,6 @@ LogListView::deleteLog()
 //*****************************************************************************
 /*!
   Display the currently selected log, if any.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -238,8 +226,6 @@ LogListView::viewLog()
 //*****************************************************************************
 /*!
   Display the log corresponding to \a pcItem.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -255,8 +241,6 @@ LogListView::viewLog(QListViewItem* pcItem)
 //*****************************************************************************
 /*!
   The current selected log has changed to \a pcItem, update the GUI.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -276,4 +260,5 @@ LogListView::selectedLogChanged(QListViewItem* pcItem)
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

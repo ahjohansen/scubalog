@@ -6,10 +6,8 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -24,7 +22,6 @@
 #include "integerdialog.h"
 
 
-
 //*****************************************************************************
 /*!
   Create the dialog object with \a pcParent as parent widget and
@@ -35,8 +32,6 @@
   and setMaxValue() to restrict the range accepted.
 
   To get a label above the integer editor, use setText().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -87,8 +82,6 @@ IntegerDialog::IntegerDialog(QWidget* pcParent, const char* pzName,
 //*****************************************************************************
 /*!
   Destroy the dialog.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -106,8 +99,6 @@ IntegerDialog::~IntegerDialog()
   Set the value to be shown to \a nValue.
 
   \sa KIntegerEdit::setValue().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -123,8 +114,6 @@ IntegerDialog::setValue(int nValue)
   Set the minimum acceptable value to \a nMinValue.
 
   \sa KIntegerEdit::setMinValue().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -140,8 +129,6 @@ IntegerDialog::setMinValue(int nMinValue)
   Set the maximum acceptable value to \a nMaxValue.
 
   \sa KIntegerEdit::setMaxValue().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -155,8 +142,6 @@ IntegerDialog::setMaxValue(int nMaxValue)
 //*****************************************************************************
 /*!
   Get the current value from the integer editor.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -170,8 +155,6 @@ IntegerDialog::getValue() const
 //*****************************************************************************
 /*!
   Set the text to be shown above the editor to \a cText.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -187,8 +170,6 @@ IntegerDialog::setText(const QString& cText)
 //*****************************************************************************
 /*!
   Update the geometry.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -211,4 +192,5 @@ IntegerDialog::updateGeometry()
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

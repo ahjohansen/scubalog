@@ -2,7 +2,7 @@
                           udcfexporter.cpp  -  description
                              -------------------
     begin                : Tue Sep 11 2001
-    copyright            : (C) 2001 by Jordi Canton
+    copyright            : (C) 2001 by Jordi CantÃ³n
     email                : 
  ***************************************************************************/
 
@@ -23,7 +23,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  Jordi Cantón
+  Jordi CantÃ³n
 */
 //*****************************************************************************
 
@@ -52,8 +52,6 @@ UDCFExporter::~UDCFExporter(){
 /*!
   Export the logbook \a cLogBook to the file \a cFileName.
   Returns `true' on success, `false' on failure.
-
-  \author Jordi Canton
 */
 //*****************************************************************************
 bool
@@ -69,7 +67,6 @@ return false; // not implemented, then false
   Export the logbook \a cLogBook to the file \a cFileName.
   Returns `true' on success, `false' on failure.
   \warning NOT INPLEMENTED YET
-  \author Jordi Canton
 */
 //*****************************************************************************
 
@@ -120,11 +117,11 @@ UDCFExporter::exportLogBook(const LogBook& cLogBook,
 
  return true;
  }//end of method
+
+
 //*****************************************************************************
 /*!
   Display the error-message \a cMessage.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -134,11 +131,11 @@ UDCFExporter::errorMessage(const QString& cMessage) const
   QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Output error"),
                        cMessage);
 }
+
+
 //*****************************************************************************
 /*!
   Builds the head of the document
-
-  \author Jordi Canton
 */
 //*****************************************************************************
 
@@ -171,8 +168,6 @@ UDCFExporter::buildHead(QDomDocument& doc) const
 //*****************************************************************************
 /*!
   Builds personal info
-
-  \author Jordi Canton
 */
 //*****************************************************************************
 
@@ -208,8 +203,6 @@ UDCFExporter::buildPersInfo(QDomDocument& doc,QDomElement &docElem,const LogBook
 //*****************************************************************************
 /*!
   Builds location logs
-
-  \author Jordi Canton
 */
 //*****************************************************************************
 
@@ -245,8 +238,6 @@ UDCFExporter::buildLocationLogs(QDomDocument& doc,QDomElement& docElem,const Log
 /*!
   Create teh part of the tree for equipment logs. The tags used are not part of
   UDFC format.
-
-  \author Jordi Canton
 */
 //*****************************************************************************
 
@@ -313,8 +304,6 @@ UDCFExporter::buildEquipmentLogs(QDomDocument& doc,QDomElement& docElem,const Lo
 //*****************************************************************************
 /*!
   Create the part of the tree for Dive logs.
-
-  \author Jordi Cantón
   \todo sets extra info for obligatory fields in the UDCF standard, lixe mix
    composition, etc
 */
@@ -519,5 +508,10 @@ UDCFExporter::buildDiveLogs(QDomDocument& doc,const LogBook& cLogBook) const
 }
 
 
-
-
+// Local Variables:
+// mode: c++
+// tab-width: 8
+// c-basic-offset: 2
+// indent-tabs-mode: nil
+// coding: utf-8
+// End:

@@ -4,7 +4,7 @@
   \brief This file contains the implementation of the DateItem class.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -21,9 +21,6 @@
   Copy the date into the item, if valid.
 
   \sa QDate::fromString(), QDate::toString().
-
-  \par Copyright:
-  André Johansen.
 */
 //*****************************************************************************
 
@@ -53,4 +50,5 @@ DateItem::setContentFromEditor(QWidget* i_pcEditor)
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

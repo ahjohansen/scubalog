@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -27,8 +27,6 @@
   \relates ScubaLog
 
   The entry point for the application.
-
-  \author André Johansen, Jordi Cantón.
 */
 //*****************************************************************************
 
@@ -42,15 +40,15 @@ main(int nArgumentCount, char** apzArguments)
                        I18N_NOOP("ScubaLog is a scuba dive logging program,\n"
                                  "written for the K Desktop Environment."),
                        KAboutData::License_GPL,
-                       "(c) 1999-2002, André Johansen",
+                       "(c) 1999-2002, AndrÃ© Johansen",
                        0,
                        "http://home.tiscali.no/andrej/scubalog",
-                       "andrej@tiscali.no");
-  aboutData.addAuthor("André Johansen",
+                       "andrejoh@c2i.net");
+  aboutData.addAuthor("AndrÃ© Johansen",
                       "Author",
-                      "andrej@tiscali.no",
+                      "andrejoh@c2i.net",
                       "http://home.tiscali.no/andrej/scubalog/");
-  aboutData.addAuthor("Jordi Canton",
+  aboutData.addAuthor("Jordi CantÃ³n",
                       "Porting to KDE v2",
                       "JordiNitrox@virtual-sub.org",
                       "http://www.virtual-sub.org");
@@ -101,4 +99,5 @@ main(int nArgumentCount, char** apzArguments)
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

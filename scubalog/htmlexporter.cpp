@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -32,8 +32,6 @@
 //*****************************************************************************
 /*!
   Initialise the exporter object.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -45,8 +43,6 @@ HTMLExporter::HTMLExporter()
 //*****************************************************************************
 /*!
   Destroy the exporter object.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -61,8 +57,6 @@ HTMLExporter::~HTMLExporter()
   Returns `true' if successful, else `false'.
 
   \warning This function is not yet implemented.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -78,8 +72,6 @@ HTMLExporter::exportLog(const DiveLog& /*cLog*/,
 /*!
   Export the logbook \a cLogBook to the directory \a cDirName.
   Returns `true' on success, `false' on failure.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -231,7 +223,7 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
     cStream << "<A HREF=\"logbook.html\">" << i18n("Index") << "</A>\n"
             << "<P>\n"
             << i18n("Dive log exported from")
-            << " <A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
+            << " <A HREF=\"http://home.tiscali.no/andrej/scubalog/\">"
             << "ScubaLog</A> "
             << cCurrentDate.toString()
             << "\n"
@@ -262,8 +254,6 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
   The output file will be called `logbook.html'.
 
   Returns `true' on success and `false' on failure.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -319,7 +309,7 @@ HTMLExporter::exportIndex(const LogBook& cLogBook,
   }
   cStream << "<HR>\n"
           << i18n("Dive log exported from")
-          << " <A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
+          << " <A HREF=\"http://home.tiscali.no/andrej/scubalog/\">"
           << "ScubaLog</A> "
           << cCurrentDate.toString()
           << "\n"
@@ -348,8 +338,6 @@ HTMLExporter::exportIndex(const LogBook& cLogBook,
   to the directory \a cDirName.
 
   Returns `true' on success and `false' on failure.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -414,7 +402,7 @@ HTMLExporter::exportLocations(const LogBook& cLogBook,
     cStream << "<A HREF=\"logbook.html\">" << i18n("Index") << "</A>\n"
             << "<P>\n"
             << i18n("Dive log exported from")
-            << " <A HREF=\"http://www.stud.ifi.uio.no/~andrej/scubalog/\">"
+            << " <A HREF=\"http://home.tiscali.no/andrej/scubalog/\">"
             << "ScubaLog</A> "
             << cCurrentDate.toString()
             << "\n"
@@ -439,8 +427,6 @@ HTMLExporter::exportLocations(const LogBook& cLogBook,
 //*****************************************************************************
 /*!
   Create a filename suitable for the location name \a cLocationName.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -466,8 +452,6 @@ HTMLExporter::getLocationExportName(const QString& cLocationName) const
   with the name \a cLocationName.
 
   If one is found, return `true', else return `false'.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -492,8 +476,6 @@ HTMLExporter::hasLocation(const LogBook& cLogBook,
 /*!
   Create paragraphs in the output by replacing double newlines in \a cText
   with an HTML paragraph marker.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -508,8 +490,6 @@ HTMLExporter::createParagraphs(QString& cText) const
 /*!
   Search for http URLs in the input \a cText and create real links.
   The link-text will be the link itself.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -546,8 +526,6 @@ HTMLExporter::createLinks(QString& cText) const
 //*****************************************************************************
 /*!
   Display the error-message \a cMessage.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -564,4 +542,5 @@ HTMLExporter::errorMessage(const QString& cMessage) const
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

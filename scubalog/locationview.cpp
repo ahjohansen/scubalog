@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -33,8 +33,6 @@
 //*****************************************************************************
 /*!
   Initialise the view.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -125,8 +123,6 @@ LocationView::LocationView(QWidget* pcParent, const char* pzName)
 //*****************************************************************************
 /*!
   Destroy the view.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -142,8 +138,6 @@ LocationView::~LocationView()
 
   This function will update the view. If a null-pointer is passed,
   the view will be cleared and the widgets will be disabled.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -193,8 +187,6 @@ LocationView::setLogBook(LogBook* pcLogBook)
   The location with the index \a nLocationIndex has been selected.
 
   Update the rest of the GUI.
-
-  \author André Johansen, Jordi Canton.
 */
 //*****************************************************************************
 
@@ -220,8 +212,6 @@ LocationView::locationSelected(int nLocationIndex)
   Edit the name of the item \a nLocationIndex.
 
   \sa locationNameChanged().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -248,8 +238,6 @@ LocationView::editLocationName(int nLocationIndex)
   Edit the name of the currently selected item, if any.
 
   \sa editLocationName(), locationNameChanged().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -268,8 +256,6 @@ LocationView::editCurrentLocationName()
 //*****************************************************************************
 /*!
   Edit the location \a cLocationName. If it does not exist, create it.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -329,8 +315,6 @@ LocationView::editLocation(const QString& cLocationName)
 //*****************************************************************************
 /*!
   Create a new location.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -373,8 +357,6 @@ LocationView::newLocation()
   Delete the currently selected location.
 
   The user will be asked before going on.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -421,8 +403,6 @@ LocationView::deleteLocation()
 //*****************************************************************************
 /*!
   Change the location name to \a pzName.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -456,8 +436,6 @@ LocationView::locationNameChanged()
 
   Notice that this function might be called when the text is changed
   from the code too, so be safe...
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -481,8 +459,6 @@ LocationView::locationDescriptionChanged()
 //*****************************************************************************
 /*!
   Preparte the locations menu \a pcMenu to be shown
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -502,4 +478,5 @@ LocationView::prepareLocationsMenu(QPopupMenu* pcMenu)
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

@@ -7,13 +7,12 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
 #ifndef DATEITEM_H
 #define DATEITEM_H
-#endif // DATEITEM_H
 
 #include <qtable.h>
 
@@ -22,7 +21,7 @@
   \class DateItem
   \brief The DateItem class is used to show dates in a QTable widget.
 
-  \author André Johansen.
+  \author AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -39,10 +38,12 @@ public:
   void setContentFromEditor(QWidget* pcEditor);
 };
 
+#endif // DATEITEM_H
 
 // Local Variables:
 // mode: c++
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  Andr� Johansen.
+  André Johansen
 */
 //*****************************************************************************
 
@@ -29,6 +29,8 @@ class QString;
 
   If the widget is left with an invalid date, a default date will
   be used.
+
+  \author André Johansen
 */
 //*****************************************************************************
 
@@ -78,4 +80,5 @@ protected:
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -20,8 +20,6 @@
 /*!
   Create the widget with \a pcParent as the parent widget and \a pzWidgetName
   as the widget name.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -35,8 +33,6 @@ ListBox::ListBox(QWidget* pcParent, const char* pzWidgetName)
 //*****************************************************************************
 /*!
   Destroy the widget.  The pop-up menu will be destroyed.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -52,8 +48,6 @@ ListBox::~ListBox()
   Check whether the widget has a pop-up menu or not.
 
   The pop-up menu will be created the first time getPopupMenu() is called.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -69,8 +63,6 @@ ListBox::hasPopupMenu() const
   Get the pop-up menu used by the widget.
 
   The menu is created the first time this function is called.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -93,8 +85,6 @@ ListBox::getPopupMenu()
   menu to reflect current state.
 
   All other events are sent to the base-class.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -125,8 +115,6 @@ ListBox::mousePressEvent(QMouseEvent* pcEvent)
   so the user can change the menu to reflect current state.
 
   All other events are sent to the base-class.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -157,4 +145,5 @@ ListBox::keyPressEvent(QKeyEvent* pcEvent)
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

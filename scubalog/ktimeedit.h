@@ -6,10 +6,8 @@
   This file is part of ScubaLog, a dive logging application for KDE.
   ScubaLog is free software licensed under the GPL.
 
-  $Id$
-
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -30,7 +28,7 @@ class KTimeValidator;
   This class provides a simple widget to write a time. The time will
   be shown in 24 hour-mode (23:04:58).
 
-  \author André Johansen <andrej@ifi.uio.no>.
+  \author AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -70,4 +68,5 @@ signals:
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

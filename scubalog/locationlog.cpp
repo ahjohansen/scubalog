@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -21,8 +21,6 @@
   Initialise the log.
 
   By default, both the name and description are empty.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -34,8 +32,6 @@ LocationLog::LocationLog()
 //*****************************************************************************
 /*!
   Destroy the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -47,8 +43,6 @@ LocationLog::~LocationLog()
 //*****************************************************************************
 /*!
   Get the location name.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -62,8 +56,6 @@ LocationLog::getName() const
 //*****************************************************************************
 /*!
   Set the name of the location to \a cName.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -77,8 +69,6 @@ LocationLog::setName(const QString& cName)
 //*****************************************************************************
 /*!
   Get the description of the location.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -92,8 +82,6 @@ LocationLog::getDescription() const
 //*****************************************************************************
 /*!
   Set the description of the location to \a cDescription.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -109,4 +97,5 @@ LocationLog::setDescription(const QString& cDescription)
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:

@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen.
+  AndrÃ© Johansen
 */
 //*****************************************************************************
 
@@ -37,8 +37,6 @@
 /*!
   Create the view with \a pcParent as parent widget and \a pzName as
   the widget name.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -173,8 +171,6 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
 //*****************************************************************************
 /*!
   Destroy the view.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -189,8 +185,6 @@ EquipmentView::~EquipmentView()
 
   This function will update the view. If a null-pointer is passed,
   the view will be cleared and the widgets will be disabled.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -245,8 +239,6 @@ EquipmentView::setLogBook(LogBook* pcLogBook)
   The item with index \a nItemNumber has been selected.
 
   Update the rest of the GUI.
-
-  \author André Johansen, Jordi Canton.
 */
 //*****************************************************************************
 
@@ -286,8 +278,6 @@ EquipmentView::itemSelected(int nItemNumber)
 //*****************************************************************************
 /*!
   Create a new equipment item.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -318,8 +308,6 @@ EquipmentView::newItem()
 //*****************************************************************************
 /*!
   Delete the current equipment item.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -355,8 +343,6 @@ EquipmentView::deleteItem()
 //*****************************************************************************
 /*!
   Move the currently selected item up in the item list.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -388,8 +374,6 @@ EquipmentView::moveCurrentUp()
 //*****************************************************************************
 /*!
   Move the currently selected item down in the item list.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -422,9 +406,7 @@ EquipmentView::moveCurrentDown()
 
 //*****************************************************************************
 /*!
-  Change the name of the current equipemnt item.
-
-  \author André Johansen.
+  Change the name of the current equipment item.
 */
 //*****************************************************************************
 
@@ -448,8 +430,6 @@ EquipmentView::changeItemName()
 //*****************************************************************************
 /*!
   Edit the name of the item \a nItemNumber.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -471,8 +451,6 @@ EquipmentView::editItemName(int nItemNumber)
   The item type has been changed to \a cType.
 
   Save the text in the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -493,8 +471,6 @@ EquipmentView::itemTypeChanged(const QString& cType)
   The item serial number has been changed to \a cSerial.
 
   Save the text in the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -515,8 +491,6 @@ EquipmentView::itemSerialChanged(const QString& cSerial)
   The item service requirements has been changed to \a cService.
 
   Save the text in the log.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -537,8 +511,6 @@ EquipmentView::itemServiceChanged(const QString& cService)
   The log entry in cell (\a nRow, \a nCol) has been changed.
 
   Save the text for later use.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -587,8 +559,6 @@ EquipmentView::logEntryChanged(int nRow, int nCol)
   The created menu is stored in #m_pcLogEntryMenu.
 
   \sa showLogEntryMenu().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -612,8 +582,6 @@ EquipmentView::createLogEntryMenu()
   \a i_nCol), the global position is \a i_cPos
 
   The menu will be created on first use by calling createEntryMenu().
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -632,8 +600,6 @@ EquipmentView::showLogEntryMenu(int           /*i_nRow*/,
 /*!
   Create a new log entry.
   New entries are always inserted at the end.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -655,8 +621,6 @@ EquipmentView::newLogEntry()
 //*****************************************************************************
 /*!
   Delete the currently selected log entry.
-
-  \author André Johansen.
 */
 //*****************************************************************************
 
@@ -676,4 +640,5 @@ EquipmentView::deleteLogEntry()
 // tab-width: 8
 // c-basic-offset: 2
 // indent-tabs-mode: nil
+// coding: utf-8
 // End:
