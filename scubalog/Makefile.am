@@ -78,11 +78,11 @@ srcdoc:
 # if you have more of them, create a subdirectory with an extra Makefile 
 install-data-local: 
 	$(mkinstalldirs) $(APPSDIR)
-	$(INSTALL_DATA) ScubaLog.kdelnk $(APPSDIR)
+	$(INSTALL_DATA) scubalog.kdelnk $(APPSDIR)
 	$(mkinstalldirs) $(kde_icondir)
-	$(INSTALL_DATA) pics/ScubaLog.xpm $(kde_icondir)
+	$(INSTALL_DATA) pics/scubalog.xpm $(kde_icondir)
 	$(mkinstalldirs) $(kde_minidir)
-	$(INSTALL_DATA) pics/mini/ScubaLog.xpm $(kde_minidir)/ScubaLog.xpm
+	$(INSTALL_DATA) pics/mini/scubalog.xpm $(kde_minidir)
 
 # remove ALL you have installed in install-data-local or install-exec-local
 uninstall-local:
