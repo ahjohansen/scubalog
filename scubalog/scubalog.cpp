@@ -128,10 +128,12 @@ ScubaLog::ScubaLog(const char* pzName)
 
   // Read the recent one, if wanted
   if ( m_bReadLastUsedProject && m_cRecentProjects.first() ) {
-    m_pcLogBook->readLogBook(*m_cRecentProjects.first());
-    *m_pcProjectName = *m_cRecentProjects.first();
-    const QString cCaption("ScubaLog [" + *m_pcProjectName + "]");
-    setCaption(cCaption);
+    bool isOk = m_pcLogBook->readLogBook(*m_cRecentProjects.first());
+    if ( isOk ) {
+      *m_pcProjectName = *m_cRecentProjects.first();
+      const QString cCaption("ScubaLog [" + *m_pcProjectName + "]");
+      setCaption(cCaption);
+    }
   }
 
   // Create the tab controller
@@ -270,12 +272,6 @@ ScubaLog::openRecent(int nRecentNumber)
       updateRecentProjects(*pcProjectName);
     }
     else {
-      QString cText;
-      cText += "Couldn't read a log book from the file\n";
-      cText += "`";
-      cText += *pcProjectName;
-      cText += "'";
-      QMessageBox::warning(this, "ScubaLog error", cText, 1, 0);
       delete pcLogBook;
     }
 
@@ -313,15 +309,12 @@ ScubaLog::openProject()
       delete m_pcLogBook;
       m_pcLogBook = pcLogBook;
 
+      const QString cCaption("ScubaLog [" + cProjectName + "]");
+      setCaption(cCaption);
+
       updateRecentProjects(cProjectName);
     }
     else {
-      QString cText;
-      cText += "Couldn't read a log book from the file\n";
-      cText += "`";
-      cText += cProjectName;
-      cText += "'";
-      QMessageBox::warning(this, "ScubaLog error", cText, 1, 0);
       delete pcLogBook;
     }
 
@@ -346,8 +339,9 @@ ScubaLog::saveProject()
   if ( m_pcProjectName->isEmpty() )
     saveProjectAs();
   else {
-    m_pcLogBook->saveLogBook(*m_pcProjectName);
-    setUnsavedData(false);
+    bool isOk = m_pcLogBook->saveLogBook(*m_pcProjectName);
+    if ( isOk )
+      setUnsavedData(false);
   }
 }
 
@@ -369,12 +363,14 @@ ScubaLog::saveProjectAs()
   QString cProjectName = QFileDialog::getSaveFileName(*m_pcProjectName);
   if ( false == cProjectName.isEmpty() ) {
     *m_pcProjectName = cProjectName.copy();
-    m_pcLogBook->saveLogBook(*m_pcProjectName);
-    setUnsavedData(false);
-    updateRecentProjects(cProjectName);
+    bool isOk = m_pcLogBook->saveLogBook(*m_pcProjectName);
+    if ( isOk ) {
+      setUnsavedData(false);
+      updateRecentProjects(cProjectName);
 
-    const QString cCaption("ScubaLog [" + cProjectName + "]");
-    setCaption(cCaption);
+      const QString cCaption("ScubaLog [" + cProjectName + "]");
+      setCaption(cCaption);
+    }
   }
 }
 
@@ -545,7 +541,8 @@ ScubaLog::gotoLog()
     if ( 0 == pcLog ) {
       QString cText;
       cText.sprintf("Couldn't find log %d", nLogNumber);
-      QMessageBox::information(this, "ScubaLog", cText);
+      QMessageBox::information(qApp->mainWidget(), "[ScubaLog] Goto",
+                               cText);
       return;
     }
     viewLog(pcLog);
