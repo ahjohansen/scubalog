@@ -31,6 +31,7 @@
 #include <qdragobject.h>
 #include <kio/netaccess.h>
 #include <kio/job.h>
+#include <kfiledialog.h>
 #include <kmenubar.h>
 #include <klocale.h>
 #include <kconfig.h>
@@ -49,7 +50,6 @@
 #include <qlist.h>
 #include <qmessagebox.h>
 #include <qlistview.h>
-#include <qfiledialog.h>
 #include <qregexp.h>
 #include <qstrlist.h>
 #include <qstring.h>
@@ -247,7 +247,7 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
 
   statusBar();
   setCentralWidget(m_pcViews);
-  setCaption("ScubaLog");
+  setAutoSaveSettings();
 
 
   //
@@ -259,8 +259,7 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
     bool isOk = readLogBookUrl(pzLogBook, e_DownloadSynchronous);
     if ( isOk ) {
       *m_pcProjectName = QString(pzLogBook);
-      const QString cCaption("ScubaLog [" + *m_pcProjectName + "]");
-      setCaption(cCaption);
+      setCaption(*m_pcProjectName);
     }
   }
   // Read the recent logbook one, if wanted
@@ -269,8 +268,7 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
                                e_DownloadSynchronous);
     if ( isOk ) {
       *m_pcProjectName = *m_cRecentProjects.first();
-      const QString cCaption("ScubaLog [" + *m_pcProjectName + "]");
-      setCaption(cCaption);
+      setCaption(*m_pcProjectName);
     }
   }
   // Create a log book if none loaded
@@ -395,8 +393,8 @@ ScubaLog::newProject()
     m_pcEquipmentView->setLogBook(pcLogBook);
     delete m_pcLogBook;
     m_pcLogBook = pcLogBook;
-    const QString cCaption("ScubaLog");
-    setCaption(cCaption);
+    setCaption(i18n("Untitled"));
+    *m_pcProjectName = "";
   }
   catch ( std::bad_alloc ) {
     statusBar()->message(i18n("Out of memory!"), 3000);
@@ -416,17 +414,13 @@ ScubaLog::newProject()
 void
 ScubaLog::openProject()
 {
-  QStringList cFilters;
-  cFilters << i18n("ScubaLog files (*.slb)")
-           << i18n("All files (*)");
+  const QString cFilters("*.slb|" + i18n("ScubaLog projects (*.slb)") + "\n" +
+                         "*|"     + i18n("All files (*)"));
 
-  QFileDialog cDialog(qApp->mainWidget(), "openDialog", true);
-  cDialog.setCaption(i18n("[ScubaLog] Open log book"));
-  cDialog.setMode(QFileDialog::ExistingFile);
-  cDialog.setFilters(cFilters);
-  if ( cDialog.exec() &&
-       false == cDialog.selectedFile().isNull() ) {
-    const QString cProjectName = cDialog.selectedFile();
+  const KURL cProjectName =
+    KFileDialog::getOpenURL(":project", cFilters, this,
+                            i18n("Open log book"));
+  if ( false == cProjectName.isEmpty() ) {
     readLogBookUrl(cProjectName, e_DownloadSynchronous);
   }
 }
@@ -476,19 +470,15 @@ ScubaLog::saveProject()
 void
 ScubaLog::saveProjectAs()
 {
-  QStringList cFilters;
-  cFilters << i18n("ScubaLog files (*.slb)")
-           << i18n("All files (*)");
+  const QString cFilters("*.slb|" + i18n("ScubaLog files (*.slb)") + "\n" +
+                         "*|"     + i18n("All files (*)"));
 
   statusBar()->message(i18n("Writing log book..."));
 
-  QFileDialog cDialog(qApp->mainWidget(), "saveDialog", true);
-  cDialog.setCaption(i18n("[ScubaLog] Save log book"));
-  cDialog.setMode(QFileDialog::AnyFile);
-  cDialog.setFilters(cFilters);
-  if ( cDialog.exec() &&
-       false == cDialog.selectedFile().isNull() ) {
-    QString cProjectName = cDialog.selectedFile();
+  QString cProjectName =
+    KFileDialog::getSaveFileName(":project", cFilters, this,
+                                 i18n("Save log book"));
+  if ( false == cProjectName.isEmpty() ) {
     if ( -1 == cProjectName.find(".slb") )
       cProjectName += ".slb";
     *m_pcProjectName = cProjectName.copy();
@@ -498,8 +488,7 @@ ScubaLog::saveProjectAs()
       //setUnsavedData(false);
       updateRecentProjects(cProjectName);
 
-      const QString cCaption("ScubaLog [" + cProjectName + "]");
-      setCaption(cCaption);
+      setCaption(cProjectName);
       statusBar()->message(i18n("Writing log book...Done"), 3000);
     }
     else {
@@ -514,7 +503,7 @@ ScubaLog::saveProjectAs()
 
 //*****************************************************************************
 /*!
-  Read a project from the URL \a cUrlName with mode \a eMode.
+  Read a project from the URL \a cUrl with mode \a eMode.
 
   If the file is local or the download mode is #e_DownloadSynchronous,
   it will be attempted loaded right away.
@@ -535,22 +524,8 @@ ScubaLog::saveProjectAs()
 //*****************************************************************************
 
 bool
-ScubaLog::readLogBookUrl(const QString& cUrlName, DownloadMode_e eMode)
+ScubaLog::readLogBookUrl(const KURL& cUrl, DownloadMode_e eMode)
 {
-  // Ensure the URL is valid, try local files in current directory too
-  KURL cUrl(cUrlName);
-  if ( false == cUrl.isValid() ) {
-    QString cLocalFile("file:");
-    if ( cUrlName.find('/') ) {
-      cLocalFile += QDir::currentDirPath() + "/";
-    }
-    cLocalFile += cUrlName;
-    //cUrl.parse(cLocalFile);
-    if ( false == cUrl.isValid() ) {
-      return false;
-    }
-  }
-    
   // Load local file
   if ( cUrl.isLocalFile() ) {
     QString cProjectName(cUrl.path());
@@ -562,30 +537,29 @@ ScubaLog::readLogBookUrl(const QString& cUrlName, DownloadMode_e eMode)
     *m_pcProjectName = cProjectName.copy();
     updateRecentProjects(cProjectName);
     //setUnsavedData(false);
-    const QString cCaption("ScubaLog [" + cProjectName + "]");
-    setCaption(cCaption);
+    setCaption(cProjectName);
   }
   // Load remote file synchronously
   else if ( e_DownloadSynchronous == eMode ) {
     QString cProjectName;
-    const bool isDownloadOk = KIO::NetAccess::download(cUrlName, cProjectName, this);
+    const bool isDownloadOk =
+      KIO::NetAccess::download(cUrl, cProjectName, this);
     if ( false == isDownloadOk )
       return false;
     bool isOk = readLogBook(cProjectName);
     KIO::NetAccess::removeTempFile(cProjectName);
     if ( false == isOk )
       return false;
-    *m_pcProjectName = cUrlName.copy();
-    updateRecentProjects(cUrlName);
+    *m_pcProjectName = cUrl.url();
+    updateRecentProjects(cUrl.url());
     //setUnsavedData(false);
-    const QString cCaption("ScubaLog [" + cUrlName + "]");
-    setCaption(cCaption);
+    setCaption(cUrl.url());
   }
   // Load remote file asynchronously
   else {
-    *m_pcKfmUrl = cUrlName;
+    *m_pcKfmUrl = cUrl.url();
     m_pcKfmFileName->sprintf("%s", tmpnam(0));
-    KIO::Job* pcIOJob = KIO::file_copy(cUrlName, *m_pcKfmFileName );
+    KIO::Job* pcIOJob = KIO::file_copy(cUrl, *m_pcKfmFileName );
     connect(pcIOJob, SIGNAL(result(KIO::Job*)),this,
             SLOT(handleDownloadFinished(KIO::Job*)));
   }
@@ -713,15 +687,12 @@ ScubaLog::exportLogBook()
 
   statusBar()->message(i18n("Exporting log book..."));
 
-  QFileDialog cOutputDialog(qApp->mainWidget(), "outputDialog", true);
-  cOutputDialog.setCaption(i18n("[ScubaLog] Select output directory"));
-  cOutputDialog.setMode(QFileDialog::Directory);
-  if ( cOutputDialog.exec() &&
-       false == cOutputDialog.selectedFile().isNull() ) {
-    const QString cDirName(cOutputDialog.selectedFile());
+  const QString cDirName =
+    KFileDialog::getExistingDirectory(":export", this,
+                                      i18n("Select output directory"));
+  if ( false == cDirName.isEmpty() ) {
     HTMLExporter cExporter;
     cExporter.exportLogBook(*m_pcLogBook, cDirName);
-
     statusBar()->message(i18n("Exporting log book...Done"), 3000);
   }
   else {
@@ -747,29 +718,22 @@ ScubaLog::exportLogBookUDCF()
 
   statusBar()->message(i18n("Exporting log book..."));
 
-  QStringList cFilters;
-  cFilters << i18n("UDCF Files (*.xml)")
-           << i18n("All files (*)");
+  const QString cFilters("*.xml|" + i18n("UDCF Files (*.xml)") + "\n" +
+                         "*|"     + i18n("All files (*)"));
 
   statusBar()->message(i18n("Writing log book..."));
 
-  QFileDialog cDialog(qApp->mainWidget(), "saveDialog", true);
-  cDialog.setCaption(i18n("[ScubaLog] Save log book"));
-  cDialog.setMode(QFileDialog::AnyFile);
-  cDialog.setFilters(cFilters);
-  if ( cDialog.exec() && false == cDialog.selectedFile().isNull() )
-    {
-    QString cProjectName = cDialog.selectedFile();
+  QString cProjectName =
+    KFileDialog::getSaveFileName(":export", cFilters, this,
+                                 i18n("Save log book"));
+  if ( false == cProjectName.isEmpty() ) {
     if ( -1 == cProjectName.find(".xml") )
       cProjectName += ".xml";
 
-
     UDCFExporter cExporter;
-    cExporter.exportLogBook(*m_pcLogBook,cProjectName );
-
+    cExporter.exportLogBook(*m_pcLogBook, cProjectName);
     statusBar()->message(i18n("Exporting log book...Done"), 3000);
-    }
-
+  }
 }
 
 //*****************************************************************************

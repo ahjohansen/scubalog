@@ -323,8 +323,7 @@ EquipmentView::deleteItem()
     return;
   assert(cEquipmentLogList.count() > (unsigned)nCurrentItem);
   m_pcItemView->removeItem(nCurrentItem);
-  EquipmentLog* pcLog = cEquipmentLogList.take(nCurrentItem);
-  delete pcLog;
+  cEquipmentLogList.remove(nCurrentItem);
 
   // Update the view with the new current item, if any
   unsigned int nNumItems = m_pcItemView->count();

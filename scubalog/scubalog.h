@@ -23,7 +23,7 @@ class QTabWidget;
 class DiveLog;
 class LogBook;
 class QPopupMenu;
-class KTabControl;
+class KURL;
 class LogListView;
 class LogView;
 class LocationView;
@@ -81,7 +81,7 @@ private slots:
 private:
   void dragEnterEvent(QDragEnterEvent* pcEvent);
   void dropEvent(QDropEvent* pcEvent);
-  bool readLogBookUrl(const QString& cUrlName, DownloadMode_e eMode);
+  bool readLogBookUrl(const KURL& cUrl, DownloadMode_e eMode);
   bool readLogBook(const QString& cFileName);
 
   void updateRecentProjects(const QString& cProjectName);

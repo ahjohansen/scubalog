@@ -38,6 +38,8 @@ LogBook::LogBook()
   m_pcDiveList  = new DiveList();
   m_pcLocations = new QList<LocationLog>();
   m_pcEquipment = new QList<EquipmentLog>();
+  m_pcLocations->setAutoDelete(true);
+  m_pcEquipment->setAutoDelete(true);
 }
 
 
@@ -55,32 +57,6 @@ LogBook::~LogBook()
   m_pcLocations = 0;
   delete m_pcEquipment;
   m_pcEquipment = 0;
-}
-
-
-//*****************************************************************************
-/*!
-  Get the divelist.
-*/
-//*****************************************************************************
-
-DiveList&
-LogBook::diveList()
-{
-  return *m_pcDiveList;
-}
-
-
-//*****************************************************************************
-/*!
-  Get the divelist.
-*/
-//*****************************************************************************
-
-DiveList&
-LogBook::diveList() const
-{
-  return *m_pcDiveList;
 }
 
 

@@ -28,7 +28,6 @@ scubalog_SOURCES = \
 	kdatevalidator.cpp \
 	kintegeredit.cpp \
 	kintegervalidator.cpp \
-	ktabcontrol.cpp \
 	ktimeedit.cpp \
 	ktimevalidator.cpp \
 	listbox.cpp \
@@ -58,7 +57,6 @@ noinst_HEADERS = \
 	kdatevalidator.h \
 	kintegeredit.h \
 	kintegervalidator.h \
-	ktabcontrol.h \
 	ktimeedit.h \
 	ktimevalidator.h \
 	listbox.h \

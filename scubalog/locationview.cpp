@@ -387,7 +387,6 @@ LocationView::deleteLocation()
 
   m_pcLocations->removeItem(nCurrentItem);
   cLocationList.remove(nCurrentItem);
-  delete pcLog;
 
   // Update the view with the new current location, if any
   const int nNewCurrent = m_pcLocations->currentItem();

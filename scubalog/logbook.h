@@ -41,18 +41,28 @@ public:
 
   //! Get the name of the diver.
   QString diverName() const { return m_cDiverName; }
+  //! Get the email address of the diver.
   QString emailAddress() const { return m_cEmailAddress; }
+  //! Get the WWW URL.
   QString wwwUrl() const { return m_cWwwUrl; }
+  //! Get the diver's comments.
   QString comments() const { return m_cComments; }
-  DiveList& diveList();
-  DiveList& diveList() const;
+  //! Get the divelist.
+  DiveList& diveList() { return *m_pcDiveList; }
+  //! Get the divelist.
+  DiveList& diveList() const { return *m_pcDiveList; }
+  //! Get the location list.
   QList<LocationLog>& locationList() const { return *m_pcLocations; }
+  //! Get the equipment log list.
   QList<EquipmentLog>& equipmentLog() const { return *m_pcEquipment; }
 
   //! Set the name of the diver to \a cName.
   void setDiverName(const QString& cName) { m_cDiverName = cName; }
+  //! Set the email address of the owner to \a cAddress.
   void setEmailAddress(const QString& cAddress) { m_cEmailAddress = cAddress; }
+  //! Set the WWW URL for \a cWwwUrl.
   void setWwwUrl(const QString& cWwwUrl) { m_cWwwUrl = cWwwUrl; }
+  //! Set the comments to \a cComments.
   void setComments(const QString& cComments) { m_cComments = cComments; }
 
 private:
@@ -71,9 +81,9 @@ private:
   QString   m_cComments;
   //! The dive list.
   DiveList* m_pcDiveList;
-  //! The location list.
+  //! The location list.  The list owns the entries.
   QList<LocationLog>*  m_pcLocations;
-  //! The eqipment with history.
+  //! The eqipment with history.  The list owns the entries.
   QList<EquipmentLog>* m_pcEquipment;
 };
 
