@@ -1,7 +1,7 @@
 .dependencies
-documentation/
-logbooks/
-misc/
-output/
+documentation
+logbooks
+misc
+output
 ScubaLog
 
