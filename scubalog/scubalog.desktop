@@ -1,7 +1,6 @@
-# KDE Config File
 [Desktop Entry]
 Type=Application
-Exec=scubalog -caption "%c" %i %m  
+Exec=scubalog %i %m -caption "%c"
 Icon=scubalog.png
 MiniIcon=scubalog.png
 DocPath=scubalog/index.html
