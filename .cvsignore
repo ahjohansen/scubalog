@@ -8,4 +8,9 @@ config.h
 config.log
 config.cache
 config.status
-
+aclocal.m4
+configure
+config.h.in
+libtool
+stamp-h
+.kdbgrc.ScubaLog
