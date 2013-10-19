@@ -38,7 +38,7 @@ class KTimeValidator : public QValidator {
   Q_OBJECT
 public:
   KTimeValidator(QTime cMin, QTime cDefault, QTime cMax,
-                 QWidget* pcParent = 0, const char* pzName = 0);
+                 QWidget* pcParent = 0);
   virtual ~KTimeValidator();
 
   virtual State validate(QString& cInput, int& nCursorPos) const;

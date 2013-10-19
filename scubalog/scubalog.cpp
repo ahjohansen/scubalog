@@ -28,9 +28,15 @@
 #include "config.h"
 
 #include <kstdaction.h>
-#include <qdragobject.h>
+#include <kstandardshortcut.h>
+#include <q3dragobject.h>
+#include <kmenu.h>
+#include <QPixmap>
+#include <QDragEnterEvent>
+#include <QDropEvent>
 #include <kio/netaccess.h>
 #include <kio/job.h>
+#include <kio/deletejob.h>
 #include <kfiledialog.h>
 #include <kmenubar.h>
 #include <klocale.h>
@@ -39,25 +45,26 @@
 #include <kurl.h>
 #include <ktoolbar.h>
 #include <kiconloader.h>
-#include <kpopupmenu.h>
 #include <kstatusbar.h>
 #include <kstdaccel.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <qtabwidget.h>
 #include <qpainter.h>
+#include <qprintdialog.h>
 #include <qprinter.h>
-#include <qpaintdevicemetrics.h>
+#include <q3paintdevicemetrics.h>
 #include <qlist.h>
 #include <qmessagebox.h>
-#include <qlistview.h>
+#include <q3listview.h>
 #include <qregexp.h>
-#include <qstrlist.h>
+#include <q3strlist.h>
 #include <qstring.h>
-#include <qkeycode.h>
-#include <qpopupmenu.h>
+#include <qtextstream.h>
+#include <qnamespace.h>
+#include <qmenu.h>
 #include <qmenubar.h>
 #include <qpushbutton.h>
-#include <qframe.h>
+#include <q3frame.h>
 #include <qcolor.h>
 #include <new>
 #include <stdlib.h>
@@ -73,7 +80,7 @@
 //*****************************************************************************
 
 ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
-  : KMainWindow(0, pzName),
+  : KMainWindow(NULL),
     m_pcProjectName(0),
     m_pcLogBook(0),
     m_pcRecentMenu(0),
@@ -86,6 +93,8 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
     m_pcKfmFileName(0),
     m_bReadLastUsedProject(true)
 {
+  setObjectName(pzName);
+
   KApplication* pcApp = KApplication::kApplication();
   connect(pcApp, SIGNAL(saveYourself()), SLOT(saveConfig()));
 
@@ -93,23 +102,20 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
   // Parse the configuration settings
   //
 
-  KConfig* pcConfiguration = KGlobal::config();
-  pcConfiguration->setGroup("Project");
+  KConfigGroup configuration = KGlobal::config()->group("Project");
   QString acRecentProjects[5];
-
-  acRecentProjects[0] = pcConfiguration->readEntry("Recent1");
-  acRecentProjects[1] = pcConfiguration->readEntry("Recent2");
-  acRecentProjects[2] = pcConfiguration->readEntry("Recent3");
-  acRecentProjects[3] = pcConfiguration->readEntry("Recent4");
-  acRecentProjects[4] = pcConfiguration->readEntry("Recent5");
+  acRecentProjects[0] = configuration.readEntry("Recent1");
+  acRecentProjects[1] = configuration.readEntry("Recent2");
+  acRecentProjects[2] = configuration.readEntry("Recent3");
+  acRecentProjects[3] = configuration.readEntry("Recent4");
+  acRecentProjects[4] = configuration.readEntry("Recent5");
   for ( int iRecent = 0; iRecent < 5; iRecent++ ) {
     if ( false == acRecentProjects[iRecent].isEmpty() )
-      m_cRecentProjects.append(new QString(acRecentProjects[iRecent]));
+      m_cRecentProjects.append(acRecentProjects[iRecent]);
   }
-  pcConfiguration->setGroup("Settings");
+  KConfigGroup settings = KGlobal::config()->group("Settings");
   m_bReadLastUsedProject =
-    pcConfiguration->readBoolEntry("AutoOpenLast", true);
-
+    settings.readEntry("AutoOpenLast", true);
 
   m_pcProjectName = new QString();
   m_pcKfmUrl      = new QString();
@@ -127,53 +133,53 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
   //
 
   KMenuBar* pcMenuBar = menuBar();
-  m_pcRecentMenu = new QPopupMenu(0, "recentMenu");
-  int nRecentNumber = 1;
-  for ( QString* pcRecent = m_cRecentProjects.first();
-        pcRecent; nRecentNumber++, pcRecent = m_cRecentProjects.next() ) {
-    QString cText;
-    cText.sprintf("[&%d] %s", nRecentNumber, pcRecent->data());
-    m_pcRecentMenu->insertItem(cText);
-  }
-  connect(m_pcRecentMenu, SIGNAL(activated(int)), SLOT(openRecent(int)));
 
-  QPopupMenu* pcMenu = new QPopupMenu(0, "projectMenu");
-  pcMenu->insertItem(i18n("&New"), this, SLOT(newProject()),
-                     KStdAccel::openNew());
-  pcMenu->insertItem(i18n("&Open..."), this, SLOT(openProject()),
-                     KStdAccel::open());
-  pcMenu->insertItem(i18n("Open &recent"), m_pcRecentMenu);
-  pcMenu->insertItem(i18n("&Save"), this, SLOT(saveProject()),
-                     KStdAccel::save());
-  pcMenu->insertItem(i18n("Save &As"), this, SLOT(saveProjectAs()),
-                     CTRL + Key_A);
-  pcMenu->insertSeparator();
-  QPopupMenu* pcExportMenu = new QPopupMenu(0, "exportMenu");
-  pcExportMenu->insertItem(i18n("Export &HTML..."), this,
-                           SLOT(exportLogBook()));
-  pcExportMenu->insertItem(i18n("Export &UDCF..."), this,
-                           SLOT(exportLogBookUDCF()));
-  pcMenu->insertItem(i18n("&Export"),pcExportMenu);
-  pcMenu->insertItem(i18n("&Print..."), this, SLOT(print()),
-                     KStdAccel::print());
-  pcMenu->insertSeparator();
-  pcMenu->insertItem(i18n("&Quit"), pcApp, SLOT(quit()), KStdAccel::quit());
-  pcMenuBar->insertItem(i18n("&Project"), pcMenu);
+  QMenu* pcProjMenu = pcMenuBar->addMenu(i18n("&Project"));
+  pcProjMenu->addAction(i18n("&New"), this, SLOT(newProject()),
+                        KStandardShortcut::openNew().primary());
+  pcProjMenu->addAction(i18n("&Open..."), this, SLOT(openProject()),
+                        KStandardShortcut::open().primary());
+  m_pcRecentMenu = pcMenuBar->addMenu(i18n("Open &recent"));
+  pcProjMenu->addAction(i18n("&Save"), this, SLOT(saveProject()),
+                        KStandardShortcut::save().primary());
+  pcProjMenu->addAction(i18n("Save &As"), this, SLOT(saveProjectAs()),
+                        Qt::CTRL + Qt::Key_A);
+  pcProjMenu->addSeparator();
+  QMenu* pcExportMenu = pcMenuBar->addMenu(i18n("&Export"));
+  pcExportMenu->addAction(i18n("Export &HTML..."), this,
+                          SLOT(exportLogBook()));
+  pcExportMenu->addAction(i18n("Export &UDCF..."), this,
+                          SLOT(exportLogBookUDCF()));
+  pcProjMenu->addAction(i18n("&Print..."), this, SLOT(print()),
+                        KStandardShortcut::print().primary());
+  pcProjMenu->addSeparator();
+  pcProjMenu->addAction(i18n("&Quit"), pcApp, SLOT(quit()),
+                        KStandardShortcut::quit().primary());
 
-  QPopupMenu* pcLogMenu = new QPopupMenu(0, "logMenu");
-  pcLogMenu->insertItem(i18n("&Goto log..."), this, SLOT(gotoLog()),
-                        CTRL + Key_G);
-  pcMenuBar->insertItem(i18n("Log"), pcLogMenu);
+  QMenu* pcLogMenu = pcMenuBar->addMenu(i18n("Log"));
+  pcLogMenu->addAction(i18n("&Goto log..."), this, SLOT(gotoLog()),
+                       Qt::CTRL + Qt::Key_G);
 
   QString cAboutText;
-  cAboutText.sprintf(i18n("ScubaLog is a scuba dive logging program,\n"
-                          "written for the K Desktop Environment.\n\n"
-                          "This program is free software, licensed\n"
-                          "under the GNU General Public License.\n\n"
-                          "Author: André Johansen <andrejoh@c2i.net>\n\n"
-                          "Version: %s\n"
-                          "Compilation date: %s"), VERSION, __DATE__);
-  pcMenuBar->insertItem(i18n("&Help"), this->helpMenu());
+  QTextStream s(&cAboutText);
+  s << i18n("ScubaLog is a scuba dive logging program,\n"
+            "written for the K Desktop Environment.\n\n"
+            "This program is free software, licensed\n"
+            "under the GNU General Public License.\n\n"
+            "Author: André Johansen <andrejoh@gmail.com>\n\n"
+            "Version: ") << VERSION << "\n"
+    << i18n("Compilation date: ") << __DATE__;
+  pcMenuBar->addMenu(this->helpMenu());
+
+  int nRecentNumber = 1;
+  for ( QList<QString>::const_iterator iRecent = m_cRecentProjects.begin();
+        iRecent != m_cRecentProjects.end();
+        nRecentNumber++, ++iRecent ) {
+    QString cText;
+    QTextStream(&cText) << "[&" << nRecentNumber << "] " << (*iRecent);
+    m_pcRecentMenu->addAction(cText);
+  }
+  connect(m_pcRecentMenu, SIGNAL(activated(int)), SLOT(openRecent(int)));
 
 
   //
@@ -181,30 +187,26 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
   //
 
   KToolBar& cToolBar = *toolBar();
-  KIconLoader& cIconLoader = *KGlobal::iconLoader();
+  KIconLoader& cIconLoader = *KIconLoader::global();
   QPixmap cIcon;
 
-  cIcon = cIconLoader.loadIcon("filenew",KIcon::Toolbar);
-  cToolBar.insertButton(cIcon, 0,
-                        SIGNAL(clicked()), this, SLOT(newProject()),
-                        true, i18n("New log-book"));
+  cIcon = cIconLoader.loadIcon("filenew", KIconLoader::Toolbar);
+  cToolBar.addAction(cIcon, i18n("New log-book"),
+                     this, SLOT(newProject()));
 
-  cIcon = cIconLoader.loadIcon("fileopen",KIcon::Toolbar);
-  cToolBar.insertButton(cIcon, 0,
-                        SIGNAL(clicked()), this, SLOT(openProject()),
-                        true, i18n("Open log-book"));
+  cIcon = cIconLoader.loadIcon("fileopen", KIconLoader::Toolbar);
+  cToolBar.addAction(cIcon, i18n("Open log-book"),
+                     this, SLOT(openProject()));
 
-  cIcon = cIconLoader.loadIcon("filesave",KIcon::Toolbar);
-  cToolBar.insertButton(cIcon, 0,
-                        SIGNAL(clicked()), this, SLOT(saveProject()),
-                        true, i18n("Save log-book"));
+  cIcon = cIconLoader.loadIcon("filesave", KIconLoader::Toolbar);
+  cToolBar.addAction(cIcon, i18n("Save log-book"),
+                     this, SLOT(saveProject()));
 
-  cToolBar.insertSeparator();
+  cToolBar.addSeparator();
 
-  cIcon = cIconLoader.loadIcon("fileprint",KIcon::Toolbar);
-  cToolBar.insertButton(cIcon, 0,
-                        SIGNAL(clicked()), this, SLOT(print()),
-                        true, i18n("Print log-book"));
+  cIcon = cIconLoader.loadIcon("fileprint", KIconLoader::Toolbar);
+  cToolBar.addAction(cIcon, i18n("Print log-book"),
+                     this, SLOT(print()));
 
 
   //
@@ -212,14 +214,14 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
   //
 
   // Create the tab controller
-  m_pcViews = new QTabWidget(this, "tabView");
+  m_pcViews = new QTabWidget(this);
 
   // Create the log list view
-  m_pcLogListView = new LogListView(m_pcViews, "logListView");
+  m_pcLogListView = new LogListView(m_pcViews);
   m_pcViews->addTab(m_pcLogListView, i18n("Log &list"));
 
   // Create the log view
-  m_pcLogView = new LogView(m_pcViews, "logView");
+  m_pcLogView = new LogView(m_pcViews);
   m_pcLogView->connect(m_pcLogListView,
                        SIGNAL(aboutToDeleteLog(const DiveLog*)),
                        SLOT(deletingLog(const DiveLog*)));
@@ -229,20 +231,19 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
           SLOT(viewLog(DiveLog*)));
 
   // Create the location view
-  m_pcLocationView = new LocationView(m_pcViews, "locationView");
+  m_pcLocationView = new LocationView(m_pcViews);
   m_pcViews->addTab(m_pcLocationView, i18n("Locations"));
   connect(m_pcLogView, SIGNAL(editLocation(const QString&)),
           SLOT(editLocation(const QString&)));
 
   // Create the personal info view
-  m_pcPersonalInfoView =
-    new PersonalInfoView(m_pcViews, "personalInfo");
+  m_pcPersonalInfoView = new PersonalInfoView(m_pcViews);
   m_pcViews->addTab(m_pcPersonalInfoView, i18n("Personal &info"));
   m_pcPersonalInfoView->connect(m_pcViews, SIGNAL(currentChanged(QWidget*)),
                                 SLOT(updateLoggedDiveTime()));
 
   // Create the equipment view
-  m_pcEquipmentView = new EquipmentView(m_pcViews, "equipment");
+  m_pcEquipmentView = new EquipmentView(m_pcViews);
   m_pcViews->addTab(m_pcEquipmentView, i18n("&Equipment"));
 
   statusBar();
@@ -256,18 +257,18 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
 
   // If specified, load the log-book provided as an argument.
   if ( pzLogBook ) {
-    bool isOk = readLogBookUrl(pzLogBook, e_DownloadSynchronous);
+    bool isOk = readLogBookUrl(KUrl(pzLogBook), e_DownloadSynchronous);
     if ( isOk ) {
       *m_pcProjectName = QString(pzLogBook);
       setCaption(*m_pcProjectName);
     }
   }
   // Read the recent logbook one, if wanted
-  else if ( m_bReadLastUsedProject && m_cRecentProjects.first() ) {
-    bool isOk = readLogBookUrl(*m_cRecentProjects.first(),
+  else if ( m_bReadLastUsedProject && !m_cRecentProjects.empty() ) {
+    bool isOk = readLogBookUrl(m_cRecentProjects.first(),
                                e_DownloadSynchronous);
     if ( isOk ) {
-      *m_pcProjectName = *m_cRecentProjects.first();
+      *m_pcProjectName = m_cRecentProjects.first();
       setCaption(*m_pcProjectName);
     }
   }
@@ -281,7 +282,7 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
   m_pcPersonalInfoView->setLogBook(m_pcLogBook);
   m_pcEquipmentView->setLogBook(m_pcLogBook);
 
-  statusBar()->message(i18n("Welcome to ScubaLog"));
+  statusBar()->showMessage(i18n("Welcome to ScubaLog"));
 }
 
 
@@ -302,11 +303,6 @@ ScubaLog::~ScubaLog()
   delete m_pcProjectName;
   delete m_pcKfmUrl;
   delete m_pcKfmFileName;
-
-  for ( QString* pcRecent = m_cRecentProjects.first();
-        pcRecent; pcRecent = m_cRecentProjects.next() ) {
-    delete pcRecent;
-  }
 
   DBG(("Destructing the main widget...Done.\n"));
 }
@@ -338,22 +334,21 @@ ScubaLog::queryExit()
 void
 ScubaLog::saveConfig()
 {
-  KConfig* pcConfig = KGlobal::config();
+  KSharedConfig::Ptr config = KGlobal::config();
+  KConfigGroup projectGroup  = config->group("Project");
+  KConfigGroup settingsGroup = config->group("Settings");
 
-  pcConfig->setGroup("Project");
   int nRecentNumber = 0;
-  for ( QString* pcRecent = m_cRecentProjects.first();
-        pcRecent && nRecentNumber < 5; pcRecent = m_cRecentProjects.next() ) {
-    if ( false == pcRecent->isEmpty() ) {
-      nRecentNumber++;
-      QString cRecentText;
-      cRecentText.sprintf("Recent%d", nRecentNumber);
-      pcConfig->writeEntry(cRecentText, pcRecent->data());
-    }
+  QList<QString>::const_iterator i = m_cRecentProjects.begin();
+  for ( ; i != m_cRecentProjects.end() && nRecentNumber < 5; ++i ) {
+    const QString& recentName = *i;
+    nRecentNumber++;
+    QString cRecentText;
+    cRecentText.sprintf("Recent%d", nRecentNumber);
+    projectGroup.writeEntry(cRecentText, recentName);
   }
 
-  pcConfig->setGroup("Settings");
-  pcConfig->writeEntry("AutoOpenLast", m_bReadLastUsedProject);
+  settingsGroup.writeEntry("AutoOpenLast", m_bReadLastUsedProject);
 }
 
 
@@ -368,8 +363,10 @@ ScubaLog::saveConfig()
 void
 ScubaLog::openRecent(int nRecentNumber)
 {
-  if ( m_cRecentProjects.at(nRecentNumber) ) {
-    QString cUrlName(*(m_cRecentProjects.at(nRecentNumber)));
+  printf("m_cRecentProjects.size() is %d\n", m_cRecentProjects.size());
+  assert(nRecentNumber >= 0);
+  if ( m_cRecentProjects.size() > nRecentNumber ) {
+    QString cUrlName(m_cRecentProjects.at(nRecentNumber));
     readLogBookUrl(cUrlName, e_DownloadAsynchronous);
   }
 }
@@ -397,7 +394,7 @@ ScubaLog::newProject()
     *m_pcProjectName = "";
   }
   catch ( std::bad_alloc ) {
-    statusBar()->message(i18n("Out of memory!"), 3000);
+    statusBar()->showMessage(i18n("Out of memory!"), 3000);
   }
 }
 
@@ -417,8 +414,8 @@ ScubaLog::openProject()
   const QString cFilters("*.slb|" + i18n("ScubaLog projects (*.slb)") + "\n" +
                          "*|"     + i18n("All files (*)"));
 
-  const KURL cProjectName =
-    KFileDialog::getOpenURL(":project", cFilters, this,
+  const KUrl cProjectName =
+    KFileDialog::getOpenUrl(KUrl(), cFilters, this,
                             i18n("Open log book"));
   if ( false == cProjectName.isEmpty() ) {
     readLogBookUrl(cProjectName, e_DownloadSynchronous);
@@ -438,21 +435,21 @@ void
 ScubaLog::saveProject()
 {
   QString cUrlName(*m_pcProjectName);
-  KURL cUrl(cUrlName);
+  KUrl cUrl(cUrlName);
 
   if ( cUrlName.isEmpty() || false == cUrl.isLocalFile() )
     saveProjectAs();
   else {
-    statusBar()->message(i18n("Writing log book..."));
+    statusBar()->showMessage(i18n("Writing log book..."));
 
     ScubaLogProject cExporter;
     const bool isOk = cExporter.exportLogBook(*m_pcLogBook, cUrlName);
     if ( isOk ) {
       //setUnsavedData(false);
-      statusBar()->message(i18n("Writing log book...Done"), 3000);
+      statusBar()->showMessage(i18n("Writing log book...Done"), 3000);
     }
     else {
-      statusBar()->message(i18n("Writing log book...Failed!"), 3000);
+      statusBar()->showMessage(i18n("Writing log book...Failed!"), 3000);
     }
   }
 }
@@ -473,15 +470,15 @@ ScubaLog::saveProjectAs()
   const QString cFilters("*.slb|" + i18n("ScubaLog files (*.slb)") + "\n" +
                          "*|"     + i18n("All files (*)"));
 
-  statusBar()->message(i18n("Writing log book..."));
+  statusBar()->showMessage(i18n("Writing log book..."));
 
   QString cProjectName =
-    KFileDialog::getSaveFileName(":project", cFilters, this,
+    KFileDialog::getSaveFileName(KUrl(), cFilters, this,
                                  i18n("Save log book"));
   if ( false == cProjectName.isEmpty() ) {
-    if ( -1 == cProjectName.find(".slb") )
+    if ( !cProjectName.endsWith(".slb") )
       cProjectName += ".slb";
-    *m_pcProjectName = cProjectName.copy();
+    *m_pcProjectName = cProjectName;
     ScubaLogProject cExporter;
     const bool isOk = cExporter.exportLogBook(*m_pcLogBook, *m_pcProjectName);
     if ( isOk ) {
@@ -489,14 +486,14 @@ ScubaLog::saveProjectAs()
       updateRecentProjects(cProjectName);
 
       setCaption(cProjectName);
-      statusBar()->message(i18n("Writing log book...Done"), 3000);
+      statusBar()->showMessage(i18n("Writing log book...Done"), 3000);
     }
     else {
-      statusBar()->message(i18n("Writing log book...Failed!"), 3000);
+      statusBar()->showMessage(i18n("Writing log book...Failed!"), 3000);
     }
   }
   else {
-    statusBar()->message(i18n("Writing log book...Aborted"), 3000);
+    statusBar()->showMessage(i18n("Writing log book...Aborted"), 3000);
   }
 }
 
@@ -524,7 +521,7 @@ ScubaLog::saveProjectAs()
 //*****************************************************************************
 
 bool
-ScubaLog::readLogBookUrl(const KURL& cUrl, DownloadMode_e eMode)
+ScubaLog::readLogBookUrl(const KUrl& cUrl, DownloadMode_e eMode)
 {
   // Load local file
   if ( cUrl.isLocalFile() ) {
@@ -534,7 +531,7 @@ ScubaLog::readLogBookUrl(const KURL& cUrl, DownloadMode_e eMode)
     bool isOk = readLogBook(cProjectName);
     if ( false == isOk )
       return false;
-    *m_pcProjectName = cProjectName.copy();
+    *m_pcProjectName = cProjectName;
     updateRecentProjects(cProjectName);
     //setUnsavedData(false);
     setCaption(cProjectName);
@@ -583,7 +580,7 @@ ScubaLog::readLogBookUrl(const KURL& cUrl, DownloadMode_e eMode)
 bool
 ScubaLog::readLogBook(const QString& cFileName)
 {
-  statusBar()->message(i18n("Reading log book..."));
+  statusBar()->showMessage(i18n("Reading log book..."));
 
   LogBook* pcLogBook = 0;
   try {
@@ -601,18 +598,18 @@ ScubaLog::readLogBook(const QString& cFileName)
 
       //setUnsavedData(false);
 
-      statusBar()->message(i18n("Reading log book...Done"), 3000);
+      statusBar()->showMessage(i18n("Reading log book...Done"), 3000);
     }
     else {
       delete pcLogBook;
       pcLogBook = 0;
-      statusBar()->message(i18n("Reading log book...Failed!"), 3000);
+      statusBar()->showMessage(i18n("Reading log book...Failed!"), 3000);
     }
   }
   catch ( std::bad_alloc ) {
     delete pcLogBook;
     pcLogBook = 0;
-    statusBar()->message(i18n("Reading log book...Out of memory!"), 3000);
+    statusBar()->showMessage(i18n("Reading log book...Out of memory!"), 3000);
   }
 
   return pcLogBook != 0;
@@ -633,39 +630,24 @@ ScubaLog::updateRecentProjects(const QString& cProjectName)
 {
   assert(false == cProjectName.isEmpty());
 
-  bool isFound = false;
-
-  // If found among recent ones, pop to front
-  for ( QString* pcRecent = m_cRecentProjects.first(); pcRecent;
-        pcRecent = m_cRecentProjects.next() ) {
-    if ( cProjectName == *pcRecent ) {
-      m_cRecentProjects.remove();
-      m_cRecentProjects.insert(0, pcRecent);
-      isFound = true;
-      break;
-    }
-  }
-
-  // Insert at front if not found
-  if ( false == isFound )
-    m_cRecentProjects.insert(0, new QString(cProjectName));
+  m_cRecentProjects.removeOne(cProjectName);
+  m_cRecentProjects.insert(0, cProjectName);
 
   // Trim the recent list to only contain 5 entries
   while ( m_cRecentProjects.count() > 5 ) {
-    QString* pcLast = m_cRecentProjects.last();
-    delete pcLast;
-    m_cRecentProjects.remove();
+    m_cRecentProjects.pop_back();
   }
 
   // Update the menu
   m_pcRecentMenu->clear();
   int nRecentNumber = 0;
-  for ( QString* pcRecent = m_cRecentProjects.first(); pcRecent;
-        pcRecent = m_cRecentProjects.next() ) {
+  QList<QString>::const_iterator i = m_cRecentProjects.begin();
+  for ( ; i != m_cRecentProjects.end(); ++i ) {
     nRecentNumber++;
     QString cText;
-    cText.sprintf("[&%d] %s", nRecentNumber, pcRecent->data());
-    m_pcRecentMenu->insertItem(cText);
+    QTextStream(&cText) << "[&" << nRecentNumber << "] "
+                        << *i;
+    m_pcRecentMenu->addAction(cText);
   }
 }
 
@@ -685,18 +667,18 @@ ScubaLog::exportLogBook()
   if ( 0 == m_pcLogBook )
     return;
 
-  statusBar()->message(i18n("Exporting log book..."));
+  statusBar()->showMessage(i18n("Exporting log book..."));
 
   const QString cDirName =
-    KFileDialog::getExistingDirectory(":export", this,
+    KFileDialog::getExistingDirectory(KUrl(), this,
                                       i18n("Select output directory"));
   if ( false == cDirName.isEmpty() ) {
     HTMLExporter cExporter;
     cExporter.exportLogBook(*m_pcLogBook, cDirName);
-    statusBar()->message(i18n("Exporting log book...Done"), 3000);
+    statusBar()->showMessage(i18n("Exporting log book...Done"), 3000);
   }
   else {
-    statusBar()->message(i18n("Exporting log book...Aborted"), 3000);
+    statusBar()->showMessage(i18n("Exporting log book...Aborted"), 3000);
   }
 }
 
@@ -716,23 +698,24 @@ ScubaLog::exportLogBookUDCF()
     return;
 
 
-  statusBar()->message(i18n("Exporting log book..."));
+  statusBar()->showMessage(i18n("Exporting log book..."));
 
   const QString cFilters("*.xml|" + i18n("UDCF Files (*.xml)") + "\n" +
                          "*|"     + i18n("All files (*)"));
 
-  statusBar()->message(i18n("Writing log book..."));
+  statusBar()->showMessage(i18n("Writing log book..."));
 
   QString cProjectName =
-    KFileDialog::getSaveFileName(":export", cFilters, this,
+    KFileDialog::getSaveFileName(KUrl(), cFilters, this,
                                  i18n("Save log book"));
   if ( false == cProjectName.isEmpty() ) {
-    if ( -1 == cProjectName.find(".xml") )
+    if ( !cProjectName.endsWith(".xml") ) {
       cProjectName += ".xml";
+    }
 
     UDCFExporter cExporter;
     cExporter.exportLogBook(*m_pcLogBook, cProjectName);
-    statusBar()->message(i18n("Exporting log book...Done"), 3000);
+    statusBar()->showMessage(i18n("Exporting log book...Done"), 3000);
   }
 }
 
@@ -748,7 +731,7 @@ ScubaLog::viewLog(DiveLog* pcLog)
   assert(pcLog);
   assert(m_pcLogView);
   m_pcLogView->viewLog(pcLog);
-  m_pcViews->showPage(m_pcLogView);
+  m_pcViews->setCurrentWidget(m_pcLogView);
 }
 
 
@@ -763,7 +746,7 @@ ScubaLog::editLocation(const QString& cLocationName)
 {
   assert(m_pcLocationView);
   m_pcLocationView->editLocation(cLocationName);
-  m_pcViews->showPage(m_pcLocationView);
+  m_pcViews->setCurrentWidget(m_pcLocationView);
 }
 
 
@@ -776,7 +759,7 @@ ScubaLog::editLocation(const QString& cLocationName)
 void
 ScubaLog::viewLogList()
 {
-  m_pcViews->showPage(m_pcLogListView);
+  m_pcViews->setCurrentWidget(m_pcLogListView);
 }
 
 
@@ -796,40 +779,48 @@ ScubaLog::gotoLog()
   // Find the smallest and largest available log numbers
   int nMinLogNumber = INT_MAX;
   int nMaxLogNumber = INT_MIN;
-  QListIterator<DiveLog> iCurrentLog(m_pcLogBook->diveList());
-  for ( ; iCurrentLog.current(); ++iCurrentLog ) {
-    if ( iCurrentLog.current()->logNumber() < nMinLogNumber )
-      nMinLogNumber = iCurrentLog.current()->logNumber();
-    if ( iCurrentLog.current()->logNumber() > nMaxLogNumber )
-      nMaxLogNumber = iCurrentLog.current()->logNumber();
+  const DiveList& dives = m_pcLogBook->diveList();
+  DiveList::const_iterator i = dives.begin();
+  for ( ; i != dives.end(); ++i ) {
+    const DiveLog& dive = *(*i);
+    int current = dive.logNumber();
+    if ( current < nMinLogNumber )
+      nMinLogNumber = current;
+    if ( current > nMaxLogNumber )
+      nMaxLogNumber = current;
   }
   if ( nMinLogNumber <= 0 || INT_MAX == nMinLogNumber ||
        nMaxLogNumber <= 0 || INT_MIN == nMaxLogNumber ||
        nMinLogNumber > nMaxLogNumber )
     return;
 
-  IntegerDialog cDialog(this, "gotoLogDialog", true);
+  IntegerDialog cDialog(this, true);
   cDialog.setValue(nMinLogNumber);
   cDialog.setMinValue(nMinLogNumber);
   cDialog.setMaxValue(nMaxLogNumber);
   cDialog.setText(i18n("Goto log"));
+  // ### TODO: FIXME
+  /*
   cDialog.setCaption(i18n("[ScubaLog] Goto"));
+  */
   if ( cDialog.exec() ) {
     cDialog.hide();
-    DiveLog* pcLog = 0;
     const int nLogNumber = cDialog.getValue();
-    QListIterator<DiveLog> iLog(m_pcLogBook->diveList());
-    for ( ; iLog.current(); ++iLog ) {
-      if ( iLog.current()->logNumber() == nLogNumber ) {
-        pcLog = iLog.current();
+    DiveLog* pcLog = NULL;
+    i = dives.begin();
+    for ( ; i != dives.end(); ++i ) {
+      DiveLog& dive = *(*i);
+      if ( dive.logNumber() == nLogNumber ) {
+        pcLog = &dive;
         break;
       }
     }
     if ( 0 == pcLog ) {
-      QString cText;
-      cText.sprintf(i18n("Couldn't find log %d"), nLogNumber);
-      QMessageBox::information(qApp->mainWidget(), i18n("[ScubaLog] Goto"),
-                               cText);
+      QString cText =
+        QString(i18n("Couldn't find log %1"))
+        .arg(nLogNumber);
+      QMessageBox::information(qApp->topLevelWidgets().at(0),
+                               i18n("[ScubaLog] Goto"), cText);
       return;
     }
     viewLog(pcLog);
@@ -858,26 +849,27 @@ ScubaLog::print()
   if ( m_pcProjectName->isEmpty() || 0 == m_pcLogBook )
     return;
 
-  statusBar()->message(i18n("Print log book..."));
+  statusBar()->showMessage(i18n("Print log book..."));
 
   // Setup printer
   QPrinter cPrinter;
   cPrinter.setCreator("ScubaLog");
   cPrinter.setDocName(*m_pcProjectName);
   cPrinter.setPageSize(QPrinter::A5);
-  if ( false == cPrinter.setup(this) ) {
-    statusBar()->message(i18n("Print log book...Cancelled"), 3000);
+  QPrintDialog printDialog(&cPrinter, this);
+  if ( printDialog.exec() != QDialog::Accepted ) {
+    statusBar()->showMessage(i18n("Print log book...Cancelled"), 3000);
     return;
   }
 
   // Initialise printing
   QPainter cPainter;
   if ( false == cPainter.begin(&cPrinter) ) {
-    statusBar()->message(i18n("Print log book...Failed!"), 3000);
+    statusBar()->showMessage(i18n("Print log book...Failed!"), 3000);
     return;
   }
 
-  const QPaintDeviceMetrics cMetrics(&cPrinter);
+  const Q3PaintDeviceMetrics cMetrics(&cPrinter);
   printf("Page size in native points is %dx%d\n",
          cMetrics.width(), cMetrics.height());
 
@@ -889,27 +881,21 @@ ScubaLog::print()
 
   // Print logs
   const QString cDiverName = m_pcLogBook->diverName();
-  QListIterator<DiveLog> iCurrentLog(m_pcLogBook->diveList());
-  for ( ; iCurrentLog.current(); ++iCurrentLog ) {
-    const DiveLog& cCurrentLog = *iCurrentLog.current();
+  const DiveList& dives = m_pcLogBook->diveList();
+  DiveList::const_iterator iCurrentLog = dives.begin();
+  for ( ; iCurrentLog != dives.end(); ++iCurrentLog ) {
+    const DiveLog& cCurrentLog = **iCurrentLog;
     QString cLogNumber;
     cLogNumber.setNum(cCurrentLog.logNumber());
     QString cMaxDepth;
     cMaxDepth.setNum(cCurrentLog.maxDepth());
     QString cGasUsage;
     cGasUsage.setNum(cCurrentLog.surfaceAirConsuption());
-    QString cDiveDescription = cCurrentLog.diveDescription().stripWhiteSpace();
+    QByteArray d;
+    d = QByteArray(cCurrentLog.diveDescription().toUtf8()).trimmed();
+    QString cDiveDescription(QString::fromUtf8(d.data()));
     const QRegExp cSingleNewLine("[^\n]\n[^\n]");
-    int nIndex = 0;
-    const int nDescrLength = cDiveDescription.length();
-    while ( nIndex != -1 && nIndex < nDescrLength ) {
-      nIndex = cDiveDescription.find(cSingleNewLine, nIndex);
-      if ( -1 == nIndex ) {
-        break;
-      }
-      cDiveDescription.replace(nIndex+1, 1, " ");
-      nIndex += 2;
-    }
+    cDiveDescription.replace(cSingleNewLine, " ");
 
     // Print header
     cPainter.setFont(cFontHeaderType);
@@ -934,26 +920,26 @@ ScubaLog::print()
     cPainter.drawText(330,  80, cGasUsage);
     cPainter.drawLine( 30,  90, 390,  90);
     cPainter.setFont(cFontDescription);
-    cPainter.drawText( 15, 110, 390, 400, WordBreak, cDiveDescription);
+    cPainter.drawText( 15, 110, 390, 400, Qt::TextWordWrap, cDiveDescription);
     cPainter.setFont(cFontFooter);
     cPainter.drawText( 10, 580, *m_pcProjectName);
     bool bPrintingOk = true;
-    if ( false == iCurrentLog.atLast() )
+    if ( (iCurrentLog + 1) != dives.end() )
       bPrintingOk = cPrinter.newPage();
     if ( false == bPrintingOk ) {
       cPainter.end();
-      statusBar()->message(i18n("Print log book...Failed!"), 3000);
+      statusBar()->showMessage(i18n("Print log book...Failed!"), 3000);
       return;
     }
-    if ( cPrinter.aborted() ) {
+    if ( cPrinter.printerState() == QPrinter::Aborted ) {
       cPainter.end();
-      statusBar()->message(i18n("Print log book...Cancelled"), 3000);
+      statusBar()->showMessage(i18n("Print log book...Cancelled"), 3000);
       return;
     }
   }
   cPainter.end();
 
-  statusBar()->message(i18n("Print log book...Done"), 3000);
+  statusBar()->showMessage(i18n("Print log book...Done"), 3000);
 }
 
 
@@ -969,7 +955,9 @@ ScubaLog::print()
 void
 ScubaLog::dragEnterEvent(QDragEnterEvent* pcEvent)
 {
-  pcEvent->accept(QUriDrag::canDecode(pcEvent));
+  if ( pcEvent->mimeData()->hasUrls() ) {
+    pcEvent->acceptProposedAction();
+  }
 }
 
 
@@ -988,7 +976,7 @@ ScubaLog::dropEvent(QDropEvent* pcEvent)
 {
   QStringList list;
 
-  if(!QUriDrag::decodeToUnicodeUris(pcEvent,list))
+  if(!Q3UriDrag::decodeToUnicodeUris(pcEvent,list))
         return;
 
   QString cUrlName(list.first());
@@ -1024,7 +1012,7 @@ ScubaLog::handleDownloadFinished(KIO::Job* pcJob)
   const QString cProjectName(*m_pcKfmFileName);
   bool isOk = readLogBook(cProjectName);
   if ( isOk ) {
-    *m_pcProjectName = cUrlName.copy();
+    *m_pcProjectName = cUrlName;
     updateRecentProjects(cUrlName);
     //setUnsavedData(false);
 

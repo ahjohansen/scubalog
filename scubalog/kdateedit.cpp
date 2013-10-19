@@ -19,15 +19,14 @@
 
 //*****************************************************************************
 /*!
-  Create a widget with \a pcParent as parent widget and \a pzName as
-  the widget name.
+  Create a widget with \a pcParent as parent widget.
   The valid date for this widget is 1.1.1900 to today, with today
   as the default.
 */
 //*****************************************************************************
 
-KDateEdit::KDateEdit(QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName),
+KDateEdit::KDateEdit(QWidget* pcParent)
+  : QLineEdit(pcParent),
     m_pcValidator(0)
 {
   m_cDate = QDate::currentDate();
@@ -47,8 +46,8 @@ KDateEdit::KDateEdit(QWidget* pcParent, const char* pzName)
 //*****************************************************************************
 
 KDateEdit::KDateEdit(QDate cFirst, QDate cDefault, QDate cLast,
-                     QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName),
+                     QWidget* pcParent)
+  : QLineEdit(pcParent),
     m_pcValidator(0)
 {
   m_cDate = cDefault;
@@ -122,7 +121,8 @@ KDateEdit::convertToDate(const QString& cText)
   int nMonth = 0;
   int nYear  = 0;
 
-  if ( (3 == sscanf(cText, "%d.%d.%d", &nDay, &nMonth, &nYear)) &&
+  if ( (3 == sscanf(cText.toAscii(), "%d.%d.%d",
+                    &nDay, &nMonth, &nYear)) &&
        (m_pcValidator->isValidDate(nDay, nMonth, nYear)) )
     cDate = QDate(nYear, nMonth, nDay);
   else {

@@ -48,8 +48,8 @@ class KIntegerEdit;
 class IntegerDialog : public QDialog {
   Q_OBJECT
 public:
-  IntegerDialog(QWidget* pcParent = 0, const char* pzName = 0,
-                bool isModal = false, WFlags nFlags = 0);
+  IntegerDialog(QWidget* pcParent = 0,
+                bool isModal = false, Qt::WFlags nFlags = 0);
   virtual ~IntegerDialog();
 
   void setValue(int nValue);

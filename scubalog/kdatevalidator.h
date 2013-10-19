@@ -38,7 +38,7 @@ class KDateValidator : public QValidator {
   Q_OBJECT
 public:
   KDateValidator(QDate cMin, QDate cDefault, QDate cMax,
-                 QWidget* pcParent = 0, const char* pzName = 0);
+                 QWidget* pcParent = 0);
   virtual ~KDateValidator();
 
   virtual State validate(QString& cInput, int& nCursorPos) const;

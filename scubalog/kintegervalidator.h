@@ -35,7 +35,7 @@ class KIntegerValidator : public QIntValidator {
   Q_OBJECT
 public:
   KIntegerValidator(int nMin, int nDefault, int nMax,
-                    QWidget* pcParent = 0, const char* pzName = 0);
+                    QWidget* pcParent = 0);
   ~KIntegerValidator();
 
   void setMinValue(int nMin);

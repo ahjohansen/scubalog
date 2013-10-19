@@ -11,11 +11,12 @@
 */
 //*****************************************************************************
 
-#include <assert.h>
-#include <qstring.h>
-#include "debug.h"
-#include "divelog.h"
 #include "divelogitem.h"
+#include "divelog.h"
+#include "debug.h"
+#include <qstring.h>
+#include <assert.h>
+#include <stdio.h>
 
 
 //*****************************************************************************
@@ -25,9 +26,9 @@
 */
 //*****************************************************************************
 
-DiveLogItem::DiveLogItem(QListView* pcListView, QListViewItem* pcPrevious,
+DiveLogItem::DiveLogItem(Q3ListView* pcListView, Q3ListViewItem* pcPrevious,
                          DiveLog* pcLog)
-  : QListViewItem(pcListView, pcPrevious),
+  : Q3ListViewItem(pcListView, pcPrevious),
     m_pcLog(pcLog), m_pcDiveNumber(0), m_pcDiveDate(0), m_pcDiveStart(0)
 {
   assert(pcLog);
@@ -82,7 +83,7 @@ DiveLogItem::key(int nColumn, bool/* isAscending*/) const
     cKey.sprintf("%05d", m_pcLog->logNumber());
   else if ( 1 == nColumn ) {
     QDateTime cStart(QDate(1950, 1, 1));
-    cKey.sprintf("%06d", cStart.daysTo(m_pcLog->diveDate()));
+    cKey.sprintf("%06d", cStart.daysTo(QDateTime(m_pcLog->diveDate())));
   }
   else
     cKey = QString(text(nColumn));
@@ -104,15 +105,15 @@ DiveLogItem::text(int nColumn) const
 {
   if ( 0 == nColumn ) {
     m_pcDiveNumber->sprintf("%d", m_pcLog->logNumber());
-    return m_pcDiveNumber->data();
+    return *m_pcDiveNumber;
   }
   else if ( 1 == nColumn ) {
     *m_pcDiveDate = m_pcLog->diveDate().toString();
-    return m_pcDiveDate->data();
+    return *m_pcDiveDate;
   }
   else if ( 2 == nColumn ) {
     *m_pcDiveStart = m_pcLog->diveStart().toString();
-    return m_pcDiveStart->data();
+    return *m_pcDiveStart;
   }
   else if ( 3 == nColumn ) {
     return m_pcLog->diveLocation();

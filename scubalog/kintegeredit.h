@@ -31,9 +31,9 @@ class KIntegerValidator;
 class KIntegerEdit : public QLineEdit {
   Q_OBJECT
 public:
-  KIntegerEdit(QWidget* pcParent = 0, const char* pzName = 0);
+  KIntegerEdit(QWidget* pcParent = 0);
   KIntegerEdit(int nMin, int nDefault, int nMax,
-               QWidget* pcParent = 0, const char* pzName = 0);
+               QWidget* pcParent = 0);
   ~KIntegerEdit();
 
   void setMinValue(int nMin);

@@ -16,11 +16,18 @@
 #include "chunkio.h"
 #include "debug.h"
 
-#include <kapp.h>
+#include <kapplication.h>
 #include <klocale.h>
 #include <qdatastream.h>
 #include <qfile.h>
 #include <qmessagebox.h>
+#include <algorithm>
+
+bool operator < (const LocationLog& l, const LocationLog& r)
+{
+  return QString::compare(l.getName(), r.getName());
+}
+
 
 //*****************************************************************************
 /*!
@@ -37,11 +44,12 @@ LogBook*
 ScubaLogProject::importLogBook(const QString& cFileName) const
 {
   QFile cFile(cFileName);
-  if ( false == cFile.open(IO_ReadOnly) ) {
+  if ( false == cFile.open(QIODevice::ReadOnly) ) {
     QString cMessage;
     cMessage = QString(i18n("Couldn't open file"))
       + "\n`" + cFileName + "'!";
-    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Read log book"),
+    QMessageBox::warning(QApplication::topLevelWidgets().at(0),
+                         i18n("[ScubaLog] Read log book"),
                          cMessage);
     return 0;
   }
@@ -62,7 +70,8 @@ ScubaLogProject::importLogBook(const QString& cFileName) const
     cMessage = QString(i18n("Couldn't read log book from"))
       + "\n`" + cFileName + "'.\n"
       + i18n("Unknown file format -- probably not a log book!");
-    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Read log book"),
+    QMessageBox::warning(QApplication::topLevelWidgets().at(0),
+                         i18n("[ScubaLog] Read log book"),
                          cMessage);
     return 0;
   }
@@ -70,7 +79,7 @@ ScubaLogProject::importLogBook(const QString& cFileName) const
   LogBook* pcLogBook = new LogBook();
 
   // Read all chunks
-  while ( false == cStream.eof() ) {
+  while ( !cStream.atEnd() ) {
     // Read a chunk header
     cStream >> nChunkId;
 
@@ -87,7 +96,7 @@ ScubaLogProject::importLogBook(const QString& cFileName) const
 
     // Read a dive log
     else if ( MAKE_CHUNK_ID('S', 'L', 'D', 'L') == nChunkId ) {
-      int nPos = cFile.at();
+      int nPos = cFile.pos();
       DiveLog* pcLog = new DiveLog();
       try {
         readDiveLog(cStream, *pcLog);
@@ -96,22 +105,25 @@ ScubaLogProject::importLogBook(const QString& cFileName) const
         QString cText;
         cText = QString(i18n("Error while reading log book from"))
           + "\n`" + cFileName + "':\n" + cException.explanation();
-        QMessageBox::warning(qApp->mainWidget(),
+        QMessageBox::warning(QApplication::topLevelWidgets().at(0),
                              i18n("[ScubaLog] Read log book"), cText);
-        cFile.at(nPos);
+        cFile.seek(nPos);
         cStream >> nChunkSize >> nChunkVersion;
-        cFile.at( nPos + nChunkSize - sizeof(unsigned int) );
-        DBG(("Position of next chunk=%d\n", cFile.at()));
+        cFile.seek(nPos + nChunkSize - sizeof(unsigned int));
+        DBG(("Position of next chunk=%d\n", cFile.pos()));
         delete pcLog;
         continue;
       }
-      DBG(("Read log %d\n", pcLog->logNumber()));
-      pcLogBook->diveList().inSort(pcLog);
+      DBG(("Read log %d (%s)\n",
+           pcLog->logNumber(),
+           pcLog->diveLocation().toUtf8().constData()));
+      DiveList& cDiveList = pcLogBook->diveList();
+      cDiveList.append(pcLog);
     }
 
     // Read a location log
     else if ( MAKE_CHUNK_ID('S', 'L', 'L', 'L') == nChunkId ) {
-      int nPos = cFile.at();
+      int nPos = cFile.pos();
       LocationLog* pcLog = new LocationLog();
       try {
         readLocationLog(cStream, *pcLog);
@@ -120,22 +132,24 @@ ScubaLogProject::importLogBook(const QString& cFileName) const
         QString cText;
         cText = QString(i18n("Error while reading log book from"))
           + "\n`" + cFileName + "':\n" + cException.explanation();
-        QMessageBox::warning(qApp->mainWidget(),
+        QMessageBox::warning(QApplication::topLevelWidgets().at(0),
                              i18n("[ScubaLog] Read log book"), cText);
-        cFile.at(nPos);
+        cFile.seek(nPos);
         cStream >> nChunkSize >> nChunkVersion;
-        cFile.at( nPos + nChunkSize - sizeof(unsigned int) );
-        DBG(("Position of next chunk=%d\n", cFile.at()));
+        cFile.seek(nPos + nChunkSize - sizeof(unsigned int));
+        DBG(("Position of next chunk=%d\n", cFile.pos()));
         delete pcLog;
         continue;
       }
-      DBG(("Read location log for `%s'\n", pcLog->getName().data()));
-      pcLogBook->locationList().inSort(pcLog);
+      DBG(("Read location log for \"%s\"\n",
+           pcLog->getName().toUtf8().constData()));
+      QList<LocationLog*>& cLocationList = pcLogBook->locationList();
+      cLocationList.append(pcLog);
     }
 
     // Read an equipment entry
     else if ( MAKE_CHUNK_ID('S', 'L', 'E', 'L') == nChunkId ) {
-      int nPos = cFile.at();
+      int nPos = cFile.pos();
       EquipmentLog* pcLog = new EquipmentLog();
       try {
         readEquipmentLog(cStream, *pcLog);
@@ -144,12 +158,12 @@ ScubaLogProject::importLogBook(const QString& cFileName) const
         QString cText;
         cText = QString(i18n("Error while reading log book from"))
           + "\n`" + cFileName + "':\n" + cException.explanation();
-        QMessageBox::warning(qApp->mainWidget(),
+        QMessageBox::warning(QApplication::topLevelWidgets().at(0),
                              i18n("[ScubaLog] Read log book"), cText);
-        cFile.at(nPos);
+        cFile.seek(nPos);
         cStream >> nChunkSize >> nChunkVersion;
-        cFile.at( nPos + nChunkSize - sizeof(unsigned int) );
-        DBG(("Position of next chunk=%d\n", cFile.at()));
+        cFile.seek(nPos + nChunkSize - sizeof(unsigned int));
+        DBG(("Position of next chunk=%d\n", cFile.pos()));
         delete pcLog;
         continue;
       }
@@ -159,30 +173,36 @@ ScubaLogProject::importLogBook(const QString& cFileName) const
     // Skip unknown chunk
     else {
       cStream >> nChunkSize >> nChunkVersion;
-      const int nOldPos = cFile.at();
+      const int nOldPos = cFile.pos();
       const int nNewPos = nOldPos + nChunkSize - 3 * sizeof(unsigned int);
       if ( nNewPos <= nOldPos || nNewPos < 0 ||
            (unsigned)nNewPos >= nFileSize ) {
         QString cText;
         cText = QString(i18n("Can't read further, aborting load of log-book"));
-        QMessageBox::warning(qApp->mainWidget(),
+        QMessageBox::warning(QApplication::topLevelWidgets().at(0),
                              i18n("[ScubaLog] Read log book"), cText);
         break;
       }
-      cFile.at(nNewPos);
+      cFile.seek(nNewPos);
     }
   }
 
-  bool isOk = IO_Ok == cFile.status();
-  if ( false == isOk ) {
+  if ( cFile.error() != QFile::NoError ) {
     QString cMessage;
     cMessage = QString(i18n("Error reading from file"))
       + "\n`" + cFileName + "'!";
-    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Read log book"),
+    QMessageBox::warning(QApplication::topLevelWidgets().at(0),
+                         i18n("[ScubaLog] Read log book"),
                          cMessage);
     delete pcLogBook;
     pcLogBook = 0;
   }
+
+  // Sort the lists.
+  DiveList& cDiveList = pcLogBook->diveList();
+  cDiveList.sort();
+  QList<LocationLog*>& cLocationList = pcLogBook->locationList();
+  std::sort(cLocationList.begin(), cLocationList.end());
 
   return pcLogBook;
 }
@@ -202,13 +222,14 @@ ScubaLogProject::exportLogBook(const LogBook& cLogBook,
                                const QString& cFileName) const
 {
   QFile cFile(cFileName);
-  if ( false == cFile.open(IO_WriteOnly) ) {
+  if ( false == cFile.open(QIODevice::WriteOnly) ) {
     QString cMessage;
     cMessage = QString(i18n("Couldn't open file"))
       + "\n`" + cFileName + "'.\n"
       + i18n("Ensure that you have write permission and\n"
              "that there is enough free space on the media!");
-    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Write log book"),
+    QMessageBox::warning(QApplication::topLevelWidgets().at(0),
+                         i18n("[ScubaLog] Write log book"),
                          cMessage);
     return false;
   }
@@ -229,21 +250,26 @@ ScubaLogProject::exportLogBook(const LogBook& cLogBook,
     writePersonalInformation(cStream, cLogBook);
 
     // Write all the dive logs
-    const DiveLog* pcLog = cLogBook.diveList().first();
-    for ( ; pcLog; pcLog = cLogBook.diveList().next() ) {
+    const DiveList& cDiveList = cLogBook.diveList();
+    QListIterator<DiveLog*> iDiveLog(cDiveList);
+    while ( iDiveLog.hasNext() ) {
+      const DiveLog* pcLog = iDiveLog.next();
       writeDiveLog(cStream, *pcLog);
     }
 
     // Write all the location logs
-    const LocationLog* pcLocationLog = cLogBook.locationList().first();
-    for ( ; pcLocationLog; pcLocationLog = cLogBook.locationList().next() ) {
+    const QList<LocationLog*>& cLocationList = cLogBook.locationList();
+    QListIterator<LocationLog*> iLocationLog(cLocationList);
+    while ( iLocationLog.hasNext() ) {
+      const LocationLog* pcLocationLog = iLocationLog.next();
       writeLocationLog(cStream, *pcLocationLog);
     }
 
     // Write all the equipment entries
-    const EquipmentLog* pcEquipment = 0;
-    for ( pcEquipment = cLogBook.equipmentLog().first(); pcEquipment;
-          pcEquipment = cLogBook.equipmentLog().next() ) {
+    const QList<EquipmentLog*>& cEquipmentList = cLogBook.equipmentLog();
+    QListIterator<EquipmentLog*> iEquipmentLog(cEquipmentList);
+    while ( iEquipmentLog.hasNext() ) {
+      const EquipmentLog* pcEquipment = iEquipmentLog.next();
       writeEquipmentLog(cStream, *pcEquipment);
     }
   }
@@ -252,25 +278,27 @@ ScubaLogProject::exportLogBook(const LogBook& cLogBook,
     cText = QString(i18n("Error while writing log book to"))
       + "\n`" + cFileName + "':\n" + cException.explanation() + "\n"
       + i18n("Ensure there is enough free space on the media!");
-    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Write log book"),
+    QMessageBox::warning(QApplication::topLevelWidgets().at(0),
+                         i18n("[ScubaLog] Write log book"),
                          cText);
     QFile::remove(cFileName);
     return false;
   }
 
   // Update file size
-  cFile.at(4);
+  cFile.seek(4);
   nChunkSize = cFile.size();
   cStream << nChunkSize;
 
-  bool isOk = IO_Ok == cFile.status();
+  const bool isOk = (cFile.error() == QFile::NoError);
   cFile.close();
-  if ( false == isOk ) {
+  if ( !isOk ) {
     QFile::remove(cFileName);
     QString cMessage;
     cMessage = QString(i18n("Error writing to file"))
       + "\n`" + cFileName + "'!";
-    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Write log book"),
+    QMessageBox::warning(QApplication::topLevelWidgets().at(0),
+                         i18n("[ScubaLog] Write log book"),
                          cMessage);
   }
 
@@ -333,13 +361,9 @@ ScubaLogProject::writePersonalInformation(QDataStream&   cStream,
   const unsigned int nChunkSize =
     3 * sizeof(unsigned int)
     + sizeof(unsigned int) + cLogBook.diverName().length()
-    + (cLogBook.diverName().isNull() ? 0 : 1)
     + sizeof(unsigned int) + cLogBook.emailAddress().length()
-    + (cLogBook.emailAddress().isNull() ? 0 : 1)
     + sizeof(unsigned int) + cLogBook.wwwUrl().length()
-    + (cLogBook.wwwUrl().isNull() ? 0 : 1)
-    + sizeof(unsigned int) + cLogBook.comments().length()
-    + (cLogBook.comments().isNull() ? 0 : 1);
+    + sizeof(unsigned int) + cLogBook.comments().length();
   const unsigned int nChunkVersion = 1;
   cStream << MAKE_CHUNK_ID('S', 'L', 'P', 'I')
           << nChunkSize
@@ -365,7 +389,7 @@ ScubaLogProject::readDiveLog(QDataStream& cStream,
 {
   // Save current IO position for checking at end
   const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
+  const int nPos = cDevice.pos();
 
   // Read rest of header
   unsigned int nChunkSize;
@@ -374,7 +398,8 @@ ScubaLogProject::readDiveLog(QDataStream& cStream,
           >> nChunkVersion;
   if ( 1 != nChunkVersion ) {
     QString cText;
-    cText.sprintf(i18n("Unknown dive log chunk version %d!"), nChunkVersion);
+    cText.sprintf(i18n("Unknown dive log chunk version %d!").toLatin1(),
+                  nChunkVersion);
     throw IOException(cText);
   }
 
@@ -430,11 +455,11 @@ ScubaLogProject::readDiveLog(QDataStream& cStream,
 
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize - sizeof(unsigned int);
-  if ( nNextChunkPos != cDevice.at() ) {
+  if ( nNextChunkPos != cDevice.pos() ) {
     QString cText;
     cText.sprintf(i18n("Unexpected position after reading dive log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
+                       "Current position is %d; expected %d...").toLatin1(),
+                  cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }
@@ -453,7 +478,7 @@ ScubaLogProject::writeDiveLog(QDataStream&   cStream,
 {
   // Save current IO position for checking at end
   const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
+  const int nPos = cDevice.pos();
 
   const unsigned int nChunkVersion = 1;
   const unsigned int nChunkSize =
@@ -462,23 +487,18 @@ ScubaLogProject::writeDiveLog(QDataStream&   cStream,
     + sizeof(unsigned int)
     + sizeof(unsigned int)
     + sizeof(unsigned int) + cLog.diveLocation().length()
-    + (cLog.diveLocation().isNull() ? 0 : 1)
     + sizeof(unsigned int) + cLog.buddyName().length()
-    + (cLog.buddyName().isNull() ? 0 : 1)
     + sizeof(float)
     + sizeof(unsigned int)
     + sizeof(unsigned int)
     + sizeof(unsigned int) + cLog.gasType().length()
-    + (cLog.gasType().isNull() ? 0 : 1)
     + sizeof(unsigned int)
     + sizeof(float)
     + sizeof(float)
     + sizeof(float)
     + sizeof(unsigned char)
     + sizeof(unsigned int) + cLog.diveType().length()
-    + (cLog.diveType().isNull() ? 0 : 1)
-    + sizeof(unsigned int) + cLog.diveDescription().length()
-    + (cLog.diveDescription().isNull() ? 0 : 1);
+    + sizeof(unsigned int) + cLog.diveDescription().length();
   const unsigned char nPlanType = (unsigned char)cLog.planType();
   cStream << MAKE_CHUNK_ID('S', 'L', 'D', 'L')
           << nChunkSize
@@ -502,11 +522,11 @@ ScubaLogProject::writeDiveLog(QDataStream&   cStream,
 
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize;
-  if ( nNextChunkPos != cDevice.at() ) {
+  if ( nNextChunkPos != cDevice.pos() ) {
     QString cText;
     cText.sprintf(i18n("Unexpected position after writing dive log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
+                       "Current position is %d; expected %d...").toLatin1(),
+                  cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }
@@ -525,7 +545,7 @@ ScubaLogProject::readLocationLog(QDataStream& cStream, LocationLog& cLog) const
 {
   // Save current IO position for checking at end
   const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
+  const int nPos = cDevice.pos();
 
   // Read rest of header
   unsigned int nChunkSize;
@@ -534,7 +554,7 @@ ScubaLogProject::readLocationLog(QDataStream& cStream, LocationLog& cLog) const
           >> nChunkVersion;
   if ( 1 != nChunkVersion ) {
     QString cText;
-    cText.sprintf(i18n("Unknown location log chunk version %d!"),
+    cText.sprintf(i18n("Unknown location log chunk version %d!").toLatin1(),
                   nChunkVersion);
     throw IOException(cText);
   }
@@ -549,11 +569,11 @@ ScubaLogProject::readLocationLog(QDataStream& cStream, LocationLog& cLog) const
 
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize - sizeof(unsigned int);
-  if ( nNextChunkPos != cDevice.at() ) {
+  if ( nNextChunkPos != cDevice.pos() ) {
     QString cText;
     cText.sprintf(i18n("Unexpected position after reading location log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
+                       "Current position is %d; expected %d...").toLatin1(),
+                  cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }
@@ -572,15 +592,13 @@ ScubaLogProject::writeLocationLog(QDataStream&       cStream,
 {
   // Save current IO position for checking at end
   const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
+  const int nPos = cDevice.pos();
 
   // Calculate the chunk size
   unsigned int nChunkSize =
     3 * sizeof(unsigned int)
     + sizeof(unsigned int) + cLog.getName().length()
-    + (cLog.getName().isNull() ? 0 : 1)
-    + sizeof(unsigned int) + cLog.getDescription().length()
-    + (cLog.getDescription().isNull() ? 0 : 1);
+    + sizeof(unsigned int) + cLog.getDescription().length();
 
   // Write the header
   const unsigned int nChunkVersion = 1;
@@ -594,11 +612,11 @@ ScubaLogProject::writeLocationLog(QDataStream&       cStream,
 
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize;
-  if ( nNextChunkPos != cDevice.at() ) {
+  if ( nNextChunkPos != cDevice.pos() ) {
     QString cText;
     cText.sprintf(i18n("Unexpected position after writing location log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
+                       "Current position is %d; expected %d...").toLatin1(),
+                  cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }
@@ -619,7 +637,7 @@ ScubaLogProject::readEquipmentLog(QDataStream&  cStream,
 {
   // Save current IO position for checking at end
   const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
+  const int nPos = cDevice.pos();
 
   // Read rest of header
   unsigned int nChunkSize;
@@ -628,7 +646,7 @@ ScubaLogProject::readEquipmentLog(QDataStream&  cStream,
           >> nChunkVersion;
   if ( 1 != nChunkVersion ) {
     QString cText;
-    cText.sprintf(i18n("Unknown equipment log chunk version %d!"),
+    cText.sprintf(i18n("Unknown equipment log chunk version %d!").toLatin1(),
                   nChunkVersion);
     throw IOException(cText);
   }
@@ -664,11 +682,11 @@ ScubaLogProject::readEquipmentLog(QDataStream&  cStream,
 
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize - sizeof(unsigned int);
-  if ( nNextChunkPos != cDevice.at() ) {
+  if ( nNextChunkPos != cDevice.pos() ) {
     QString cText;
     cText.sprintf(i18n("Unexpected position after reading equipment log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
+                       "Current position is %d; expected %d...").toLatin1(),
+                  cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }
@@ -688,26 +706,22 @@ ScubaLogProject::writeEquipmentLog(QDataStream&        cStream,
 {
   // Save current IO position for checking at end
   const QIODevice& cDevice = *cStream.device();
-  const int nPos = cDevice.at();
+  const int nPos = cDevice.pos();
 
-  QListIterator<EquipmentHistoryEntry> iHistoryEntry(cLog.history());
+  QListIterator<EquipmentHistoryEntry*> iHistoryEntry(cLog.history());
 
   // Calculate the chunk size
   unsigned int nChunkSize =
     3 * sizeof(unsigned int)
     + sizeof(unsigned int) + cLog.type().length()
-    + (cLog.type().isNull() ? 0 : 1)
     + sizeof(unsigned int) + cLog.name().length()
-    + (cLog.name().isNull() ? 0 : 1)
     + sizeof(unsigned int) + cLog.serialNumber().length()
-    + (cLog.serialNumber().isNull() ? 0 : 1)
     + sizeof(unsigned int) + cLog.serviceRequirements().length()
-    + (cLog.serviceRequirements().isNull() ? 0 : 1)
     + sizeof(unsigned int);
-  for ( ; iHistoryEntry.current(); ++iHistoryEntry )
-    nChunkSize += 2 * sizeof(unsigned int) +
-      iHistoryEntry.current()->comment().length() +
-      (iHistoryEntry.current()->comment().isNull() ? 0 : 1);
+  for ( ; iHistoryEntry.hasNext(); ) {
+    const EquipmentHistoryEntry* pcEntry = iHistoryEntry.next();
+    nChunkSize += 2 * sizeof(unsigned int) + pcEntry->comment().length();
+  }
 
   // Write the header
   unsigned int nChunkVersion = 1;
@@ -723,19 +737,19 @@ ScubaLogProject::writeEquipmentLog(QDataStream&        cStream,
           << cLog.history().count();
 
   // Write the history entries
-  iHistoryEntry.toFirst();
-  for ( ; iHistoryEntry.current(); ++iHistoryEntry ) {
-    const EquipmentHistoryEntry* pcEntry = iHistoryEntry.current();
+  iHistoryEntry = cLog.history();
+  for ( ; iHistoryEntry.hasNext(); ) {
+    const EquipmentHistoryEntry* pcEntry = iHistoryEntry.next();
     writeEquipmentHistoryEntry(cStream, *pcEntry);
   }
 
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize;
-  if ( nNextChunkPos != cDevice.at() ) {
+  if ( nNextChunkPos != cDevice.pos() ) {
     QString cText;
     cText.sprintf(i18n("Unexpected position after writing equipment log!\n"
-                       "Current position is %d; expected %d..."),
-                  cDevice.at(), nNextChunkPos);
+                       "Current position is %d; expected %d...").toLatin1(),
+                  cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }

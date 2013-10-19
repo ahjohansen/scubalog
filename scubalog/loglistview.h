@@ -17,9 +17,9 @@
 
 #include <qwidget.h>
 
-class QListView;
+class Q3ListView;
 class QPushButton;
-class QListViewItem;
+class Q3ListViewItem;
 class DiveList;
 class DiveLog;
 
@@ -47,7 +47,7 @@ class DiveLog;
 class LogListView : public QWidget {
   Q_OBJECT
 public:
-  LogListView(QWidget* pcParent, const char* pzName);
+  LogListView(QWidget* pcParent);
   virtual ~LogListView();
 
   void setLogList(DiveList* pcDiveList);
@@ -56,12 +56,12 @@ public slots:
   void createNewLog();
   void deleteLog();
   void viewLog();
-  void viewLog(QListViewItem* pcItem);
-  void selectedLogChanged(QListViewItem* pcItem);
+  void viewLog(Q3ListViewItem* pcItem);
+  void selectedLogChanged(Q3ListViewItem* pcItem);
 
 private:
   //! The dive list view.
-  QListView*   m_pcDiveListView;
+  Q3ListView*  m_pcDiveListView;
   //! The button used to create a new log.
   QPushButton* m_pcNewLog;
   //! The button used to delete a log.

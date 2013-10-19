@@ -21,7 +21,7 @@ class DiveLog;
 class LogBook;
 class QComboBox;
 class QLineEdit;
-class QMultiLineEdit;
+class QTextEdit;
 class QPushButton;
 class KIntegerEdit;
 class KDateEdit;
@@ -42,7 +42,7 @@ class KTimeEdit;
 class LogView : public QWidget {
   Q_OBJECT
 public:
-  LogView(QWidget* pcParent = 0, const char* pzName = 0);
+  LogView(QWidget* pcParent = 0);
   virtual ~LogView();
 
   void setLogBook(LogBook* pcLogBook);
@@ -105,11 +105,11 @@ private:
   //! The dive type selector.
   QComboBox*    m_pcDiveTypeSelector;
   //! The dive description editor.
-  QMultiLineEdit* m_pcDescription;
+  QTextEdit*    m_pcDescription;
   //! Move to previous log.
-  QPushButton*    m_pcPreviousLog;
+  QPushButton*  m_pcPreviousLog;
   //! Move to next log.
-  QPushButton*    m_pcNextLog;
+  QPushButton*  m_pcNextLog;
 
 signals:
   void newLog(DiveLog* pcLog);

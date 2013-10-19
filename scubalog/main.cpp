@@ -17,7 +17,8 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <klocale.h>
-#include <kapp.h>
+#include <kapplication.h>
+#include <klocalizedstring.h>
 #include <qmessagebox.h>
 #include <iostream>
 #include <new>
@@ -35,29 +36,28 @@ main(int nArgumentCount, char** apzArguments)
 {
   // Setup the about dialogue box.
   KAboutData aboutData("scubalog",
-                       I18N_NOOP("ScubaLog"),
+                       "",
+                       ki18n("ScubaLog"),
                        VERSION,
-                       I18N_NOOP("ScubaLog is a scuba dive logging program,\n"
-                                 "written for the K Desktop Environment."),
+                       ki18n("ScubaLog is a scuba dive logging program,\n"
+                            "written for the K Desktop Environment."),
                        KAboutData::License_GPL,
-                       "(c) 1999-2004, André Johansen",
-                       0,
+                       ki18n("(c) 1999-2004, André Johansen"),
+                       ki18n(""),
                        "http://home.tiscali.no/andrej/scubalog",
                        "andrejoh@c2i.net");
-  aboutData.addAuthor("André Johansen",
-                      "Author",
+  aboutData.addAuthor(ki18n("André Johansen"),
+                      ki18n("Author"),
                       "andrejoh@c2i.net",
                       "http://home.tiscali.no/andrej/scubalog/");
-  aboutData.addAuthor("Jordi Cantón",
-                      "Porting to KDE v2",
+  aboutData.addAuthor(ki18n("Jordi Cantón"),
+                      ki18n("Porting to KDE v2"),
                       "JordiNitrox@virtual-sub.org",
                       "http://www.virtual-sub.org");
 
   // Setup command line handling.
-  KCmdLineOptions options[] = {
-    { "+[File]", I18N_NOOP("ScubaLog file to open"), 0 },
-    { 0, 0, 0 }
-  };
+  KCmdLineOptions options;
+  options.add("+[File]", ki18n("ScubaLog file to open"));
   KCmdLineArgs::init( nArgumentCount, apzArguments, &aboutData );
   KCmdLineArgs::addCmdLineOptions( options );
 
@@ -72,21 +72,21 @@ main(int nArgumentCount, char** apzArguments)
     // Validate arguments
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     if ( args->count() )
-      pzLogBook = args->arg(0);
+      pzLogBook = args->arg(0).toAscii();
 
     ScubaLog* pcMainGUI = new ScubaLog("scubalog", pzLogBook);
-    cApplication.setMainWidget(pcMainGUI);
+    //cApplication.addTopLevelWidget(pcMainGUI);
     pcMainGUI->show();
     nReturnValue = cApplication.exec();
     pcMainGUI->saveConfig();
     delete pcMainGUI;
   }
   catch ( std::bad_alloc& ) {
-    std::cerr << i18n("Out of memory -- exiting ScubaLog...\n");
+    std::cerr << i18n("Out of memory -- exiting ScubaLog...\n").toStdString();
     throw;
   }
   catch ( ... ) {
-    std::cerr << i18n("Caught unhandled exception -- exiting ScubaLog...\n");
+    std::cerr << i18n("Caught unhandled exception -- exiting ScubaLog...\n").toStdString();
     throw;
   }
 

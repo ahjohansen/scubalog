@@ -16,10 +16,9 @@
 
 #include <qwidget.h>
 
-
 class QLabel;
 class QLineEdit;
-class QMultiLineEdit;
+class QTextEdit;
 class LogBook;
 
 
@@ -40,7 +39,7 @@ class LogBook;
 class PersonalInfoView : public QWidget {
   Q_OBJECT
 public:
-  PersonalInfoView(QWidget* pcParent, const char* pzName);
+  PersonalInfoView(QWidget* pcParent);
   ~PersonalInfoView();
 
   void setLogBook(LogBook* pcLogBook);
@@ -69,7 +68,7 @@ private:
   //! The logged dive time label.
   QLabel*         m_pcLoggedDiveTime;
   //! The comments editor.
-  QMultiLineEdit* m_pcComments;
+  QTextEdit*      m_pcComments;
   //! The log book being edited.
   LogBook*        m_pcLogBook;
 };

@@ -33,9 +33,8 @@ EquipmentLog::EquipmentLog()
 EquipmentLog::~EquipmentLog()
 {
   // Delete the history entries
-  for ( EquipmentHistoryEntry* pcEntry = m_cHistory.first();
-        pcEntry; pcEntry = m_cHistory.next() ) {
-    delete pcEntry;
+  while ( !m_cHistory.isEmpty() ) {
+    delete m_cHistory.takeFirst();
   }
 }
 

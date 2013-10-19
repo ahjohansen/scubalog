@@ -20,28 +20,27 @@
 #include "debug.h"
 
 #include <klocale.h>
-#include <kapp.h>
-#include <qtable.h>
+#include <kapplication.h>
+#include <q3table.h>
 #include <qlayout.h>
-#include <qpopupmenu.h>
 #include <qpushbutton.h>
 #include <qlineedit.h>
-#include <qlistbox.h>
+#include <q3listbox.h>
 #include <qlabel.h>
 #include <qsplitter.h>
 #include <qwidget.h>
+#include <qmenu.h>
 #include <assert.h>
 #include <stdio.h>
 
 //*****************************************************************************
 /*!
-  Create the view with \a pcParent as parent widget and \a pzName as
-  the widget name.
+  Create the view with \a pcParent as parent widget.
 */
 //*****************************************************************************
 
-EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
-  : QWidget(pcParent, pzName),
+EquipmentView::EquipmentView(QWidget* pcParent)
+  : QWidget(pcParent),
     m_pcLogBook(0),
     m_pcItemView(0),
     m_pcNew(0),
@@ -56,61 +55,61 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
     m_pcLogEntryMenu(0)
 {
   QSplitter* pcSplitter =
-    new QSplitter(QSplitter::Vertical, this, "splitter");
+    new QSplitter(Qt::Vertical, this);
 
   QWidget* pcTop = new QWidget(pcSplitter);
 
-  m_pcItemView = new QListBox(pcTop, "equipmentList");
+  m_pcItemView = new Q3ListBox(pcTop, "equipmentList");
   connect(m_pcItemView, SIGNAL(highlighted(int)), SLOT(itemSelected(int)));
   connect(m_pcItemView, SIGNAL(selected(int)), SLOT(editItemName(int)));
 
-  m_pcNew = new QPushButton(pcTop, "new");
+  m_pcNew = new QPushButton(pcTop);
   m_pcNew->setText(i18n("&New"));
   m_pcNew->setEnabled(false);
   connect(m_pcNew, SIGNAL(clicked()), SLOT(newItem()));
 
-  m_pcDelete = new QPushButton(pcTop, "delete");
+  m_pcDelete = new QPushButton(pcTop);
   m_pcDelete->setText(i18n("Delete"));
   m_pcDelete->setEnabled(false);
   connect(m_pcDelete, SIGNAL(clicked()), SLOT(deleteItem()));
 
-  m_pcMoveUp = new QPushButton(pcTop, "moveUp");
+  m_pcMoveUp = new QPushButton(pcTop);
   m_pcMoveUp->setText(i18n("Move &up"));
   m_pcMoveUp->setEnabled(false);
   connect(m_pcMoveUp, SIGNAL(clicked()), SLOT(moveCurrentUp()));
 
-  m_pcMoveDown = new QPushButton(pcTop, "moveDown");
+  m_pcMoveDown = new QPushButton(pcTop);
   m_pcMoveDown->setText(i18n("Move &down"));
   m_pcMoveDown->setEnabled(false);
   connect(m_pcMoveDown, SIGNAL(clicked()), SLOT(moveCurrentDown()));
 
-  m_pcItemName = new QLineEdit(pcTop, "itemName");
+  m_pcItemName = new QLineEdit(pcTop);
   m_pcItemName->hide();
   connect(m_pcItemName, SIGNAL(returnPressed()), SLOT(changeItemName()));
 
-  QLabel* pcTypeText = new QLabel(pcTop, "itemTypeText");
+  QLabel* pcTypeText = new QLabel(pcTop);
   pcTypeText->setText(i18n("Type: "));
 
-  m_pcType = new QLineEdit(pcTop, "itemType");
+  m_pcType = new QLineEdit(pcTop);
   connect(m_pcType, SIGNAL(textChanged(const QString&)),
           SLOT(itemTypeChanged(const QString&)));
 
-  QLabel* pcSerialText = new QLabel(pcTop, "itemSerialText");
+  QLabel* pcSerialText = new QLabel(pcTop);
   pcSerialText->setText(i18n("Serial number: "));
 
-  m_pcSerial = new QLineEdit(pcTop, "serial");
+  m_pcSerial = new QLineEdit(pcTop);
   connect(m_pcSerial, SIGNAL(textChanged(const QString&)),
           SLOT(itemSerialChanged(const QString&)));
 
-  QLabel* pcServiceText = new QLabel(pcTop, "serviceText");
+  QLabel* pcServiceText = new QLabel(pcTop);
   pcServiceText->setText(i18n("Service: "));
 
-  m_pcService = new QLineEdit(pcTop, "service");
+  m_pcService = new QLineEdit(pcTop);
   connect(m_pcService, SIGNAL(textChanged(const QString&)),
           SLOT(itemServiceChanged(const QString&)));
 
-  m_pcLogView = new QTable(0, 2, pcSplitter, "equipmentLog");
-  m_pcLogView->setSelectionMode(QTable::Single);
+  m_pcLogView = new Q3Table(0, 2, pcSplitter, "equipmentLog");
+  m_pcLogView->setSelectionMode(Q3Table::Single);
   m_pcLogView->verticalHeader()->hide();
   m_pcLogView->setLeftMargin(0);
   m_pcLogView->horizontalHeader()->setLabel(0, i18n("Date"));
@@ -140,13 +139,13 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   pcServiceText->setMinimumSize(pcServiceText->sizeHint());
   m_pcService->setMinimumSize(m_pcService->sizeHint());
 
-  QBoxLayout* pcSplitLayout = new QVBoxLayout(this, 5);
+  QBoxLayout* pcSplitLayout = new QVBoxLayout(this);
   pcSplitLayout->addWidget(pcSplitter);
   pcSplitLayout->activate();
 
-  QVBoxLayout* pcTopLayout    = new QVBoxLayout(pcTop, 5);
+  QVBoxLayout* pcTopLayout    = new QVBoxLayout(pcTop);
   QHBoxLayout* pcButtonLayout = new QHBoxLayout();
-  QGridLayout* pcInfoLayout   = new QGridLayout(2, 4);
+  QGridLayout* pcInfoLayout   = new QGridLayout();
   pcTopLayout->addWidget(m_pcItemView, 2);
   pcTopLayout->addLayout(pcButtonLayout);
   pcButtonLayout->addWidget(m_pcNew,      0);
@@ -156,14 +155,14 @@ EquipmentView::EquipmentView(QWidget* pcParent, const char* pzName)
   pcButtonLayout->addWidget(m_pcItemName, 1);
   pcTopLayout->addSpacing(10);
   pcTopLayout->addLayout(pcInfoLayout);
-  pcInfoLayout->setColStretch(1, 1);
-  pcInfoLayout->setColStretch(3, 1);
+  pcInfoLayout->setColumnStretch(1, 1);
+  pcInfoLayout->setColumnStretch(3, 1);
   pcInfoLayout->addWidget(pcTypeText,     0, 0);
   pcInfoLayout->addWidget(m_pcType,       0, 1);
   pcInfoLayout->addWidget(pcSerialText,   0, 2);
   pcInfoLayout->addWidget(m_pcSerial,     0, 3);
   pcInfoLayout->addWidget(pcServiceText,  1, 0);
-  pcInfoLayout->addMultiCellWidget(m_pcService, 1, 1, 1, 3);
+  pcInfoLayout->addWidget(m_pcService, 1, 1, 1, 3);
   pcTopLayout->activate();
 }
 
@@ -195,18 +194,20 @@ EquipmentView::setLogBook(LogBook* pcLogBook)
   if ( pcLogBook ) {
     m_pcItemView->clear();
     m_pcItemView->setAutoUpdate(false);
-    QList<EquipmentLog>& cEquipment = pcLogBook->equipmentLog();
-    EquipmentLog* pcItem = cEquipment.first();
-    while ( pcItem ) {
+    QList<EquipmentLog*>& cEquipment = pcLogBook->equipmentLog();
+    QListIterator<EquipmentLog*> iEquipment(cEquipment);
+    while ( iEquipment.hasNext() ) {
+      EquipmentLog* pcItem = iEquipment.next();
       m_pcItemView->insertItem(pcItem->name());
-      pcItem = cEquipment.next();
     }
     m_pcItemView->setAutoUpdate(true);
     m_pcNew->setEnabled(true);
     unsigned int nNumItems = cEquipment.count();
     bool bItemsExist = nNumItems != 0;
-    if ( nNumItems )
-      m_pcItemView->setCurrentItem(0);
+    if ( nNumItems ) {
+      const int item = 0;
+      m_pcItemView->setCurrentItem(item);
+    }
     m_pcDelete->setEnabled(bItemsExist);
     m_pcMoveUp->setEnabled(false);
     m_pcMoveDown->setEnabled(nNumItems >= 2);
@@ -249,7 +250,7 @@ EquipmentView::itemSelected(int nItemNumber)
     return;
 
   assert(m_pcLogBook);
-  QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
+  QList<EquipmentLog*>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.at(nItemNumber);
   assert(pcLog);
 
@@ -259,18 +260,17 @@ EquipmentView::itemSelected(int nItemNumber)
   m_pcSerial->setText(pcLog->serialNumber());
   m_pcService->setText(pcLog->serviceRequirements());
 
-  QList<EquipmentHistoryEntry>& cHistory = pcLog->history();
+  QList<EquipmentHistoryEntry*>& cHistory = pcLog->history();
   const unsigned int nNumRows = cHistory.count();
   m_pcLogView->setNumRows(nNumRows);
-  int iRow = 0;
-  for ( EquipmentHistoryEntry* pcEntry = cHistory.first();
-        pcEntry; pcEntry = cHistory.next() ) {
+  QList<EquipmentHistoryEntry*>::const_iterator i = cHistory.begin();
+  for ( int iRow = 0; i != cHistory.end(); ++i, ++iRow ) {
+    const EquipmentHistoryEntry* pcEntry = (*i);
     QString cDateText(pcEntry->date().toString());
     DateItem* pcDateItem =
-      new DateItem(m_pcLogView, QTableItem::OnTyping, cDateText);
+      new DateItem(m_pcLogView, Q3TableItem::OnTyping, cDateText);
     m_pcLogView->setItem(iRow, 0, pcDateItem);
     m_pcLogView->setText(iRow, 1, pcEntry->comment());
-    iRow++;
   }
 }
 
@@ -285,7 +285,7 @@ void
 EquipmentView::newItem()
 {
   assert(m_pcLogBook);
-  QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
+  QList<EquipmentLog*>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = new EquipmentLog();
   cEquipmentLogList.append(pcLog);
   m_pcItemView->insertItem("");
@@ -317,13 +317,13 @@ EquipmentView::deleteItem()
   assert(m_pcLogBook);
 
   // Find and delete the item
-  QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
+  QList<EquipmentLog*>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   int nCurrentItem = m_pcItemView->currentItem();
   if ( -1 == nCurrentItem )
     return;
   assert(cEquipmentLogList.count() > (unsigned)nCurrentItem);
   m_pcItemView->removeItem(nCurrentItem);
-  cEquipmentLogList.remove(nCurrentItem);
+  delete cEquipmentLogList.takeAt(nCurrentItem);
 
   // Update the view with the new current item, if any
   unsigned int nNumItems = m_pcItemView->count();
@@ -354,8 +354,8 @@ EquipmentView::moveCurrentUp()
   assert(nCurrentItem >= 1 &&
          (unsigned)nCurrentItem < m_pcItemView->count());
 
-  QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
-  EquipmentLog* pcLog = cEquipmentLogList.take(nCurrentItem);
+  QList<EquipmentLog*>& cEquipmentLogList = m_pcLogBook->equipmentLog();
+  EquipmentLog* pcLog = cEquipmentLogList.takeAt(nCurrentItem);
   cEquipmentLogList.insert(nCurrentItem-1, pcLog);
 
   QString cName(m_pcItemView->text(nCurrentItem));
@@ -385,8 +385,8 @@ EquipmentView::moveCurrentDown()
   assert(nCurrentItem >= 0 &&
          (unsigned)nCurrentItem < m_pcItemView->count()-1);
 
-  QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
-  EquipmentLog* pcLog = cEquipmentLogList.take(nCurrentItem);
+  QList<EquipmentLog*>& cEquipmentLogList = m_pcLogBook->equipmentLog();
+  EquipmentLog* pcLog = cEquipmentLogList.takeAt(nCurrentItem);
   cEquipmentLogList.insert(nCurrentItem+1, pcLog);
 
   QString cName(m_pcItemView->text(nCurrentItem));
@@ -416,7 +416,7 @@ EquipmentView::changeItemName()
   assert(m_pcItemView->count() >= 1);
   int nCurrentItem = m_pcItemView->currentItem();
   assert(nCurrentItem >= 0);
-  QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
+  QList<EquipmentLog*>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.at(nCurrentItem);
   QString cName(m_pcItemName->text());
   pcLog->setName(cName);
@@ -437,7 +437,7 @@ EquipmentView::editItemName(int nItemNumber)
 {
   assert(m_pcLogBook);
   assert(m_pcItemView->count() > (unsigned)nItemNumber);
-  QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
+  QList<EquipmentLog*>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.at(nItemNumber);
   m_pcItemName->setText(pcLog->name());
   m_pcItemName->show();
@@ -457,10 +457,13 @@ void
 EquipmentView::itemTypeChanged(const QString& cType)
 {
   assert(m_pcLogBook);
-  QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
-  EquipmentLog* pcLog = cEquipmentLogList.at(m_pcItemView->currentItem());
-  if ( pcLog ) {
-    pcLog->setType(cType);
+  QList<EquipmentLog*>& cEquipmentLogList = m_pcLogBook->equipmentLog();
+  int i = m_pcItemView->currentItem();
+  if ( i >= 0 && i < cEquipmentLogList.count() ) {
+    EquipmentLog* pcLog = cEquipmentLogList.at(i);
+    if ( pcLog ) {
+      pcLog->setType(cType);
+    }
   }
 }
 
@@ -477,10 +480,13 @@ void
 EquipmentView::itemSerialChanged(const QString& cSerial)
 {
   assert(m_pcLogBook);
-  QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
-  EquipmentLog* pcLog = cEquipmentLogList.at(m_pcItemView->currentItem());
-  if ( pcLog ) {
-    pcLog->setSerialNumber(cSerial);
+  QList<EquipmentLog*>& cEquipmentLogList = m_pcLogBook->equipmentLog();
+  int i = m_pcItemView->currentItem();
+  if ( i >= 0 && i < cEquipmentLogList.count() ) {
+    EquipmentLog* pcLog = cEquipmentLogList.at(i);
+    if ( pcLog ) {
+      pcLog->setSerialNumber(cSerial);
+    }
   }
 }
 
@@ -497,10 +503,13 @@ void
 EquipmentView::itemServiceChanged(const QString& cService)
 {
   assert(m_pcLogBook);
-  QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
-  EquipmentLog* pcLog = cEquipmentLogList.at(m_pcItemView->currentItem());
-  if ( pcLog ) {
-    pcLog->setServiceRequirements(cService);
+  QList<EquipmentLog*>& cEquipmentLogList = m_pcLogBook->equipmentLog();
+  int i = m_pcItemView->currentItem();
+  if ( i >= 0 && i < cEquipmentLogList.count() ) {
+    EquipmentLog* pcLog = cEquipmentLogList.at(i);
+    if ( pcLog ) {
+      pcLog->setServiceRequirements(cService);
+    }
   }
 }
 
@@ -521,17 +530,17 @@ EquipmentView::logEntryChanged(int nRow, int nCol)
   if ( nCurrentItem < 0 )
     return;
 
-  QList<EquipmentLog>& cEquipmentLogList = m_pcLogBook->equipmentLog();
+  QList<EquipmentLog*>& cEquipmentLogList = m_pcLogBook->equipmentLog();
   EquipmentLog* pcLog = cEquipmentLogList.at(nCurrentItem);
   if ( 0 == pcLog )
     return;
-  QList<EquipmentHistoryEntry>& cHistory = pcLog->history();
+  QList<EquipmentHistoryEntry*>& cHistory = pcLog->history();
   while ( cHistory.count() <= (unsigned)nRow )
     cHistory.append(new EquipmentHistoryEntry());
   EquipmentHistoryEntry& cEntry = *cHistory.at(nRow);
   // Convert text to date
   if ( 0 == nCol ) {
-    QTableItem* pcItem = m_pcLogView->item(nRow, nCol);
+    Q3TableItem* pcItem = m_pcLogView->item(nRow, nCol);
     assert(pcItem != 0);
     DateItem* pcDateItem =
       dynamic_cast<DateItem*>(m_pcLogView->item(nRow, nCol));
@@ -541,7 +550,7 @@ EquipmentView::logEntryChanged(int nRow, int nCol)
       cEntry.setDate(cDate);
     else
       DBG(("EquipmentView::logEntryChanged(): Invalid date \"%s\"\n",
-           cText.data()));
+           pcDateItem->text().toUtf8().constData()));
   }
   else {
     const QString cComment = m_pcLogView->text(nRow, nCol);
@@ -567,11 +576,11 @@ EquipmentView::createLogEntryMenu()
   if ( m_pcLogEntryMenu )
     return;
 
-  m_pcLogEntryMenu = new QPopupMenu(this, "logEntryMenu");
-  m_pcLogEntryMenu->insertItem(i18n("Insert a &new entry"),
-                               this, SLOT(newLogEntry()));
-  m_pcLogEntryMenu->insertItem(i18n("&Delete the current entry"),
-                               this, SLOT(deleteLogEntry()));
+  m_pcLogEntryMenu = new QMenu(this);
+  m_pcLogEntryMenu->addAction(i18n("Insert a &new entry"),
+                              this, SLOT(newLogEntry()));
+  m_pcLogEntryMenu->addAction(i18n("&Delete the current entry"),
+                              this, SLOT(deleteLogEntry()));
 }
 
 
@@ -611,7 +620,7 @@ EquipmentView::newLogEntry()
 
   m_pcLogView->insertRows(nNewRow, 1);
   DateItem* pcDateItem =
-    new DateItem(m_pcLogView, QTableItem::OnTyping, "2002-01-01");
+    new DateItem(m_pcLogView, Q3TableItem::OnTyping, "2002-01-01");
   m_pcLogView->setItem(nNewRow, 0, pcDateItem);
   m_pcLogView->setCurrentCell(nNewRow, 0);
 }

@@ -15,14 +15,16 @@
 #include <new>
 #include <qwidget.h>
 #include <qsplitter.h>
-#include <qlistbox.h>
 #include <qpushbutton.h>
 #include <qlineedit.h>
-#include <qmultilinedit.h>
+#include <QTextEdit>
 #include <qmessagebox.h>
 #include <qlayout.h>
-#include <qpopupmenu.h>
-#include <kapp.h>
+#include <QMenu>
+#include <QHBoxLayout>
+#include <QBoxLayout>
+#include <QVBoxLayout>
+#include <kapplication.h>
 #include <klocale.h>
 #include "listbox.h"
 #include "logbook.h"
@@ -36,8 +38,8 @@
 */
 //*****************************************************************************
 
-LocationView::LocationView(QWidget* pcParent, const char* pzName)
-  : QWidget(pcParent, pzName),
+LocationView::LocationView(QWidget* pcParent)
+  : QWidget(pcParent),
     m_pcLocations(0),
     m_pcNewLocation(0),
     m_pcDeleteLocation(0),
@@ -45,47 +47,45 @@ LocationView::LocationView(QWidget* pcParent, const char* pzName)
     m_pcLocationDescription(0),
     m_pcLogBook(0)
 {
-  QSplitter* pcSplitter =
-    new QSplitter(QSplitter::Vertical, this, "splitter");
+  QSplitter* pcSplitter = new QSplitter(Qt::Vertical, this);
 
   QWidget* pcTop = new QWidget(pcSplitter);
 
-  m_pcLocations = new ListBox(pcTop, "locations");
+  m_pcLocations = new ListBox(pcTop);
   m_pcLocations->setEnabled(false);
   connect(m_pcLocations, SIGNAL(highlighted(int)),
           SLOT(locationSelected(int)));
   connect(m_pcLocations, SIGNAL(selected(int)),
           SLOT(editLocationName(int)));
 
-  m_pcNewLocation = new QPushButton(pcTop, "newLocation");
+  m_pcNewLocation = new QPushButton(pcTop);
   m_pcNewLocation->setEnabled(false);
   m_pcNewLocation->setText(i18n("&New"));
   connect(m_pcNewLocation, SIGNAL(clicked()), SLOT(newLocation()));
 
-  m_pcDeleteLocation = new QPushButton(pcTop, "deleteLocation");
+  m_pcDeleteLocation = new QPushButton(pcTop);
   m_pcDeleteLocation->setText(i18n("&Delete"));
   m_pcDeleteLocation->setEnabled(false);
   connect(m_pcDeleteLocation, SIGNAL(clicked()), SLOT(deleteLocation()));
 
-  m_pcLocationName = new QLineEdit(pcTop, "locationName");
+  m_pcLocationName = new QLineEdit(pcTop);
   m_pcLocationName->hide();
   m_pcLocationName->setEnabled(false);
   connect(m_pcLocationName, SIGNAL(returnPressed()),
           SLOT(locationNameChanged()));
 
-  m_pcLocationDescription =
-    new QMultiLineEdit(pcSplitter, "locationDescription");
+  m_pcLocationDescription = new QTextEdit(pcSplitter);
   m_pcLocationDescription->setEnabled(false);
   connect(m_pcLocationDescription, SIGNAL(textChanged()),
           SLOT(locationDescriptionChanged()));
 
-  QPopupMenu* pcLocationsMenu = m_pcLocations->getPopupMenu();
-  pcLocationsMenu->insertItem("&New", this, SLOT(newLocation()), 0, 0);
-  pcLocationsMenu->insertItem("&Delete", this, SLOT(deleteLocation()), 0, 1);
-  pcLocationsMenu->insertItem("&Edit name", this,
-                                SLOT(editCurrentLocationName()), 0, 2);
-  connect(m_pcLocations, SIGNAL(aboutToShowPopup(QPopupMenu*)),
-          SLOT(prepareLocationsMenu(QPopupMenu*)));
+  QMenu* pcLocationsMenu = m_pcLocations->getPopupMenu();
+  pcLocationsMenu->addAction("&New", this, SLOT(newLocation()));
+  pcLocationsMenu->addAction("&Delete", this, SLOT(deleteLocation()));
+  pcLocationsMenu->addAction("&Edit name", this,
+                             SLOT(editCurrentLocationName()));
+  connect(m_pcLocations, SIGNAL(aboutToShowPopup(QMenu*)),
+          SLOT(prepareLocationsMenu(QMenu*)));
 
 
   //
@@ -103,12 +103,12 @@ LocationView::LocationView(QWidget* pcParent, const char* pzName)
   m_pcLocationName->setMinimumSize(m_pcLocationName->sizeHint());
   m_pcLocationDescription->resize(100, 100);
 
-  QBoxLayout* pcSplitLayout = new QVBoxLayout(this, 5);
+  QBoxLayout* pcSplitLayout = new QVBoxLayout(this);
   pcSplitLayout->addWidget(pcSplitter);
   pcSplitLayout->activate();
 
-  QBoxLayout* pcTopLayout = new QVBoxLayout(pcTop, 0);
-  QBoxLayout* pcButtonLayout = new QHBoxLayout(5);
+  QBoxLayout* pcTopLayout    = new QVBoxLayout(pcTop);
+  QBoxLayout* pcButtonLayout = new QHBoxLayout();
   pcTopLayout->addWidget(m_pcLocations, 1);
   pcTopLayout->addSpacing(5);
   pcTopLayout->addLayout(pcButtonLayout);
@@ -149,11 +149,12 @@ LocationView::setLogBook(LogBook* pcLogBook)
   if ( pcLogBook ) {
     m_pcLocations->clear();
     m_pcLocations->setAutoUpdate(false);
-    QList<LocationLog>& cLocationList = pcLogBook->locationList();
-    LocationLog* pcLocation = cLocationList.first();
-    while ( pcLocation ) {
+    QList<LocationLog*>& cLocationList = pcLogBook->locationList();
+    QListIterator<LocationLog*> iLoc(cLocationList);
+    LocationLog* pcLocation;
+    while ( iLoc.hasNext() ) {
+      pcLocation = iLoc.next();
       m_pcLocations->insertItem(pcLocation->getName());
-      pcLocation = cLocationList.next();
     }
     m_pcLocations->setAutoUpdate(true);
     m_pcNewLocation->setEnabled(true);
@@ -197,7 +198,7 @@ LocationView::locationSelected(int nLocationIndex)
     return;
 
   assert(m_pcLogBook);
-  QList<LocationLog>& cLocationList = m_pcLogBook->locationList();
+  QList<LocationLog*>& cLocationList = m_pcLogBook->locationList();
   LocationLog* pcLog = cLocationList.at(nLocationIndex);
   assert(pcLog);
 
@@ -220,7 +221,7 @@ LocationView::editLocationName(int nLocationIndex)
 {
   assert(m_pcLogBook);
   assert(m_pcLocations->count() > (unsigned)nLocationIndex);
-  QList<LocationLog>& cLocationList = m_pcLogBook->locationList();
+  QList<LocationLog*>& cLocationList = m_pcLogBook->locationList();
   LocationLog* pcLog = cLocationList.at(nLocationIndex);
   assert(pcLog);
   m_pcLocations->setEnabled(false);
@@ -264,14 +265,14 @@ LocationView::editLocation(const QString& cLocationName)
 {
   assert(m_pcLogBook);
 
-  QList<LocationLog>& cLocations = m_pcLogBook->locationList();
+  QList<LocationLog*>& cLocations = m_pcLogBook->locationList();
 
   // First, try to find the location
-  QListIterator<LocationLog> iLog(cLocations);
+  QListIterator<LocationLog*> iLog(cLocations);
   int nLocationIndex = 0;
   bool isFound = false;
-  for ( ; iLog.current(); ++iLog, nLocationIndex++ ) {
-    if ( (iLog.current())->getName() == cLocationName ) {
+  for ( ; iLog.hasNext(); ++nLocationIndex ) {
+    if ( iLog.next()->getName() == cLocationName ) {
       isFound = true;
       break;
     }
@@ -288,7 +289,8 @@ LocationView::editLocation(const QString& cLocationName)
     pcLog = new LocationLog();
   }
   catch ( std::bad_alloc ) {
-    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] New location"),
+    QMessageBox::warning(QApplication::topLevelWidgets().at(0),
+                         i18n("[ScubaLog] New location"),
                          i18n("Out of memory when creating "
                               "a new location log!"));
     return;
@@ -328,13 +330,14 @@ LocationView::newLocation()
     pcLog = new LocationLog();
   }
   catch ( std::bad_alloc ) {
-    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] New location"),
+    QMessageBox::warning(QApplication::topLevelWidgets().at(0),
+                         i18n("[ScubaLog] New location"),
                          i18n("Out of memory when creating "
                               "a new location log!"));
     return;
   }
 
-  QList<LocationLog>& cLocations = m_pcLogBook->locationList();
+  QList<LocationLog*>& cLocations = m_pcLogBook->locationList();
   cLocations.append(pcLog);
   m_pcLocations->insertItem("");
   m_pcLocations->setCurrentItem(m_pcLocations->count()-1);
@@ -366,7 +369,7 @@ LocationView::deleteLocation()
   assert(m_pcLogBook);
 
   // Find and delete the location
-  QList<LocationLog>& cLocationList = m_pcLogBook->locationList();
+  QList<LocationLog*>& cLocationList = m_pcLogBook->locationList();
   int nCurrentItem = m_pcLocations->currentItem();
   if ( -1 == nCurrentItem )
     return;
@@ -375,18 +378,18 @@ LocationView::deleteLocation()
   LocationLog* pcLog = cLocationList.at(nCurrentItem);
   assert(pcLog);
 
-  QString cMessage;
-  cMessage.sprintf(i18n("Are you sure you want to delete the location\n"
-                        "`%s'?"), pcLog->getName().data());
+  QString cMessage =
+    QString(i18n("Are you sure you want to delete the location\n"
+                 "'%1'?")).arg(QString(pcLog->getName().data()));
   const int nResult =
-    QMessageBox::information(qApp->mainWidget(),
+    QMessageBox::information(QApplication::topLevelWidgets().at(0),
                              i18n("[ScubaLog] Delete location"),
                              cMessage, i18n("&Yes"), i18n("&No"));
   if ( 1 == nResult )
     return;
 
   m_pcLocations->removeItem(nCurrentItem);
-  cLocationList.remove(nCurrentItem);
+  cLocationList.removeAt(nCurrentItem);
 
   // Update the view with the new current location, if any
   const int nNewCurrent = m_pcLocations->currentItem();
@@ -413,7 +416,7 @@ LocationView::locationNameChanged()
 
   int nCurrentItem = m_pcLocations->currentItem();
   assert(nCurrentItem >= 0);
-  QList<LocationLog>& cLocations = m_pcLogBook->locationList();
+  QList<LocationLog*>& cLocations = m_pcLogBook->locationList();
   LocationLog* pcLocation = cLocations.at(nCurrentItem);
   QString cName(m_pcLocationName->text());
   pcLocation->setName(cName);
@@ -446,11 +449,11 @@ LocationView::locationDescriptionChanged()
   int nCurrentItem = m_pcLocations->currentItem();
   if ( -1 == nCurrentItem )
     return;
-  QList<LocationLog>& cLocations = m_pcLogBook->locationList();
+  QList<LocationLog*>& cLocations = m_pcLogBook->locationList();
   LocationLog* pcLocation = cLocations.at(nCurrentItem);
   if ( 0 == pcLocation )
     return;
-  QString cDescription(m_pcLocationDescription->text());
+  QString cDescription(m_pcLocationDescription->toPlainText());
   pcLocation->setDescription(cDescription);
 }
 
@@ -462,13 +465,13 @@ LocationView::locationDescriptionChanged()
 //*****************************************************************************
 
 void
-LocationView::prepareLocationsMenu(QPopupMenu* pcMenu)
+LocationView::prepareLocationsMenu(QMenu* pcMenu)
 {
   assert(pcMenu);
 
   bool bHasSelectedLocation = (m_pcLocations->currentItem() != -1);
-  pcMenu->setItemEnabled(1, bHasSelectedLocation);
-  pcMenu->setItemEnabled(2, bHasSelectedLocation);
+  pcMenu->actions().at(1)->setEnabled(bHasSelectedLocation);
+  pcMenu->actions().at(2)->setEnabled(bHasSelectedLocation);
 }
 
 

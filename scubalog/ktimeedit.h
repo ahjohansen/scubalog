@@ -17,6 +17,7 @@
 #include <qlineedit.h>
 #include <qdatetime.h>
 
+
 class KTimeValidator;
 
 
@@ -35,9 +36,9 @@ class KTimeValidator;
 class KTimeEdit : public QLineEdit {
   Q_OBJECT
 public:
-  KTimeEdit(QWidget* pcParent = 0, const char* pzName = 0);
+  KTimeEdit(QWidget* pcParent = 0);
   KTimeEdit(QTime cFirst, QTime cDefault, QTime cLast,
-            QWidget* pcParent = 0, const char* pzName = 0);
+            QWidget* pcParent = 0);
   virtual ~KTimeEdit();
 
   QTime time() const;

@@ -36,8 +36,8 @@
 //*****************************************************************************
 
 KTimeValidator::KTimeValidator(QTime cFirst, QTime cDefault, QTime cLast,
-                               QWidget* pcParent, const char* pzName)
-  : QValidator(pcParent, pzName),
+                               QWidget* pcParent)
+  : QValidator(pcParent),
     m_cFirst(cFirst),
     m_cLast(cLast),
     m_cDefault(cDefault)
@@ -80,7 +80,7 @@ KTimeValidator::~KTimeValidator()
 QValidator::State
 KTimeValidator::validate(QString& cInput, int&) const
 {
-  State eState = Valid;
+  State eState = QValidator::Intermediate;
 
   int nLength = cInput.length() + 1;
   int iNumber = 0;
@@ -131,7 +131,7 @@ KTimeValidator::validate(QString& cInput, int&) const
   }
 
   DBG(("\"%s\" is a valid time!\n", cInput.data()));
-  return Valid;
+  return QValidator::Intermediate;
 }
 
 

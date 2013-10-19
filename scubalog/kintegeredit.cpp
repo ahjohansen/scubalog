@@ -13,9 +13,9 @@
 
 #include "kintegeredit.h"
 #include "kintegervalidator.h"
-
 #include <assert.h>
 #include <limits.h>
+
 
 //*****************************************************************************
 /*!
@@ -23,12 +23,12 @@
 
   This widget will accept all valid integers.
 
-  The parent widget is \a pcParent, the name is \a pzName.
+  The parent widget is \a pcParent.
 */
 //*****************************************************************************
 
-KIntegerEdit::KIntegerEdit(QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName),
+KIntegerEdit::KIntegerEdit(QWidget* pcParent)
+  : QLineEdit(pcParent),
     m_pcValidator(0),
     m_nInteger(0)
 {
@@ -44,13 +44,13 @@ KIntegerEdit::KIntegerEdit(QWidget* pcParent, const char* pzName)
   This widget will accept integers between \a nMin and \a nMax.
   If the widget is left with an invalid integer, \a nDefault will be used.
 
-  The parent widget is \a pcParent, the name is \a pzName.
+  The parent widget is \a pcParent.
 */
 //*****************************************************************************
 
 KIntegerEdit::KIntegerEdit(int nMin, int nDefault, int nMax,
-                           QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName),
+                           QWidget* pcParent)
+  : QLineEdit(pcParent),
     m_pcValidator(0),
     m_nInteger(0)
 {

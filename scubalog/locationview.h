@@ -16,11 +16,12 @@
 
 #include <qwidget.h>
 
-class QPopupMenu;
-class QListBox;
+class QMenu;
+class Q3ListBox;
 class QPushButton;
 class QLineEdit;
-class QMultiLineEdit;
+class Q3MultiLineEdit;
+class QTextEdit;
 class ListBox;
 class LogBook;
 class LocationLog;
@@ -49,7 +50,7 @@ class LocationLog;
 class LocationView : public QWidget {
   Q_OBJECT
 public:
-  LocationView(QWidget* pcParent, const char* pzName);
+  LocationView(QWidget* pcParent);
   virtual ~LocationView();
 
   void setLogBook(LogBook* pcLogBook);
@@ -65,7 +66,7 @@ private slots:
   void deleteLocation();
   void locationNameChanged();
   void locationDescriptionChanged();
-  void prepareLocationsMenu(QPopupMenu* pcMenu);
+  void prepareLocationsMenu(QMenu* pcMenu);
 
 private:
   //! The location selector.
@@ -77,7 +78,7 @@ private:
   //! The name of the location.
   QLineEdit*      m_pcLocationName;
   //! The location description.
-  QMultiLineEdit* m_pcLocationDescription;
+  QTextEdit*      m_pcLocationDescription;
   //! The current logbook.
   LogBook*        m_pcLogBook;
 };

@@ -37,8 +37,8 @@
 //*****************************************************************************
 
 KDateValidator::KDateValidator(QDate cFirst, QDate cDefault, QDate cLast,
-                               QWidget* pcParent, const char* pzName)
-  : QValidator(pcParent, pzName)
+                               QWidget* pcParent)
+  : QValidator(pcParent)
 {
   assert(cFirst.isValid());
   assert(cDefault.isValid());
@@ -82,7 +82,7 @@ KDateValidator::~KDateValidator()
 QValidator::State
 KDateValidator::validate(QString& cInput, int&) const
 {
-  State eState = Valid;
+  State eState = QValidator::Intermediate;
 
   int nLength = cInput.length() + 1;
   int iNumber = 0;
@@ -134,7 +134,7 @@ KDateValidator::validate(QString& cInput, int&) const
   }
 
   DBG(("\"%s\" is a valid date!\n", cInput.data()));
-  return Valid;
+  return QValidator::Intermediate;
 }
 
 
@@ -293,7 +293,8 @@ KDateValidator::convertToDate(const QString& cDateText)
   int nMonth = 0;
   int nYear  = 0;
 
-  if ( (3 == sscanf(cDateText, "%d.%d.%d", &nDay, &nMonth, &nYear)) &&
+  if ( (3 == sscanf(cDateText.toAscii(), "%d.%d.%d",
+                    &nDay, &nMonth, &nYear)) &&
        (QDate::isValid(nYear, nMonth, nDay)) )
     cDate = QDate(nYear, nMonth, nDay);
 

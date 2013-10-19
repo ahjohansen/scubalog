@@ -14,7 +14,8 @@
 #ifndef DIVELOGITEM_H
 #define DIVELOGITEM_H
 
-#include <qlistview.h>
+class QColorGroup;
+#include <q3listview.h>
 
 class DiveLog;
 class QString;
@@ -37,9 +38,9 @@ class QString;
 */
 //*****************************************************************************
 
-class DiveLogItem : public QListViewItem {
+class DiveLogItem : public Q3ListViewItem {
 public:
-  DiveLogItem(QListView* pcListView, QListViewItem* pcPrevious,
+  DiveLogItem(Q3ListView* pcListView, Q3ListViewItem* pcPrevious,
               DiveLog* pcLog);
   virtual ~DiveLogItem();
   virtual QString text(int nColumn) const;

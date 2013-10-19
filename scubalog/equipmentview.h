@@ -17,12 +17,12 @@
 #include <qwidget.h>
 
 class QString;
-class QListBox;
+class Q3ListBox;
 class QPushButton;
 class QLineEdit;
 class LogBook;
-class QTable;
-class QPopupMenu;
+class Q3Table;
+class QMenu;
 
 //*****************************************************************************
 /*!
@@ -39,7 +39,7 @@ class QPopupMenu;
 class EquipmentView : public QWidget {
   Q_OBJECT
 public:
-  EquipmentView(QWidget* pcParent, const char* pzName);
+  EquipmentView(QWidget* pcParent);
   virtual ~EquipmentView();
 
   void setLogBook(LogBook* pcLogBook);
@@ -67,7 +67,7 @@ private:
   //! The log book.
   LogBook*       m_pcLogBook;
   //! The equipment list view.
-  QListBox*      m_pcItemView;
+  Q3ListBox*      m_pcItemView;
   //! The new item button.
   QPushButton*   m_pcNew;
   //! The delete item button.
@@ -85,9 +85,9 @@ private:
   //! The service editor.
   QLineEdit*     m_pcService;
   //! The log edit view.
-  QTable*        m_pcLogView;
+  Q3Table*       m_pcLogView;
   //! The context menu used in the log for an entry.
-  QPopupMenu*    m_pcLogEntryMenu;
+  QMenu*         m_pcLogEntryMenu;
 };
 
 #endif // EQUIPMENTVIEW_H

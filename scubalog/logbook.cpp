@@ -14,7 +14,7 @@
 #include <qfile.h>
 #include <qdatastream.h>
 #include <qmessagebox.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <klocale.h>
 #include "debug.h"
 #include "chunkio.h"
@@ -36,10 +36,8 @@ LogBook::LogBook()
     m_pcEquipment(0)
 {
   m_pcDiveList  = new DiveList();
-  m_pcLocations = new QList<LocationLog>();
-  m_pcEquipment = new QList<EquipmentLog>();
-  m_pcLocations->setAutoDelete(true);
-  m_pcEquipment->setAutoDelete(true);
+  m_pcLocations = new QList<LocationLog*>();
+  m_pcEquipment = new QList<EquipmentLog*>();
 }
 
 
@@ -51,12 +49,23 @@ LogBook::LogBook()
 
 LogBook::~LogBook()
 {
-  delete m_pcDiveList;
-  m_pcDiveList  = 0;
-  delete m_pcLocations;
-  m_pcLocations = 0;
-  delete m_pcEquipment;
-  m_pcEquipment = 0;
+  if ( m_pcDiveList ) {
+    qDeleteAll(*m_pcDiveList);
+    delete m_pcDiveList;
+    m_pcDiveList  = 0;
+  }
+
+  if ( m_pcLocations ) {
+    qDeleteAll(*m_pcLocations);
+    delete m_pcLocations;
+    m_pcLocations = 0;
+  }
+
+  if ( m_pcEquipment ) {
+    qDeleteAll(*m_pcEquipment);
+    delete m_pcEquipment;
+    m_pcEquipment = 0;
+  }
 }
 
 

@@ -14,9 +14,12 @@
 #ifndef LISTBOX_H
 #define LISTBOX_H
 
-#include <qlistbox.h>
+#include <q3listbox.h>
 
-class QPopupMenu;
+class QMenu;
+class QKeyEvent;
+class QMouseEvent;
+
 
 //*****************************************************************************
 /*!
@@ -44,15 +47,15 @@ class QPopupMenu;
 */
 //*****************************************************************************
 
-class ListBox : public QListBox {
+class ListBox : public Q3ListBox {
   Q_OBJECT
 
 public:
-  ListBox(QWidget* pcParent = 0, const char* pzWidgetName = 0);
+  ListBox(QWidget* pcParent = 0);
   ~ListBox();
 
   bool hasPopupMenu() const;
-  QPopupMenu* getPopupMenu();
+  QMenu* getPopupMenu();
 
 protected:
   virtual void mousePressEvent(QMouseEvent* pcEvent);
@@ -60,11 +63,11 @@ protected:
 
 private:
   //! The pop-up menu used by the widget, if any.
-  QPopupMenu* m_pcPopupMenu;
+  QMenu* m_pcPopupMenu;
 
 signals:
   //! Emitted just before the pop-up menu \a pcMenu is shown.
-  void aboutToShowPopup(QPopupMenu* pcMenu);
+  void aboutToShowPopup(QMenu* pcMenu);
 };
 
 #endif // LISTBOX_H

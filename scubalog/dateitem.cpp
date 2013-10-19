@@ -39,7 +39,7 @@ DateItem::setContentFromEditor(QWidget* i_pcEditor)
     setText(cItemText);
   }
   else {
-    QTableItem::setContentFromEditor(i_pcEditor);
+    Q3TableItem::setContentFromEditor(i_pcEditor);
   }
 }
 

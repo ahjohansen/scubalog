@@ -14,23 +14,24 @@
 #include "personalinfoview.h"
 #include "logbook.h"
 #include "divelist.h"
-
 #include <klocale.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <qlayout.h>
-#include <qmultilinedit.h>
+#include <QTextEdit>
 #include <qlineedit.h>
 #include <qlabel.h>
+#include <QGridLayout>
+#include <QVBoxLayout>
+
 
 //*****************************************************************************
 /*!
-  Create the personal info view class with \a pcParent as parent widget
-  and \a pzName as widget name.
+  Create the personal info view class with \a pcParent as parent widget.
 */
 //*****************************************************************************
 
-PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
-  : QWidget(pcParent, pzName),
+PersonalInfoView::PersonalInfoView(QWidget* pcParent)
+  : QWidget(pcParent),
     m_pcName(0),
     m_pcEmailAddress(0),
     m_pcWwwUrl(0),
@@ -42,45 +43,45 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
   // Create GUI elements
   //
 
-  QLabel* pcNameLabel = new QLabel(this, "diverNameText");
+  QLabel* pcNameLabel = new QLabel(this);
   pcNameLabel->setText(i18n("&Name:"));
   pcNameLabel->setMinimumSize(pcNameLabel->sizeHint());
 
-  m_pcName = new QLineEdit(this, "diverName");
+  m_pcName = new QLineEdit(this);
   m_pcName->setMinimumSize(m_pcName->sizeHint());
   connect(m_pcName, SIGNAL(textChanged(const QString&)),
           SLOT(diverNameChanged(const QString&)));
   pcNameLabel->setBuddy(m_pcName);
 
-  QLabel* pcEmailLabel = new QLabel(this, "emailText");
+  QLabel* pcEmailLabel = new QLabel(this);
   pcEmailLabel->setText(i18n("&Email address:"));
   pcEmailLabel->setMinimumSize(pcEmailLabel->sizeHint());
 
-  m_pcEmailAddress = new QLineEdit(this, "emailAddress");
+  m_pcEmailAddress = new QLineEdit(this);
   m_pcEmailAddress->setMinimumSize(m_pcEmailAddress->sizeHint());
   connect(m_pcEmailAddress, SIGNAL(textChanged(const QString&)),
           SLOT(emailAddressChanged(const QString&)));
   pcEmailLabel->setBuddy(m_pcEmailAddress);
 
-  QLabel* pcWwwUrlLabel = new QLabel(this, "wwwUrlText");
+  QLabel* pcWwwUrlLabel = new QLabel(this);
   pcWwwUrlLabel->setText(i18n("&WWW URL:"));
   pcWwwUrlLabel->setMinimumSize(pcWwwUrlLabel->sizeHint());
 
-  m_pcWwwUrl = new QLineEdit(this, "wwwUrl");
+  m_pcWwwUrl = new QLineEdit(this);
   m_pcWwwUrl->setMinimumSize(m_pcWwwUrl->sizeHint());
   connect(m_pcWwwUrl, SIGNAL(textChanged(const QString&)),
           SLOT(wwwUrlChanged(const QString&)));
   pcWwwUrlLabel->setBuddy(m_pcWwwUrl);
 
-  m_pcLoggedDiveTime = new QLabel(this, "loggedDiveTime");
+  m_pcLoggedDiveTime = new QLabel(this);
   m_pcLoggedDiveTime->setText(i18n("Total logged dive time: 000h 00min"));
   m_pcLoggedDiveTime->setMinimumSize(m_pcLoggedDiveTime->sizeHint());
 
-  QLabel* pcCommentsLabel = new QLabel(this, "commentsText");
+  QLabel* pcCommentsLabel = new QLabel(this);
   pcCommentsLabel->setText(i18n("&Comments:"));
   pcCommentsLabel->setMinimumSize(pcCommentsLabel->sizeHint());
 
-  m_pcComments = new QMultiLineEdit(this, "comments");
+  m_pcComments = new QTextEdit(this);
   connect(m_pcComments, SIGNAL(textChanged()), SLOT(commentsChanged()));
   pcCommentsLabel->setBuddy(m_pcComments);
 
@@ -92,18 +93,18 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent, const char* pzName)
   // Geometry management using layout engines
   //
 
-  QVBoxLayout* pcDVTopLayout = new QVBoxLayout(this, 5);
-  QGridLayout* pcUpperLayout = new QGridLayout(3, 4);
+  QVBoxLayout* pcDVTopLayout = new QVBoxLayout(this);
+  QGridLayout* pcUpperLayout = new QGridLayout();
   pcDVTopLayout->addLayout(pcUpperLayout);
-  pcUpperLayout->setColStretch(1, 1);
-  pcUpperLayout->setColStretch(3, 1);
+  pcUpperLayout->setColumnStretch(1, 1);
+  pcUpperLayout->setColumnStretch(3, 1);
   pcUpperLayout->addWidget(pcNameLabel,       0, 0);
   pcUpperLayout->addWidget(m_pcName,          0, 1);
   pcUpperLayout->addWidget(pcEmailLabel,      1, 0);
   pcUpperLayout->addWidget(m_pcEmailAddress,  1, 1);
   pcUpperLayout->addWidget(pcWwwUrlLabel,     1, 2);
   pcUpperLayout->addWidget(m_pcWwwUrl,        1, 3);
-  pcUpperLayout->addMultiCellWidget(m_pcLoggedDiveTime, 2, 2, 0, 1);
+  pcUpperLayout->addWidget(m_pcLoggedDiveTime, 2, 2, 0, 1);
   pcDVTopLayout->addWidget(pcCommentsLabel);
   pcDVTopLayout->addWidget(m_pcComments, 10);
   pcDVTopLayout->activate();
@@ -218,11 +219,15 @@ PersonalInfoView::updateLoggedDiveTime()
   if ( m_pcLogBook ) {
     unsigned int nNumMins = 0;
     DiveList& cDiveList = m_pcLogBook->diveList();
-    for ( DiveLog* pcLog = cDiveList.first(); pcLog; pcLog = cDiveList.next() )
+    QListIterator<DiveLog*> iLog(cDiveList);
+    while ( iLog.hasNext() ) {
+      DiveLog* pcLog = iLog.next();
       nNumMins += pcLog->diveTime().hour() * 60 + pcLog->diveTime().minute();
-
-    cLoggedTimeText.sprintf(i18n("Total logged dive time: %dh %dmin"),
-                            nNumMins/60, nNumMins%60);
+    }
+    cLoggedTimeText =
+      QString(i18n("Total logged dive time: %1h %2min"))
+      .arg(nNumMins/60)
+      .arg(nNumMins%60);
   }
   m_pcLoggedDiveTime->setText(cLoggedTimeText);
 }
@@ -239,7 +244,7 @@ void
 PersonalInfoView::commentsChanged()
 {
   if ( m_pcLogBook )
-    m_pcLogBook->setComments(m_pcComments->text());
+    m_pcLogBook->setComments(m_pcComments->document()->toPlainText());
 }
 
 

@@ -13,42 +13,40 @@
 
 #include "ktimeedit.h"
 #include "ktimevalidator.h"
-
 #include <stdio.h>
 #include <string.h>
 
+
 //*****************************************************************************
 /*!
-  Create a widget with \a pcParent as parent widget and \a pzName as
-  the widget name.
+  Create a widget with \a pcParent as parent widget.
   The valid time for this widget is 0:00:00 to 23:59:59, with the current
   time as the default.
 */
 //*****************************************************************************
 
-KTimeEdit::KTimeEdit(QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName),
+KTimeEdit::KTimeEdit(QWidget* pcParent)
+  : QLineEdit(pcParent),
     m_cTime(QTime::currentTime()),
     m_pcValidator(0)
 {
   setText(m_cTime.toString());
-  m_pcValidator = new KTimeValidator(QTime(), m_cTime, QTime(23,59,59));
+  m_pcValidator = new KTimeValidator(QTime(0, 0, 0), m_cTime, QTime(23,59,59));
   setValidator(m_pcValidator);
 }
 
 
 //*****************************************************************************
 /*!
-  Create a widget with \a pcParent as parent widget and \a pzName as
-  the widget name.
+  Create a widget with \a pcParent as parent widget.
   The valid time for this widget is from \a cFirst to \a cLast (inclusive),
   with \a cDefault as the default.
 */
 //*****************************************************************************
 
 KTimeEdit::KTimeEdit(QTime cFirst, QTime cDefault, QTime cLast,
-                     QWidget* pcParent, const char* pzName)
-  : QLineEdit(pcParent, pzName),
+                     QWidget* pcParent)
+  : QLineEdit(pcParent),
     m_cTime(cDefault),
     m_pcValidator(0)
 {
@@ -122,7 +120,8 @@ KTimeEdit::convertToTime(const QString& cText)
   int nMinute = 0;
   int nSecond = 0;
 
-  if ( (3 == sscanf(cText, "%d:%d:%d", &nHour, &nMinute, &nSecond)) &&
+  if ( (3 == sscanf(cText.toAscii(), "%d:%d:%d",
+                    &nHour, &nMinute, &nSecond)) &&
        (m_pcValidator->isValidTime(nHour, nMinute, nSecond)) )
     cTime = QTime(nHour, nMinute, nSecond);
   else {

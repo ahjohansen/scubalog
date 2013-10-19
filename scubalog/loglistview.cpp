@@ -17,65 +17,66 @@
 #include "debug.h"
 
 #include <klocale.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <qmessagebox.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
-#include <qlistview.h>
-#include <qframe.h>
+#include <q3listview.h>
+#include <q3frame.h>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <new>
 #include <assert.h>
 
 //*****************************************************************************
 /*!
-  Create the log list view with \a pcParent as parent widget and \a pzName
-  as widget name.
+  Create the log list view with \a pcParent as parent widget.
 */
 //*****************************************************************************
 
-LogListView::LogListView(QWidget* pcParent, const char* pzName)
-  : QWidget(pcParent, pzName),
+LogListView::LogListView(QWidget* pcParent)
+  : QWidget(pcParent),
     m_pcDiveListView(0),
     m_pcNewLog(0),
     m_pcDeleteLog(0),
     m_pcViewLog(0),
     m_pcDiveLogList(0)
 {
-  m_pcDiveListView = new QListView(this, "dives");
-  m_pcDiveListView->setFrameStyle(QFrame::WinPanel|QFrame::Sunken);
+  m_pcDiveListView = new Q3ListView(this, "dives");
+  m_pcDiveListView->setFrameStyle(Q3Frame::WinPanel|Q3Frame::Sunken);
   m_pcDiveListView->addColumn(i18n("Dive"));
   m_pcDiveListView->addColumn(i18n("Date"));
   m_pcDiveListView->addColumn(i18n("Time"));
   m_pcDiveListView->addColumn(i18n("Location"));
-  m_pcDiveListView->setColumnAlignment(0, AlignRight);
-  m_pcDiveListView->setColumnWidthMode(3, QListView::Maximum);
+  m_pcDiveListView->setColumnAlignment(0, Qt::AlignRight);
+  m_pcDiveListView->setColumnWidthMode(3, Q3ListView::Maximum);
   m_pcDiveListView->setAllColumnsShowFocus(true);
   m_pcDiveListView->setSorting(0);
-  connect(m_pcDiveListView, SIGNAL(doubleClicked(QListViewItem*)),
-          SLOT(viewLog(QListViewItem*)));
-  connect(m_pcDiveListView, SIGNAL(returnPressed(QListViewItem*)),
-          SLOT(viewLog(QListViewItem*)));
-  connect(m_pcDiveListView, SIGNAL(selectionChanged(QListViewItem*)),
-          SLOT(selectedLogChanged(QListViewItem*)));
+  connect(m_pcDiveListView, SIGNAL(doubleClicked(Q3ListViewItem*)),
+          SLOT(viewLog(Q3ListViewItem*)));
+  connect(m_pcDiveListView, SIGNAL(returnPressed(Q3ListViewItem*)),
+          SLOT(viewLog(Q3ListViewItem*)));
+  connect(m_pcDiveListView, SIGNAL(selectionChanged(Q3ListViewItem*)),
+          SLOT(selectedLogChanged(Q3ListViewItem*)));
 
-  m_pcNewLog = new QPushButton(this, "new");
+  m_pcNewLog = new QPushButton(this);
   m_pcNewLog->setText(i18n("&New log entry"));
   m_pcNewLog->setMinimumSize(m_pcNewLog->sizeHint());
   connect(m_pcNewLog, SIGNAL(clicked()), SLOT(createNewLog()));
 
-  m_pcDeleteLog = new QPushButton(this, "delete");
+  m_pcDeleteLog = new QPushButton(this);
   m_pcDeleteLog->setText(i18n("&Delete log"));
   m_pcDeleteLog->setMinimumSize(m_pcDeleteLog->sizeHint());
   m_pcDeleteLog->setEnabled(false);
   connect(m_pcDeleteLog, SIGNAL(clicked()), SLOT(deleteLog()));
 
-  m_pcViewLog = new QPushButton(this, "view");
+  m_pcViewLog = new QPushButton(this);
   m_pcViewLog->setText(i18n("&View log"));
   m_pcViewLog->setMinimumSize(m_pcViewLog->sizeHint());
   m_pcViewLog->setEnabled(false);
   connect(m_pcViewLog, SIGNAL(clicked()), SLOT(viewLog()));
 
-  QVBoxLayout* pcDLVTopLayout = new QVBoxLayout(this, 5);
+  QVBoxLayout* pcDLVTopLayout = new QVBoxLayout(this);
   pcDLVTopLayout->addWidget(m_pcDiveListView, 10);
   QHBoxLayout* pcDLVButtonLayout = new QHBoxLayout();
   pcDLVTopLayout->addLayout(pcDLVButtonLayout);
@@ -120,9 +121,10 @@ LogListView::setLogList(DiveList* pcDiveList)
   m_pcDiveListView->clear();
   m_pcDiveLogList = pcDiveList;
   if ( pcDiveList ) {
-    DiveLog* pcLog = 0;
     DiveLogItem* pcPreviousItem = 0;
-    for (  pcLog = pcDiveList->first(); pcLog; pcLog = pcDiveList->next() ) {
+    QListIterator<DiveLog*> iLog(*pcDiveList);
+    while ( iLog.hasNext() ) {
+      DiveLog* pcLog = iLog.next();
       DiveLogItem* pcItem =
         new DiveLogItem(m_pcDiveListView, pcPreviousItem, pcLog);
       pcPreviousItem = pcItem;
@@ -164,7 +166,8 @@ LogListView::createNewLog()
   catch ( std::bad_alloc ) {
     // In case the divelogitem causes OOM, delete the log to be sure...
     delete pcLog;
-    QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] New dive log"),
+    QMessageBox::warning(QApplication::topLevelWidgets().at(0),
+                         i18n("[ScubaLog] New dive log"),
                          i18n("Out of memory when creating a new dive log!"));
   }
 }
@@ -189,18 +192,21 @@ LogListView::deleteLog()
   if ( pcItem ) {
     DiveLog* pcLog = pcItem->log();
     DBG(("About to delete dive log #%d\n", pcLog->logNumber()));
-    QString cMessage;
-    cMessage.sprintf(i18n("Are you sure you want to delete log %d?\n"
-                          "(location: `%s')"), pcLog->logNumber(),
-                     pcLog->diveLocation().data());
-    int nResult = QMessageBox::information(qApp->mainWidget(),
+    QString cMessage =
+      QString(i18n("Are you sure you want to delete log %1?\n"
+                   "(location: '%2')"))
+      .arg(pcLog->logNumber())
+      .arg(QString(pcLog->diveLocation().data()));
+    int nResult = QMessageBox::information(QApplication::topLevelWidgets().at(0),
                                            i18n("[ScubaLog] Delete log"),
                                            cMessage,
                                            i18n("&Yes"), i18n("&No"));
     if ( 0 == nResult ) {
       delete pcItem;
       emit aboutToDeleteLog(pcLog);
-      m_pcDiveLogList->remove(pcLog); // This will delete the log too!
+      int i = m_pcDiveLogList->indexOf(pcLog);
+      assert(i != -1);
+      delete m_pcDiveLogList->takeAt(i);
       DBG(("Deleted dive log...\n"));
     }
   }
@@ -230,7 +236,7 @@ LogListView::viewLog()
 //*****************************************************************************
 
 void
-LogListView::viewLog(QListViewItem* pcItem)
+LogListView::viewLog(Q3ListViewItem* pcItem)
 {
   DiveLogItem* pcLogItem = dynamic_cast<DiveLogItem*>(pcItem);
   assert(pcLogItem);
@@ -245,7 +251,7 @@ LogListView::viewLog(QListViewItem* pcItem)
 //*****************************************************************************
 
 void
-LogListView::selectedLogChanged(QListViewItem* pcItem)
+LogListView::selectedLogChanged(Q3ListViewItem* pcItem)
 {
   assert(m_pcDeleteLog);
   assert(m_pcViewLog);

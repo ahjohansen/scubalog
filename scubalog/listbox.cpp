@@ -11,20 +11,21 @@
 */
 //*****************************************************************************
 
-#include <qpopupmenu.h>
-#include <qkeycode.h>
 #include "listbox.h"
+#include <qmenu.h>
+#include <qnamespace.h>
+#include <QMouseEvent>
+#include <QKeyEvent>
 
 
 //*****************************************************************************
 /*!
-  Create the widget with \a pcParent as the parent widget and \a pzWidgetName
-  as the widget name.
+  Create the widget with \a pcParent as the parent widget.
 */
 //*****************************************************************************
 
-ListBox::ListBox(QWidget* pcParent, const char* pzWidgetName)
-  : QListBox(pcParent, pzWidgetName),
+ListBox::ListBox(QWidget* pcParent)
+  : Q3ListBox(pcParent),
     m_pcPopupMenu(0)
 {
 }
@@ -66,11 +67,11 @@ ListBox::hasPopupMenu() const
 */
 //*****************************************************************************
 
-QPopupMenu*
+QMenu*
 ListBox::getPopupMenu()
 {
   if ( 0 == m_pcPopupMenu )
-    m_pcPopupMenu = new QPopupMenu(0, "popup");
+    m_pcPopupMenu = new QMenu(0);
   return m_pcPopupMenu;
 }
 
@@ -91,7 +92,7 @@ ListBox::getPopupMenu()
 void
 ListBox::mousePressEvent(QMouseEvent* pcEvent)
 {
-  if ( m_pcPopupMenu && RightButton == pcEvent->button() ) {
+  if ( m_pcPopupMenu && Qt::RightButton == pcEvent->button() ) {
     int nItem = findItem(pcEvent->pos().y());
     if ( -1 != nItem ) {
       setCurrentItem(nItem);
@@ -100,7 +101,7 @@ ListBox::mousePressEvent(QMouseEvent* pcEvent)
     m_pcPopupMenu->popup(mapToGlobal(pcEvent->pos()));
   }
   else {
-    QListBox::mousePressEvent(pcEvent);
+    Q3ListBox::mousePressEvent(pcEvent);
   }
 }
 
@@ -121,21 +122,22 @@ ListBox::mousePressEvent(QMouseEvent* pcEvent)
 void
 ListBox::keyPressEvent(QKeyEvent* pcEvent)
 {
-  if ( m_pcPopupMenu && 0 == pcEvent->state() &&
-       (Key_Menu == pcEvent->key() || Key_Escape  == pcEvent->key()) ) {
+  if ( m_pcPopupMenu && Qt::NoModifier == pcEvent->modifiers() &&
+       (Qt::Key_Menu == pcEvent->key() || Qt::Key_Escape  == pcEvent->key()) ) {
     QPoint cPos = mapToGlobal(pos());
     cPos.setX(cPos.x() + 2);
     int nCurrentY = 2;
     const int nCurrentItem = currentItem();
     if ( -1 != nCurrentItem ) {
-      itemYPos(nCurrentItem, &nCurrentY);
+      // ### Find new solution
+      //itemYPos(nCurrentItem, &nCurrentY);
     }
     cPos.setY(cPos.y() + nCurrentY);
     emit aboutToShowPopup(m_pcPopupMenu);
     m_pcPopupMenu->popup(cPos);
   }
   else {
-    QListBox::keyPressEvent(pcEvent);
+    Q3ListBox::keyPressEvent(pcEvent);
   }
 }
 

@@ -14,7 +14,7 @@
 #ifndef DATEITEM_H
 #define DATEITEM_H
 
-#include <qtable.h>
+#include <q3table.h>
 
 //*****************************************************************************
 /*!
@@ -25,12 +25,12 @@
 */
 //*****************************************************************************
 
-class DateItem : public QTableItem
+class DateItem : public Q3TableItem
 {
 public:
   //! Initialise the object.
-  DateItem(QTable* i_pcTable, EditType eEditType, const QString& i_cText)
-    : QTableItem(i_pcTable, eEditType, i_cText)
+  DateItem(Q3Table* i_pcTable, EditType eEditType, const QString& i_cText)
+    : Q3TableItem(i_pcTable, eEditType, i_cText)
   {
     setReplaceable(false);
   }

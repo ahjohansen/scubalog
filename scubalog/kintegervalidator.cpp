@@ -27,8 +27,8 @@
 //*****************************************************************************
 
 KIntegerValidator::KIntegerValidator(int nMin, int nDefault, int nMax,
-                                     QWidget* pcParent, const char* pzName)
-  : QIntValidator(nMin, nMax, pcParent, pzName),
+                                     QWidget* pcParent)
+  : QIntValidator(nMin, nMax, pcParent),
     m_nDefault(nDefault)
 {
   assert((nMin <= nMax) && (nMin <= nDefault) && (nMax >= nDefault));

@@ -14,7 +14,7 @@
 #include <qstring.h>
 #include <qdatetime.h>
 #include <qdatastream.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <klocale.h>
 #include "chunkio.h"
 #include "divelog.h"

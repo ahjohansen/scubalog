@@ -14,9 +14,20 @@
 #ifndef DIVELIST_H
 #define DIVELIST_H
 
-#include <qlist.h>
 #include "debug.h"
 #include "divelog.h"
+#include <qlist.h>
+#include <QtAlgorithms>
+
+
+//! Compare the two items \a pcItem1 and \a pcItem2 in the list.
+static bool compareDiveLogItems(const DiveLog* pcLog1, const DiveLog* pcLog2)
+{
+  DBG(("compareDiveLogItems(): %d and %d => %s\n",
+       pcLog1->logNumber(), pcLog2->logNumber(),
+       pcLog1->logNumber() < pcLog2->logNumber() ? "less" : "!less"));
+  return pcLog1->logNumber() < pcLog2->logNumber();
+}
 
 
 //*****************************************************************************
@@ -30,25 +41,16 @@
 */
 //*****************************************************************************
 
-class DiveList : public QList<DiveLog> {
+class DiveList : public QList<DiveLog*> {
 public:
   //! Initialise the list.
-  DiveList() : QList<DiveLog>::QList<DiveLog>() {
+  DiveList() : QList<DiveLog*>() {
     DBG(("DiveList::DiveList()\n"));
-    setAutoDelete(true);
   }
 
-protected:
-  //! Compare the two items \a pcItem1 and \a pcItem2 in the list.
-  virtual int compareItems(QCollection::Item pcItem1,
-                           QCollection::Item pcItem2)
+  void sort()
   {
-    DiveLog* pcLog1 = static_cast<DiveLog*>(pcItem1);
-    DiveLog* pcLog2 = static_cast<DiveLog*>(pcItem2);
-    DBG(("compareItems(): %d and %d => %d\n",
-         pcLog1->logNumber(), pcLog2->logNumber(),
-         pcLog1->logNumber() - pcLog2->logNumber()));
-    return ( pcLog1->logNumber() - pcLog2->logNumber() );
+    qSort(this->begin(), this->end(), compareDiveLogItems);
   }
 
 private:

@@ -37,9 +37,9 @@ class KDateValidator;
 class KDateEdit : public QLineEdit {
   Q_OBJECT
 public:
-  KDateEdit(QWidget* pcParent = 0, const char* pzName = 0);
+  KDateEdit(QWidget* pcParent = 0);
   KDateEdit(QDate cFirst, QDate cDefault, QDate cLast,
-            QWidget* pcParent = 0, const char* pzName = 0);
+            QWidget* pcParent = 0);
   virtual ~KDateEdit();
 
   QDate date() const;

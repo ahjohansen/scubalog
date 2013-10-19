@@ -33,7 +33,7 @@
 #include <qtextstream.h>
 #include <qmessagebox.h>
 #include <qregexp.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <klocale.h>
 #include <qmessagebox.h>
 #include "logbook.h"
@@ -41,6 +41,7 @@
 #include "locationlog.h"
 #include "equipmentlog.h"
 #include "divelist.h"
+
 
 UDCFExporter::UDCFExporter(){
 }
@@ -91,7 +92,7 @@ UDCFExporter::exportLogBook(const LogBook& cLogBook,
  // dive logs
  buildDiveLogs(doc,cLogBook);
  QFile cFile(cFileName);
- bool isOpen = cFile.open(IO_WriteOnly);
+ bool isOpen = cFile.open(QIODevice::WriteOnly);
  if ( false == isOpen ) {
       QString cMessage;
       cMessage = QString(i18n("Couldn't open file for output"))
@@ -104,7 +105,7 @@ UDCFExporter::exportLogBook(const LogBook& cLogBook,
   cStream << doc.toString();
 
   // Ensure output was successful
-  if ( IO_Ok != cFile.status() ) {
+  if ( cFile.error() != QFile::NoError ) {
       QString cMessage;
       cMessage = QString(i18n("Error outputting log"))
         + "\n(`" + cFileName + "')";
@@ -128,7 +129,8 @@ UDCFExporter::exportLogBook(const LogBook& cLogBook,
 void
 UDCFExporter::errorMessage(const QString& cMessage) const
 {
-  QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Output error"),
+  QMessageBox::warning(QApplication::topLevelWidgets().at(0),
+                       i18n("[ScubaLog] Output error"),
                        cMessage);
 }
 
@@ -216,8 +218,10 @@ UDCFExporter::buildLocationLogs(QDomDocument& doc,QDomElement& docElem,const Log
  QDomElement location,auxelem;
  QDomText textnode;
  // Write all the location logs
- const LocationLog* pcLocationLog = cLogBook.locationList().first();
- for ( ; pcLocationLog; pcLocationLog = cLogBook.locationList().next() ) {
+ const QList<LocationLog*>& locationList = cLogBook.locationList();
+ QListIterator<LocationLog*> i(locationList);
+ while ( i.hasNext() ) {
+   const LocationLog* pcLocationLog = i.next();
       location= doc.createElement( "LOCATION" );
       auxelem = doc.createElement( "NAME" );
       textnode = doc.createTextNode ( pcLocationLog->getName() );
@@ -251,9 +255,10 @@ UDCFExporter::buildEquipmentLogs(QDomDocument& doc,QDomElement& docElem,const Lo
  QDomElement piece,auxelem,date,dateelem;
  QDomText textnode;
  // Write all the equipment logs, one for each piece of equipment
- EquipmentLog* pcEquipmentLog = cLogBook.equipmentLog().first();
- EquipmentHistoryEntry* pcEquipmentHistoryEntry;
- for ( ; pcEquipmentLog; pcEquipmentLog = cLogBook.equipmentLog().next() ) {
+ QList<EquipmentLog*>& equipmentLog = cLogBook.equipmentLog();
+ QListIterator<EquipmentLog*> iE(equipmentLog);
+ while ( iE.hasNext() ) {
+   const EquipmentLog* pcEquipmentLog = iE.next();
       piece= doc.createElement( "PIECE" );
       auxelem = doc.createElement( "TYPE" );
       textnode = doc.createTextNode ( pcEquipmentLog->type() );
@@ -271,8 +276,11 @@ UDCFExporter::buildEquipmentLogs(QDomDocument& doc,QDomElement& docElem,const Lo
       textnode = doc.createTextNode ( pcEquipmentLog->serviceRequirements() );
       auxelem.appendChild(textnode);
       piece.appendChild(auxelem);
-      pcEquipmentHistoryEntry=pcEquipmentLog->history().first();
-      for (;pcEquipmentHistoryEntry;pcEquipmentHistoryEntry=pcEquipmentLog->history().next()){
+
+      const QList<EquipmentHistoryEntry*>& history = pcEquipmentLog->history();
+      QListIterator<EquipmentHistoryEntry*> iH(history);
+      while ( iH.hasNext() ) {
+        const EquipmentHistoryEntry* pcEquipmentHistoryEntry = iH.next();
           auxelem = doc.createElement( "SERVICE" );
           date= doc.createElement( "DATE" );
           dateelem= doc.createElement( "YEAR" );
@@ -319,8 +327,10 @@ UDCFExporter::buildDiveLogs(QDomDocument& doc,const LogBook& cLogBook) const
  QDomText textnode;
  double bottomtime,divetime;
  // Write all the dive entries
- DiveLog* pcdiveLog = cLogBook.diveList().first();
- for ( ; pcdiveLog; pcdiveLog = cLogBook.diveList().next() ) {
+ const DiveList& diveList = cLogBook.diveList();
+ QListIterator<DiveLog*> iD(diveList);
+ while ( iD.hasNext() ) {
+   DiveLog* pcdiveLog = iD.next();
       repgroup= doc.createElement( "REPGROUP" );
       dive = doc.createElement( "DIVE" );
       auxelem = doc.createElement( "PLACE" );
@@ -503,8 +513,6 @@ UDCFExporter::buildDiveLogs(QDomDocument& doc,const LogBook& cLogBook) const
       repgroup.appendChild(dive);
       docElem.appendChild(repgroup);
     }
-
-
 }
 
 

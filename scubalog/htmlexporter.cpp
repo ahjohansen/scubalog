@@ -19,7 +19,7 @@
 #include <qtextstream.h>
 #include <qmessagebox.h>
 #include <qregexp.h>
-#include <kapp.h>
+#include <kapplication.h>
 #include <klocale.h>
 #include "debug.h"
 #include "divelist.h"
@@ -91,7 +91,7 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
 
   const QDate cCurrentDate(QDate::currentDate());
   const DiveList& cDiveList = cLogBook.diveList();
-  QListIterator<DiveLog> iLog(cDiveList);
+  QListIterator<DiveLog*> iLog(cDiveList);
 
   bool isIndexOk = exportIndex(cLogBook, cDirName);
   if ( false == isIndexOk )
@@ -105,8 +105,8 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
   //
   // Export the dive logs
   //
-  for ( iLog.toFirst(); iLog.current(); ++iLog ) {
-    const DiveLog* pcCurrentLog = iLog.current();
+  while ( iLog.hasNext() ) {
+    const DiveLog* pcCurrentLog = iLog.next();
     QString cLogNumber;
     cLogNumber.setNum(pcCurrentLog->logNumber());
     QString cFileName(cDirName);
@@ -114,7 +114,7 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
     cFileName += cLogNumber;
     cFileName += ".html";
     QFile cFile(cFileName);
-    bool isOpen = cFile.open(IO_WriteOnly);
+    bool isOpen = cFile.open(QIODevice::WriteOnly);
     if ( false == isOpen ) {
       QString cMessage;
       cMessage = QString(i18n("Couldn't open file for output"))
@@ -206,18 +206,16 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
             << "<P>\n"
             << cDescription
             << "\n<HR>\n";
-    if ( false == iLog.atFirst() ) {
-      QListIterator<DiveLog> iPreviousLog = iLog;
-      --iPreviousLog;
+    if ( !iLog.hasPrevious() ) {
+      const DiveLog* pcPreviousLog = iLog.peekPrevious();
       cStream << "<A HREF=\""
-              << (iPreviousLog.current())->logNumber()
+              << pcPreviousLog->logNumber()
               << ".html\">" << i18n("Previous log") << "</A> ";
     }
-    if ( false == iLog.atLast() ) {
-      QListIterator<DiveLog> iNextLog = iLog;
-      ++iNextLog;
+    if ( iLog.hasNext() ) {
+      const DiveLog* pcNextLog = iLog.peekNext();
       cStream << "<A HREF=\""
-              << (iNextLog.current())->logNumber()
+              << pcNextLog->logNumber()
               << ".html\">" << i18n("Next log") << "</A> ";
     }
     cStream << "<A HREF=\"logbook.html\">" << i18n("Index") << "</A>\n"
@@ -231,7 +229,7 @@ HTMLExporter::exportLogBook(const LogBook& cLogBook,
             << "</HTML>\n";
 
     // Ensure output was successful
-    if ( IO_Ok != cFile.status() ) {
+    if ( cFile.error() != QFile::NoError ) {
       QString cMessage;
       cMessage = QString(i18n("Error outputting log"))
         + "\n(`" + cFileName + "')";
@@ -263,11 +261,11 @@ HTMLExporter::exportIndex(const LogBook& cLogBook,
 {
   const QDate cCurrentDate(QDate::currentDate());
   const DiveList& cDiveList = cLogBook.diveList();
-  QListIterator<DiveLog> iLog(cDiveList);
+  QListIterator<DiveLog*> iLog(cDiveList);
 
   const QString cFileName(cDirName + "/logbook.html");
   QFile cFile(cFileName);
-  bool isOpen = cFile.open(IO_WriteOnly);
+  bool isOpen = cFile.open(QIODevice::WriteOnly);
   if ( false == isOpen ) {
     QString cMessage;
     cMessage = QString(i18n("Couldn't open file for output"))
@@ -285,8 +283,8 @@ HTMLExporter::exportIndex(const LogBook& cLogBook,
           << "</HEAD>\n"
           << "<BODY>\n"
           << "<H1>" << i18n("Dive logs") << "</H1>\n";
-  for ( iLog.toFirst(); iLog.current(); ++iLog ) {
-    const DiveLog* pcCurrentLog = iLog.current();
+  for ( ; iLog.hasNext(); ) {
+    const DiveLog* pcCurrentLog = iLog.next();
     QString cLogNumber;
     cLogNumber.setNum(pcCurrentLog->logNumber());
     cStream << "<A HREF=\""
@@ -298,9 +296,9 @@ HTMLExporter::exportIndex(const LogBook& cLogBook,
             << "<BR>\n";
   }
   cStream << "<H1>" << i18n("Location logs") << "</H1>\n";
-  QListIterator<LocationLog> iLocation(cLogBook.locationList());
-  for ( ; iLocation.current(); ++iLocation ) {
-    const LocationLog* pcCurrentLog = iLocation.current();
+  QListIterator<LocationLog*> iLocation(cLogBook.locationList());
+  for ( ; iLocation.hasNext(); ) {
+    const LocationLog* pcCurrentLog = iLocation.next();
     cStream << "<A HREF=\""
             << getLocationExportName(pcCurrentLog->getName())
             << "\">"
@@ -317,14 +315,14 @@ HTMLExporter::exportIndex(const LogBook& cLogBook,
           << "</HTML>\n";
 
 
-  bool isOk = IO_Ok == cFile.status();
+  const bool isOk = (cFile.error() == QFile::NoError);
   cFile.close();
-  if ( false == isOk ) {
+  if ( !isOk ) {
     QFile::remove(cFileName);
     QString cMessage;
     cMessage = QString(i18n("Error writing to file"))
       + "\n`" + cFileName + "'!";
-    QMessageBox::warning(qApp->mainWidget(),
+    QMessageBox::warning(QApplication::topLevelWidgets().at(0),
                          i18n("[ScubaLog] Write log index"), cMessage);
   }
 
@@ -346,17 +344,17 @@ HTMLExporter::exportLocations(const LogBook& cLogBook,
                               const QString& cDirName) const
 {
   const QDate cCurrentDate(QDate::currentDate());
-  const QList<LocationLog>& cLocationList = cLogBook.locationList();
-  QListIterator<LocationLog> iLog(cLocationList);
+  const QList<LocationLog*>& cLocationList = cLogBook.locationList();
+  QListIterator<LocationLog*> iLog(cLocationList);
 
-  for ( ; iLog.current(); ++iLog ) {
-    const LocationLog* pcLog = iLog.current();
+  for ( ; iLog.hasNext(); ) {
+    const LocationLog* pcLog = iLog.next();
     assert(pcLog);
     const QString cLocationName(pcLog->getName());
     QString cFileName(cDirName + "/");
     cFileName += getLocationExportName(cLocationName);
     QFile cFile(cFileName);
-    bool isOpen = cFile.open(IO_WriteOnly);
+    bool isOpen = cFile.open(QIODevice::WriteOnly);
     if ( false == isOpen ) {
       QString cMessage;
       cMessage = QString(i18n("Couldn't open file for output"))
@@ -385,18 +383,16 @@ HTMLExporter::exportLocations(const LogBook& cLogBook,
             << "<P>\n"
             << cDescription
             << "\n<HR>\n";
-    if ( false == iLog.atFirst() ) {
-      QListIterator<LocationLog> iPreviousLog = iLog;
-      --iPreviousLog;
+    if ( iLog.hasPrevious() ) {
+      LocationLog* pcPreviousLog = iLog.peekPrevious();
       cStream << "<A HREF=\""
-              << getLocationExportName((iPreviousLog.current())->getName())
+              << getLocationExportName(pcPreviousLog->getName())
               << "\">" << i18n("Previous location") << "</A> ";
     }
-    if ( false == iLog.atLast() ) {
-      QListIterator<LocationLog> iNextLog = iLog;
-      ++iNextLog;
+    if ( iLog.hasNext() ) {
+      LocationLog* pcNextLog = iLog.peekNext();
       cStream << "<A HREF=\""
-              << getLocationExportName((iNextLog.current())->getName())
+              << getLocationExportName(pcNextLog->getName())
               << "\">" << i18n("Next location") << "</A> ";
     }
     cStream << "<A HREF=\"logbook.html\">" << i18n("Index") << "</A>\n"
@@ -410,7 +406,7 @@ HTMLExporter::exportLocations(const LogBook& cLogBook,
             << "</HTML>\n";
 
     // Ensure output was successful
-    if ( IO_Ok != cFile.status() ) {
+    if ( cFile.error() != QFile::NoError ) {
       QString cMessage;
       cMessage = QString(i18n("Error outputting log"))
         + "\n(`" + cFileName + "')";
@@ -439,7 +435,7 @@ HTMLExporter::getLocationExportName(const QString& cLocationName) const
   assert(cExpression.isValid());
   cExportName.replace(cExpression, "_");
   cExportName += ".html";
-  cExportName = cExportName.lower();
+  cExportName = cExportName.toLower();
   DBG(("Export name for `%s' is `%s'\n", cLocationName.data(),
        cExportName.data()));
   return cExportName;
@@ -459,10 +455,10 @@ bool
 HTMLExporter::hasLocation(const LogBook& cLogBook,
                           const QString& cLocationName) const
 {
-  QListIterator<LocationLog> iLog(cLogBook.locationList());
+  QListIterator<LocationLog*> iLog(cLogBook.locationList());
   bool isFound = false;
-  for ( ; iLog.current(); ++iLog ) {
-    const LocationLog* pcLog = iLog.current();
+  for ( ; iLog.hasNext(); ) {
+    const LocationLog* pcLog = iLog.next();
     if ( pcLog->getName() == cLocationName ) {
       isFound = true;
       break;
@@ -500,12 +496,12 @@ HTMLExporter::createLinks(QString& cText) const
   bool isDone = false;
   int nSearchPos = 0;
   do {
-    int nStartPos = cText.find("http://", nSearchPos);
+    int nStartPos = cText.indexOf("http://", nSearchPos);
     if ( -1 == nStartPos ) {
       isDone = true;
       continue;
     }
-    int nEndPos = cText.find(cWS, nStartPos);
+    int nEndPos = cText.indexOf(cWS, nStartPos);
     if ( -1 == nEndPos )
       nEndPos = cText.length();
     int nLength = nEndPos - nStartPos;
@@ -532,7 +528,8 @@ HTMLExporter::createLinks(QString& cText) const
 void
 HTMLExporter::errorMessage(const QString& cMessage) const
 {
-  QMessageBox::warning(qApp->mainWidget(), i18n("[ScubaLog] Output error"),
+  QMessageBox::warning(QApplication::topLevelWidgets().at(0),
+                       i18n("[ScubaLog] Output error"),
                        cMessage);
 }
 

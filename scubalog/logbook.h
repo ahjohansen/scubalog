@@ -52,9 +52,9 @@ public:
   //! Get the divelist.
   DiveList& diveList() const { return *m_pcDiveList; }
   //! Get the location list.
-  QList<LocationLog>& locationList() const { return *m_pcLocations; }
+  QList<LocationLog*>& locationList() const { return *m_pcLocations; }
   //! Get the equipment log list.
-  QList<EquipmentLog>& equipmentLog() const { return *m_pcEquipment; }
+  QList<EquipmentLog*>& equipmentLog() const { return *m_pcEquipment; }
 
   //! Set the name of the diver to \a cName.
   void setDiverName(const QString& cName) { m_cDiverName = cName; }
@@ -82,9 +82,9 @@ private:
   //! The dive list.
   DiveList* m_pcDiveList;
   //! The location list.  The list owns the entries.
-  QList<LocationLog>*  m_pcLocations;
+  QList<LocationLog*>*  m_pcLocations;
   //! The eqipment with history.  The list owns the entries.
-  QList<EquipmentLog>* m_pcEquipment;
+  QList<EquipmentLog*>* m_pcEquipment;
 };
 
 #endif // LOGBOOK_H
