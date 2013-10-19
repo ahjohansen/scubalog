@@ -171,15 +171,8 @@ ScubaLog::ScubaLog(const char* pzName, const char* pzLogBook)
     << i18n("Compilation date: ") << __DATE__;
   pcMenuBar->addMenu(this->helpMenu());
 
-  int nRecentNumber = 1;
-  for ( QList<QString>::const_iterator iRecent = m_cRecentProjects.begin();
-        iRecent != m_cRecentProjects.end();
-        nRecentNumber++, ++iRecent ) {
-    QString cText;
-    QTextStream(&cText) << "[&" << nRecentNumber << "] " << (*iRecent);
-    m_pcRecentMenu->addAction(cText);
-  }
-  connect(m_pcRecentMenu, SIGNAL(activated(int)), SLOT(openRecent(int)));
+  updateRecentProjectsMenu();
+  connect(m_pcRecentMenu, SIGNAL(triggered(QAction*)), SLOT(openRecent(QAction*)));
 
 
   //
@@ -354,19 +347,19 @@ ScubaLog::saveConfig()
 
 //*****************************************************************************
 /*!
-  Open the recent project \a nRecentNumber.
+  Open the recent project triggered by the menu action \a action.
 
   \sa openProject().
 */
 //*****************************************************************************
 
 void
-ScubaLog::openRecent(int nRecentNumber)
+ScubaLog::openRecent(QAction* action)
 {
-  printf("m_cRecentProjects.size() is %d\n", m_cRecentProjects.size());
-  assert(nRecentNumber >= 0);
-  if ( m_cRecentProjects.size() > nRecentNumber ) {
-    QString cUrlName(m_cRecentProjects.at(nRecentNumber));
+  int index = action->data().toInt();
+  assert(index >= 0 && index < m_cRecentProjects.size());
+  if ( index >= 0 && index < m_cRecentProjects.size() ) {
+    QString cUrlName(m_cRecentProjects.at(index));
     readLogBookUrl(cUrlName, e_DownloadAsynchronous);
   }
 }
@@ -638,16 +631,30 @@ ScubaLog::updateRecentProjects(const QString& cProjectName)
     m_cRecentProjects.pop_back();
   }
 
-  // Update the menu
+  updateRecentProjectsMenu();
+}
+
+
+//*****************************************************************************
+/*!
+  Update the recent projects menu from the list of recent projects
+  #m_cRecentProjects.
+*/
+//*****************************************************************************
+
+void
+ScubaLog::updateRecentProjectsMenu()
+{
+  assert(m_pcRecentMenu);
   m_pcRecentMenu->clear();
   int nRecentNumber = 0;
   QList<QString>::const_iterator i = m_cRecentProjects.begin();
   for ( ; i != m_cRecentProjects.end(); ++i ) {
     nRecentNumber++;
     QString cText;
-    QTextStream(&cText) << "[&" << nRecentNumber << "] "
-                        << *i;
-    m_pcRecentMenu->addAction(cText);
+    QTextStream(&cText) << "[&" << nRecentNumber << "] " << *i;
+    QAction* a = m_pcRecentMenu->addAction(cText);
+    a->setData(QVariant(nRecentNumber-1));
   }
 }
 

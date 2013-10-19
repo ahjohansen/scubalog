@@ -19,6 +19,8 @@
 #include <kmainwindow.h>
 #include <kio/job.h>
 
+
+class QAction;
 class QTabWidget;
 class DiveLog;
 class LogBook;
@@ -66,7 +68,7 @@ protected:
 
 private slots:
   void newProject();
-  void openRecent(int nRecentProjectNumber);
+  void openRecent(QAction* action);
   void openProject();
   void saveProject();
   void saveProjectAs();
@@ -85,6 +87,7 @@ private:
   bool readLogBook(const QString& cFileName);
 
   void updateRecentProjects(const QString& cProjectName);
+  void updateRecentProjectsMenu();
 
   //! The name of the current project, or none if not saved yet.
   QString*          m_pcProjectName;
