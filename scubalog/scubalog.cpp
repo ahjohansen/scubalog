@@ -290,8 +290,6 @@ ScubaLog::~ScubaLog()
   DBG(("Destructing the main widget...\n"));
 
   hide();
-  if ( m_pcLogBook )
-    m_pcLogBook->diveList().clear();
   delete m_pcLogBook;
   delete m_pcProjectName;
   delete m_pcKfmUrl;
