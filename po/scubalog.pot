@@ -7,435 +7,441 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2002-12-09 12:41+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2004-07-12 23:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: divelog.cpp:44 logview.cpp:178
+#: scubalog/divelog.cpp:44 scubalog/logview.cpp:190
 msgid "Nature"
 msgstr ""
 
-#: equipmentview.cpp:59 locationview.cpp:64 scubalog.cpp:136
+#: scubalog/equipmentview.cpp:68 scubalog/locationview.cpp:62
+#: scubalog/scubalog.cpp:141
 msgid "&New"
 msgstr ""
 
-#: equipmentview.cpp:64
+#: scubalog/equipmentview.cpp:73
 msgid "Delete"
 msgstr ""
 
-#: equipmentview.cpp:69
+#: scubalog/equipmentview.cpp:78
 msgid "Move &up"
 msgstr ""
 
-#: equipmentview.cpp:74
+#: scubalog/equipmentview.cpp:83
 msgid "Move &down"
 msgstr ""
 
-#: equipmentview.cpp:83
+#: scubalog/equipmentview.cpp:92
 msgid "Type: "
 msgstr ""
 
-#: equipmentview.cpp:90
+#: scubalog/equipmentview.cpp:99
 msgid "Serial number: "
 msgstr ""
 
-#: equipmentview.cpp:97
+#: scubalog/equipmentview.cpp:106
 msgid "Service: "
 msgstr ""
 
-#: equipmentview.cpp:107 htmlexporter.cpp:197 loglistview.cpp:47
+#: scubalog/equipmentview.cpp:116 scubalog/htmlexporter.cpp:189
+#: scubalog/loglistview.cpp:47
 msgid "Date"
 msgstr ""
 
-#: equipmentview.cpp:108
+#: scubalog/equipmentview.cpp:117
 msgid "Event"
 msgstr ""
 
-#: equipmentview.cpp:591
+#: scubalog/equipmentview.cpp:572
 msgid "Insert a &new entry"
 msgstr ""
 
-#: equipmentview.cpp:593
+#: scubalog/equipmentview.cpp:574
 msgid "&Delete the current entry"
 msgstr ""
 
-#: htmlexporter.cpp:94
+#: scubalog/htmlexporter.cpp:86
 msgid "Couldn't create output directory"
 msgstr ""
 
-#: htmlexporter.cpp:128 htmlexporter.cpp:283 htmlexporter.cpp:374
-#: udcfexporter.cpp:100
+#: scubalog/htmlexporter.cpp:120 scubalog/htmlexporter.cpp:273
+#: scubalog/htmlexporter.cpp:362 scubalog/udcfexporter.cpp:97
 msgid "Couldn't open file for output"
 msgstr ""
 
-#: htmlexporter.cpp:160
+#: scubalog/htmlexporter.cpp:152
 msgid "hour"
 msgstr ""
 
-#: htmlexporter.cpp:162
+#: scubalog/htmlexporter.cpp:154
 msgid "hours"
 msgstr ""
 
-#: htmlexporter.cpp:169
+#: scubalog/htmlexporter.cpp:161
 msgid "minute"
 msgstr ""
 
-#: htmlexporter.cpp:171
+#: scubalog/htmlexporter.cpp:163
 msgid "minutes"
 msgstr ""
 
-#: htmlexporter.cpp:178
+#: scubalog/htmlexporter.cpp:170
 msgid "seconds"
 msgstr ""
 
-#: htmlexporter.cpp:180
+#: scubalog/htmlexporter.cpp:172
 msgid "second"
 msgstr ""
 
-#: htmlexporter.cpp:189 scubalog.cpp:161
+#: scubalog/htmlexporter.cpp:181 scubalog/scubalog.cpp:166
 msgid "Log"
 msgstr ""
 
-#: htmlexporter.cpp:194
+#: scubalog/htmlexporter.cpp:186
 msgid "Log number"
 msgstr ""
 
-#: htmlexporter.cpp:202 htmlexporter.cpp:394 loglistview.cpp:49
+#: scubalog/htmlexporter.cpp:194 scubalog/htmlexporter.cpp:382
+#: scubalog/loglistview.cpp:49
 msgid "Location"
 msgstr ""
 
-#: htmlexporter.cpp:205
+#: scubalog/htmlexporter.cpp:197
 msgid "Buddy"
 msgstr ""
 
-#: htmlexporter.cpp:208
+#: scubalog/htmlexporter.cpp:200
 msgid "Maximum depth"
 msgstr ""
 
-#: htmlexporter.cpp:211
+#: scubalog/htmlexporter.cpp:203
 msgid "Dive time"
 msgstr ""
 
-#: htmlexporter.cpp:222 logview.cpp:213
+#: scubalog/htmlexporter.cpp:214 scubalog/logview.cpp:225
 msgid "Previous log"
 msgstr ""
 
-#: htmlexporter.cpp:229 logview.cpp:218
+#: scubalog/htmlexporter.cpp:221 scubalog/logview.cpp:230
 msgid "Next log"
 msgstr ""
 
-#: htmlexporter.cpp:231 htmlexporter.cpp:414
+#: scubalog/htmlexporter.cpp:223 scubalog/htmlexporter.cpp:402
 msgid "Index"
 msgstr ""
 
-#: htmlexporter.cpp:233 htmlexporter.cpp:321 htmlexporter.cpp:416
+#: scubalog/htmlexporter.cpp:225 scubalog/htmlexporter.cpp:311
+#: scubalog/htmlexporter.cpp:404
 msgid "Dive log exported from"
 msgstr ""
 
-#: htmlexporter.cpp:244 htmlexporter.cpp:427 udcfexporter.cpp:112
+#: scubalog/htmlexporter.cpp:236 scubalog/htmlexporter.cpp:415
+#: scubalog/udcfexporter.cpp:109
 msgid "Error outputting log"
 msgstr ""
 
-#: htmlexporter.cpp:293
+#: scubalog/htmlexporter.cpp:283
 msgid "log book index"
 msgstr ""
 
-#: htmlexporter.cpp:297
+#: scubalog/htmlexporter.cpp:287
 msgid "Dive logs"
 msgstr ""
 
-#: htmlexporter.cpp:310
+#: scubalog/htmlexporter.cpp:300
 msgid "Location logs"
 msgstr ""
 
-#: htmlexporter.cpp:335 scubalogproject.cpp:275
+#: scubalog/htmlexporter.cpp:325 scubalog/scubalogproject.cpp:271
 msgid "Error writing to file"
 msgstr ""
 
-#: htmlexporter.cpp:338
+#: scubalog/htmlexporter.cpp:328
 msgid "[ScubaLog] Write log index"
 msgstr ""
 
-#: htmlexporter.cpp:405
+#: scubalog/htmlexporter.cpp:393
 msgid "Previous location"
 msgstr ""
 
-#: htmlexporter.cpp:412
+#: scubalog/htmlexporter.cpp:400
 msgid "Next location"
 msgstr ""
 
-#: htmlexporter.cpp:557 udcfexporter.cpp:134
+#: scubalog/htmlexporter.cpp:535 scubalog/udcfexporter.cpp:131
 msgid "[ScubaLog] Output error"
 msgstr ""
 
-#: integerdialog.cpp:60
+#: scubalog/integerdialog.cpp:55
 msgid "&Ok"
 msgstr ""
 
-#: integerdialog.cpp:65
+#: scubalog/integerdialog.cpp:60
 msgid "&Cancel"
 msgstr ""
 
-#: locationview.cpp:68
+#: scubalog/locationview.cpp:66
 msgid "&Delete"
 msgstr ""
 
-#: locationview.cpp:305 locationview.cpp:347
+#: scubalog/locationview.cpp:291 scubalog/locationview.cpp:331
 msgid "[ScubaLog] New location"
 msgstr ""
 
-#: locationview.cpp:306 locationview.cpp:348
+#: scubalog/locationview.cpp:292 scubalog/locationview.cpp:332
 msgid "Out of memory when creating a new location log!"
 msgstr ""
 
-#: locationview.cpp:397
+#: scubalog/locationview.cpp:379
 #, c-format
 msgid ""
 "Are you sure you want to delete the location\n"
 "`%s'?"
 msgstr ""
 
-#: locationview.cpp:401
+#: scubalog/locationview.cpp:383
 msgid "[ScubaLog] Delete location"
 msgstr ""
 
-#: locationview.cpp:402 loglistview.cpp:209
+#: scubalog/locationview.cpp:384 scubalog/loglistview.cpp:199
 msgid "&Yes"
 msgstr ""
 
-#: locationview.cpp:402 loglistview.cpp:209
+#: scubalog/locationview.cpp:384 scubalog/loglistview.cpp:199
 msgid "&No"
 msgstr ""
 
-#: loglistview.cpp:46
+#: scubalog/loglistview.cpp:46
 msgid "Dive"
 msgstr ""
 
-#: loglistview.cpp:48
+#: scubalog/loglistview.cpp:48
 msgid "Time"
 msgstr ""
 
-#: loglistview.cpp:62
+#: scubalog/loglistview.cpp:62
 msgid "&New log entry"
 msgstr ""
 
-#: loglistview.cpp:67
+#: scubalog/loglistview.cpp:67
 msgid "&Delete log"
 msgstr ""
 
-#: loglistview.cpp:73
+#: scubalog/loglistview.cpp:73
 msgid "&View log"
 msgstr ""
 
-#: loglistview.cpp:175 logview.cpp:342
+#: scubalog/loglistview.cpp:167 scubalog/logview.cpp:348
 msgid "[ScubaLog] New dive log"
 msgstr ""
 
-#: loglistview.cpp:176 logview.cpp:343
+#: scubalog/loglistview.cpp:168 scubalog/logview.cpp:349
 msgid "Out of memory when creating a new dive log!"
 msgstr ""
 
-#: loglistview.cpp:203
+#: scubalog/loglistview.cpp:193
 #, c-format
 msgid ""
 "Are you sure you want to delete log %d?\n"
 "(location: `%s')"
 msgstr ""
 
-#: loglistview.cpp:207
+#: scubalog/loglistview.cpp:197
 msgid "[ScubaLog] Delete log"
 msgstr ""
 
-#: logview.cpp:56
+#: scubalog/logview.cpp:68
 msgid "Dive &number:"
 msgstr ""
 
-#: logview.cpp:67
+#: scubalog/logview.cpp:79
 msgid "Dive &date:"
 msgstr ""
 
-#: logview.cpp:77
+#: scubalog/logview.cpp:89
 msgid "Dive &start:"
 msgstr ""
 
-#: logview.cpp:87
+#: scubalog/logview.cpp:99
 msgid "Dive &time:"
 msgstr ""
 
-#: logview.cpp:97
+#: scubalog/logview.cpp:109
 msgid "&Gas:"
 msgstr ""
 
-#: logview.cpp:107
+#: scubalog/logview.cpp:119
 msgid "&Air temperature:"
 msgstr ""
 
-#: logview.cpp:117
+#: scubalog/logview.cpp:129
 msgid "L&ocation:"
 msgstr ""
 
-#: logview.cpp:129
+#: scubalog/logview.cpp:141
 msgid "Edit"
 msgstr ""
 
-#: logview.cpp:135
+#: scubalog/logview.cpp:147
 msgid "&Plan type:"
 msgstr ""
 
-#: logview.cpp:139
+#: scubalog/logview.cpp:151
 msgid "Single level"
 msgstr ""
 
-#: logview.cpp:140
+#: scubalog/logview.cpp:152
 msgid "Multi level"
 msgstr ""
 
-#: logview.cpp:144
+#: scubalog/logview.cpp:156
 msgid "&Bottom time:"
 msgstr ""
 
-#: logview.cpp:154
+#: scubalog/logview.cpp:166
 msgid "&Max depth:"
 msgstr ""
 
-#: logview.cpp:164
+#: scubalog/logview.cpp:176
 msgid "B&uddy:"
 msgstr ""
 
-#: logview.cpp:174
+#: scubalog/logview.cpp:186
 msgid "Dive t&ype:"
 msgstr ""
 
-#: logview.cpp:179
+#: scubalog/logview.cpp:191
 msgid "Deep"
 msgstr ""
 
-#: logview.cpp:180
+#: scubalog/logview.cpp:192
 msgid "Wreck"
 msgstr ""
 
-#: logview.cpp:181
+#: scubalog/logview.cpp:193
 msgid "Night"
 msgstr ""
 
-#: logview.cpp:182
+#: scubalog/logview.cpp:194
 msgid "Cave"
 msgstr ""
 
-#: logview.cpp:183
+#: scubalog/logview.cpp:195
 msgid "Ice"
 msgstr ""
 
-#: logview.cpp:184
+#: scubalog/logview.cpp:196
 msgid "Current"
 msgstr ""
 
-#: logview.cpp:185
+#: scubalog/logview.cpp:197
 msgid "Navigation"
 msgstr ""
 
-#: logview.cpp:186
+#: scubalog/logview.cpp:198
 msgid "Rescue"
 msgstr ""
 
-#: logview.cpp:187
+#: scubalog/logview.cpp:199
 msgid "Course"
 msgstr ""
 
-#: logview.cpp:194
+#: scubalog/logview.cpp:206
 msgid "Min &water temp:"
 msgstr ""
 
-#: logview.cpp:204
+#: scubalog/logview.cpp:216
 msgid "Dive des&cription:"
 msgstr ""
 
-#: main.cpp:87
+#: scubalog/main.cpp:85
 msgid "Out of memory -- exiting ScubaLog...\n"
 msgstr ""
 
-#: main.cpp:91
+#: scubalog/main.cpp:89
 msgid "Caught unhandled exception -- exiting ScubaLog...\n"
 msgstr ""
 
-#: personalinfoview.cpp:47
+#: scubalog/personalinfoview.cpp:46
 msgid "&Name:"
 msgstr ""
 
-#: personalinfoview.cpp:57
+#: scubalog/personalinfoview.cpp:56
 msgid "&Email address:"
 msgstr ""
 
-#: personalinfoview.cpp:67
+#: scubalog/personalinfoview.cpp:66
 msgid "&WWW URL:"
 msgstr ""
 
-#: personalinfoview.cpp:77
+#: scubalog/personalinfoview.cpp:76
 msgid "Total logged dive time: 000h 00min"
 msgstr ""
 
-#: personalinfoview.cpp:81
+#: scubalog/personalinfoview.cpp:80
 msgid "&Comments:"
 msgstr ""
 
-#: personalinfoview.cpp:222
+#: scubalog/personalinfoview.cpp:217
 msgid "0h 0min"
 msgstr ""
 
-#: personalinfoview.cpp:229
+#: scubalog/personalinfoview.cpp:224
 #, c-format
 msgid "Total logged dive time: %dh %dmin"
 msgstr ""
 
-#: scubalog.cpp:138
+#: scubalog/scubalog.cpp:143
 msgid "&Open..."
 msgstr ""
 
-#: scubalog.cpp:140
+#: scubalog/scubalog.cpp:145
 msgid "Open &recent"
 msgstr ""
 
-#: scubalog.cpp:141
+#: scubalog/scubalog.cpp:146
 msgid "&Save"
 msgstr ""
 
-#: scubalog.cpp:143
+#: scubalog/scubalog.cpp:148
 msgid "Save &As"
 msgstr ""
 
-#: scubalog.cpp:147
+#: scubalog/scubalog.cpp:152
 msgid "Export &HTML..."
 msgstr ""
 
-#: scubalog.cpp:149
+#: scubalog/scubalog.cpp:154
 msgid "Export &UDCF..."
 msgstr ""
 
-#: scubalog.cpp:151
+#: scubalog/scubalog.cpp:156
 msgid "&Export"
 msgstr ""
 
-#: scubalog.cpp:152
+#: scubalog/scubalog.cpp:157
 msgid "&Print..."
 msgstr ""
 
-#: scubalog.cpp:155
+#: scubalog/scubalog.cpp:160
 msgid "&Quit"
 msgstr ""
 
-#: scubalog.cpp:156
+#: scubalog/scubalog.cpp:161
 msgid "&Project"
 msgstr ""
 
-#: scubalog.cpp:159
+#: scubalog/scubalog.cpp:164
 msgid "&Goto log..."
 msgstr ""
 
-#: scubalog.cpp:164
+#: scubalog/scubalog.cpp:169
 #, c-format
 msgid ""
 "ScubaLog is a scuba dive logging program,\n"
@@ -444,292 +450,297 @@ msgid ""
 "This program is free software, licensed\n"
 "under the GNU General Public License.\n"
 "\n"
-"Author: André Johansen <andrej@tiscali.no>\n"
+"Author: AndrÃ© Johansen <andrejoh@c2i.net>\n"
 "\n"
 "Version: %s\n"
 "Compilation date: %s"
 msgstr ""
 
-#: scubalog.cpp:171
+#: scubalog/scubalog.cpp:176
 msgid "&Help"
 msgstr ""
 
-#: scubalog.cpp:185
+#: scubalog/scubalog.cpp:190
 msgid "New log-book"
 msgstr ""
 
-#: scubalog.cpp:190
+#: scubalog/scubalog.cpp:195
 msgid "Open log-book"
 msgstr ""
 
-#: scubalog.cpp:195
+#: scubalog/scubalog.cpp:200
 msgid "Save log-book"
 msgstr ""
 
-#: scubalog.cpp:202
+#: scubalog/scubalog.cpp:207
 msgid "Print log-book"
 msgstr ""
 
-#: scubalog.cpp:214
+#: scubalog/scubalog.cpp:219
 msgid "Log &list"
 msgstr ""
 
-#: scubalog.cpp:221
+#: scubalog/scubalog.cpp:226
 msgid "Log &view"
 msgstr ""
 
-#: scubalog.cpp:228
+#: scubalog/scubalog.cpp:233
 msgid "Locations"
 msgstr ""
 
-#: scubalog.cpp:235
+#: scubalog/scubalog.cpp:240
 msgid "Personal &info"
 msgstr ""
 
-#: scubalog.cpp:241
+#: scubalog/scubalog.cpp:246
 msgid "&Equipment"
 msgstr ""
 
-#: scubalog.cpp:281
+#: scubalog/scubalog.cpp:286
 msgid "Welcome to ScubaLog"
 msgstr ""
 
-#: scubalog.cpp:407
+#: scubalog/scubalog.cpp:402
 msgid "Out of memory!"
 msgstr ""
 
-#: scubalog.cpp:427 scubalog.cpp:491
+#: scubalog/scubalog.cpp:420 scubalog/scubalog.cpp:480
 msgid "ScubaLog files (*.slb)"
 msgstr ""
 
-#: scubalog.cpp:428 scubalog.cpp:492 scubalog.cpp:773
+#: scubalog/scubalog.cpp:421 scubalog/scubalog.cpp:481
+#: scubalog/scubalog.cpp:752
 msgid "All files (*)"
 msgstr ""
 
-#: scubalog.cpp:431
+#: scubalog/scubalog.cpp:424
 msgid "[ScubaLog] Open log book"
 msgstr ""
 
-#: scubalog.cpp:461 scubalog.cpp:494 scubalog.cpp:775
+#: scubalog/scubalog.cpp:452 scubalog/scubalog.cpp:483
+#: scubalog/scubalog.cpp:754
 msgid "Writing log book..."
 msgstr ""
 
-#: scubalog.cpp:467 scubalog.cpp:514
+#: scubalog/scubalog.cpp:458 scubalog/scubalog.cpp:503
 msgid "Writing log book...Done"
 msgstr ""
 
-#: scubalog.cpp:470 scubalog.cpp:517
+#: scubalog/scubalog.cpp:461 scubalog/scubalog.cpp:506
 msgid "Writing log book...Failed!"
 msgstr ""
 
-#: scubalog.cpp:497 scubalog.cpp:778
+#: scubalog/scubalog.cpp:486 scubalog/scubalog.cpp:757
 msgid "[ScubaLog] Save log book"
 msgstr ""
 
-#: scubalog.cpp:521
+#: scubalog/scubalog.cpp:510
 msgid "Writing log book...Aborted"
 msgstr ""
 
-#: scubalog.cpp:627
+#: scubalog/scubalog.cpp:612
 msgid "Reading log book..."
 msgstr ""
 
-#: scubalog.cpp:645
+#: scubalog/scubalog.cpp:630
 msgid "Reading log book...Done"
 msgstr ""
 
-#: scubalog.cpp:650
+#: scubalog/scubalog.cpp:635
 msgid "Reading log book...Failed!"
 msgstr ""
 
-#: scubalog.cpp:656
+#: scubalog/scubalog.cpp:641
 msgid "Reading log book...Out of memory!"
 msgstr ""
 
-#: scubalog.cpp:733 scubalog.cpp:769
+#: scubalog/scubalog.cpp:714 scubalog/scubalog.cpp:748
 msgid "Exporting log book..."
 msgstr ""
 
-#: scubalog.cpp:736
+#: scubalog/scubalog.cpp:717
 msgid "[ScubaLog] Select output directory"
 msgstr ""
 
-#: scubalog.cpp:744 scubalog.cpp:791
+#: scubalog/scubalog.cpp:725 scubalog/scubalog.cpp:770
 msgid "Exporting log book...Done"
 msgstr ""
 
-#: scubalog.cpp:747
+#: scubalog/scubalog.cpp:728
 msgid "Exporting log book...Aborted"
 msgstr ""
 
-#: scubalog.cpp:772
+#: scubalog/scubalog.cpp:751
 msgid "UDCF Files (*.xml)"
 msgstr ""
 
-#: scubalog.cpp:880
+#: scubalog/scubalog.cpp:851
 msgid "Goto log"
 msgstr ""
 
-#: scubalog.cpp:881 scubalog.cpp:896
+#: scubalog/scubalog.cpp:852 scubalog/scubalog.cpp:867
 msgid "[ScubaLog] Goto"
 msgstr ""
 
-#: scubalog.cpp:895
+#: scubalog/scubalog.cpp:866
 #, c-format
 msgid "Couldn't find log %d"
 msgstr ""
 
-#: scubalog.cpp:928
+#: scubalog/scubalog.cpp:897
 msgid "Print log book..."
 msgstr ""
 
-#: scubalog.cpp:936 scubalog.cpp:1017
+#: scubalog/scubalog.cpp:905 scubalog/scubalog.cpp:986
 msgid "Print log book...Cancelled"
 msgstr ""
 
-#: scubalog.cpp:943 scubalog.cpp:1012
+#: scubalog/scubalog.cpp:912 scubalog/scubalog.cpp:981
 msgid "Print log book...Failed!"
 msgstr ""
 
-#: scubalog.cpp:985
+#: scubalog/scubalog.cpp:954
 msgid "Log number:"
 msgstr ""
 
-#: scubalog.cpp:986
+#: scubalog/scubalog.cpp:955
 msgid "Date:"
 msgstr ""
 
-#: scubalog.cpp:987
+#: scubalog/scubalog.cpp:956
 msgid "Location:"
 msgstr ""
 
-#: scubalog.cpp:988
+#: scubalog/scubalog.cpp:957
 msgid "Buddy:"
 msgstr ""
 
-#: scubalog.cpp:989
+#: scubalog/scubalog.cpp:958
 msgid "Maximum depth:"
 msgstr ""
 
-#: scubalog.cpp:990
+#: scubalog/scubalog.cpp:959
 msgid "Dive time:"
 msgstr ""
 
-#: scubalog.cpp:991
+#: scubalog/scubalog.cpp:960
 msgid "Gas type:"
 msgstr ""
 
-#: scubalog.cpp:992
+#: scubalog/scubalog.cpp:961
 msgid "Gas usage:"
 msgstr ""
 
-#: scubalog.cpp:1023
+#: scubalog/scubalog.cpp:992
 msgid "Print log book...Done"
 msgstr ""
 
-#: scubalogproject.cpp:44 scubalogproject.cpp:211
+#: scubalog/scubalogproject.cpp:42 scubalog/scubalogproject.cpp:207
 msgid "Couldn't open file"
 msgstr ""
 
-#: scubalogproject.cpp:46 scubalogproject.cpp:67 scubalogproject.cpp:102
-#: scubalogproject.cpp:126 scubalogproject.cpp:150 scubalogproject.cpp:171
-#: scubalogproject.cpp:183
+#: scubalog/scubalogproject.cpp:44 scubalog/scubalogproject.cpp:65
+#: scubalog/scubalogproject.cpp:100 scubalog/scubalogproject.cpp:124
+#: scubalog/scubalogproject.cpp:148 scubalog/scubalogproject.cpp:169
+#: scubalog/scubalogproject.cpp:181
 msgid "[ScubaLog] Read log book"
 msgstr ""
 
-#: scubalogproject.cpp:64
+#: scubalog/scubalogproject.cpp:62
 msgid "Couldn't read log book from"
 msgstr ""
 
-#: scubalogproject.cpp:66
+#: scubalog/scubalogproject.cpp:64
 msgid "Unknown file format -- probably not a log book!"
 msgstr ""
 
-#: scubalogproject.cpp:99 scubalogproject.cpp:123 scubalogproject.cpp:147
+#: scubalog/scubalogproject.cpp:97 scubalog/scubalogproject.cpp:121
+#: scubalog/scubalogproject.cpp:145
 msgid "Error while reading log book from"
 msgstr ""
 
-#: scubalogproject.cpp:169
+#: scubalog/scubalogproject.cpp:167
 msgid "Can't read further, aborting load of log-book"
 msgstr ""
 
-#: scubalogproject.cpp:181
+#: scubalog/scubalogproject.cpp:179
 msgid "Error reading from file"
 msgstr ""
 
-#: scubalogproject.cpp:213
+#: scubalog/scubalogproject.cpp:209
 msgid ""
 "Ensure that you have write permission and\n"
 "that there is enough free space on the media!"
 msgstr ""
 
-#: scubalogproject.cpp:215 scubalogproject.cpp:259 scubalogproject.cpp:277
+#: scubalog/scubalogproject.cpp:211 scubalog/scubalogproject.cpp:255
+#: scubalog/scubalogproject.cpp:273
 msgid "[ScubaLog] Write log book"
 msgstr ""
 
-#: scubalogproject.cpp:256
+#: scubalog/scubalogproject.cpp:252
 msgid "Error while writing log book to"
 msgstr ""
 
-#: scubalogproject.cpp:258
+#: scubalog/scubalogproject.cpp:254
 msgid "Ensure there is enough free space on the media!"
 msgstr ""
 
-#: scubalogproject.cpp:322
+#: scubalog/scubalogproject.cpp:316
 msgid "Invalid personal information chunk version"
 msgstr ""
 
-#: scubalogproject.cpp:387
+#: scubalog/scubalogproject.cpp:377
 #, c-format
 msgid "Unknown dive log chunk version %d!"
 msgstr ""
 
-#: scubalogproject.cpp:445
+#: scubalog/scubalogproject.cpp:435
 #, c-format
 msgid ""
 "Unexpected position after reading dive log!\n"
 "Current position is %d; expected %d..."
 msgstr ""
 
-#: scubalogproject.cpp:517
+#: scubalog/scubalogproject.cpp:507
 #, c-format
 msgid ""
 "Unexpected position after writing dive log!\n"
 "Current position is %d; expected %d..."
 msgstr ""
 
-#: scubalogproject.cpp:549
+#: scubalog/scubalogproject.cpp:537
 #, c-format
 msgid "Unknown location log chunk version %d!"
 msgstr ""
 
-#: scubalogproject.cpp:566
+#: scubalog/scubalogproject.cpp:554
 #, c-format
 msgid ""
 "Unexpected position after reading location log!\n"
 "Current position is %d; expected %d..."
 msgstr ""
 
-#: scubalogproject.cpp:613
+#: scubalog/scubalogproject.cpp:599
 #, c-format
 msgid ""
 "Unexpected position after writing location log!\n"
 "Current position is %d; expected %d..."
 msgstr ""
 
-#: scubalogproject.cpp:645
+#: scubalog/scubalogproject.cpp:631
 #, c-format
 msgid "Unknown equipment log chunk version %d!"
 msgstr ""
 
-#: scubalogproject.cpp:683
+#: scubalog/scubalogproject.cpp:669
 #, c-format
 msgid ""
 "Unexpected position after reading equipment log!\n"
 "Current position is %d; expected %d..."
 msgstr ""
 
-#: scubalogproject.cpp:750
+#: scubalog/scubalogproject.cpp:736
 #, c-format
 msgid ""
 "Unexpected position after writing equipment log!\n"
