@@ -12,17 +12,10 @@
 //*****************************************************************************
 
 #include "ktimevalidator.h"
-
+#include "debug.h"
 #include <assert.h>
 #include <ctype.h>
 #include <qwidget.h>
-
-#if defined(DEBUG)
-# define DBG(x)
-#else
-# include <stdio.h>
-# define DBG(x) printf x
-#endif
 
 
 //*****************************************************************************
