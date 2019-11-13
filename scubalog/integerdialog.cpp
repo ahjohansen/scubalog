@@ -26,9 +26,9 @@
 
 //*****************************************************************************
 /*!
-  Create the dialog object with \a pcParent as parent widget and
-  \a pzName as widget name. If \a isModal is `true', the dialog
-  will be modal. The flags \a nFlags can be used to customize the dialog.
+  Create the dialog object with \a pcParent as parent widget.
+  If \a isModal is `true', the dialog will be modal.
+  The flags \a nFlags can be used to customize the dialog.
 
   The dialog will by default accept all possible integers. Use setMinValue()
   and setMaxValue() to restrict the range accepted.
@@ -73,8 +73,8 @@ IntegerDialog::IntegerDialog(QWidget* pcParent,
   QGridLayout* pcLayout = new QGridLayout(this);
   pcLayout->setColumnStretch(1, 1);
   pcLayout->setRowStretch(0, 1);
-  pcLayout->addWidget(m_pcText,   0, 0, 0, 2);
-  pcLayout->addWidget(m_pcEditor, 1, 1, 0, 2);
+  pcLayout->addWidget(m_pcText,   0, 0, 1, 3);
+  pcLayout->addWidget(m_pcEditor, 1, 0, 1, 3);
   pcLayout->addWidget(m_pcOk,     2, 0);
   pcLayout->addWidget(m_pcCancel, 2, 2);
   pcLayout->activate();

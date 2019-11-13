@@ -104,7 +104,7 @@ PersonalInfoView::PersonalInfoView(QWidget* pcParent)
   pcUpperLayout->addWidget(m_pcEmailAddress,  1, 1);
   pcUpperLayout->addWidget(pcWwwUrlLabel,     1, 2);
   pcUpperLayout->addWidget(m_pcWwwUrl,        1, 3);
-  pcUpperLayout->addWidget(m_pcLoggedDiveTime, 2, 2, 0, 1);
+  pcUpperLayout->addWidget(m_pcLoggedDiveTime, 2, 0, 1, 2);
   pcDVTopLayout->addWidget(pcCommentsLabel);
   pcDVTopLayout->addWidget(m_pcComments, 10);
   pcDVTopLayout->activate();
