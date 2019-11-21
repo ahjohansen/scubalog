@@ -1,0 +1,94 @@
+# Custom configuration.
+
+KDE_LIB_DIR = /usr/lib64/kde4/devel ;
+
+
+###############################################################################
+# For Jamrules:
+
+MOC = moc-qt4 ;
+
+rule Moc
+{
+    TEMPORARY $(<) ;
+    NOCARE Moc ;
+    NOTFILE Moc ;
+    Clean $(<) ;
+#   RmTemps $(<:S=.o) : $(<) ;
+    # are both of the following necessary?
+    DEPENDS $(<) : $(>) ;
+    DEPENDS $(<:S=.o) : $(<) ;
+}
+
+actions Moc
+{
+    $(RM) $(<)
+    for i in $(>) ; do $(MOC) $i >> $(<) ; done
+}
+
+
+###############################################################################
+
+
+C++         = g++ ;
+C++FLAGS    = -g ;
+OPTIM       = ;
+LINK        = $(C++) ;
+
+SubDirHdrs /usr/include/Qt ;
+SubDirHdrs /usr/include/QtCore ;
+SubDirHdrs /usr/include/QtGui ;
+SubDirHdrs /usr/include/Qt3Support ;
+SubDirHdrs /usr/include/kde4 ;
+
+#SEARCH_SOURCE += [ FDirName scubalog ] ;
+
+Moc scubalog_moc.cpp :
+  equipmentview.h
+  integerdialog.h
+  kdateedit.h
+  kdatevalidator.h
+  kintegeredit.h
+  kintegervalidator.h
+  ktimeedit.h
+  ktimevalidator.h
+  listbox.h
+  locationview.h
+  loglistview.h
+  logview.h
+  personalinfoview.h
+  scubalog.h
+  ;
+
+Main scubalog :
+  dateitem.cpp
+  divelog.cpp
+  divelogitem.cpp
+  equipmentlog.cpp
+  equipmentview.cpp
+  htmlexporter.cpp
+  integerdialog.cpp
+  kdateedit.cpp
+  kdatevalidator.cpp
+  kintegeredit.cpp
+  kintegervalidator.cpp
+  ktimeedit.cpp
+  ktimevalidator.cpp
+  listbox.cpp
+  locationlog.cpp
+  locationview.cpp
+  logbook.cpp
+  loglistview.cpp
+  logview.cpp
+  main.cpp
+  personalinfoview.cpp
+  scubalog.cpp
+  scubalog_meta_unload.cpp
+  scubalogproject.cpp
+  udcfexporter.cpp
+  scubalog_moc.cpp
+  ;
+
+LINKLIBS on scubalog +=
+  -L$(KDE_LIB_DIR) -lkdeui -lkio -lkdecore
+  -lQtGui -lQt3Support -lQtXml -lQtCore -lstdc++ ;
