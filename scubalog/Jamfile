@@ -83,7 +83,6 @@ Main scubalog :
   main.cpp
   personalinfoview.cpp
   scubalog.cpp
-  scubalog_meta_unload.cpp
   scubalogproject.cpp
   udcfexporter.cpp
   scubalog_moc.cpp
