@@ -350,7 +350,7 @@ LogView::newLog()
     viewLog(pcLog);
     emit newLog(pcLog);
   }
-  catch ( std::bad_alloc ) {
+  catch ( std::bad_alloc& ) {
     QMessageBox::warning(QApplication::topLevelWidgets().at(0),
                          i18n("[ScubaLog] New dive log"),
                          i18n("Out of memory when creating a new dive log!"));

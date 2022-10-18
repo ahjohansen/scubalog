@@ -288,7 +288,7 @@ LocationView::editLocation(const QString& cLocationName)
   try {
     pcLog = new LocationLog();
   }
-  catch ( std::bad_alloc ) {
+  catch ( std::bad_alloc& ) {
     QMessageBox::warning(QApplication::topLevelWidgets().at(0),
                          i18n("[ScubaLog] New location"),
                          i18n("Out of memory when creating "
@@ -329,7 +329,7 @@ LocationView::newLocation()
   try {
     pcLog = new LocationLog();
   }
-  catch ( std::bad_alloc ) {
+  catch ( std::bad_alloc& ) {
     QMessageBox::warning(QApplication::topLevelWidgets().at(0),
                          i18n("[ScubaLog] New location"),
                          i18n("Out of memory when creating "
@@ -373,7 +373,7 @@ LocationView::deleteLocation()
   int nCurrentItem = m_pcLocations->currentItem();
   if ( -1 == nCurrentItem )
     return;
-  assert(cLocationList.count() > (unsigned)nCurrentItem);
+  assert(cLocationList.count() > nCurrentItem);
 
   LocationLog* pcLog = cLocationList.at(nCurrentItem);
   assert(pcLog);

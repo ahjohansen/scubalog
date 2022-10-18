@@ -321,7 +321,7 @@ EquipmentView::deleteItem()
   int nCurrentItem = m_pcItemView->currentItem();
   if ( -1 == nCurrentItem )
     return;
-  assert(cEquipmentLogList.count() > (unsigned)nCurrentItem);
+  assert(cEquipmentLogList.count() > nCurrentItem);
   m_pcItemView->removeItem(nCurrentItem);
   delete cEquipmentLogList.takeAt(nCurrentItem);
 
@@ -535,7 +535,7 @@ EquipmentView::logEntryChanged(int nRow, int nCol)
   if ( 0 == pcLog )
     return;
   QList<EquipmentHistoryEntry*>& cHistory = pcLog->history();
-  while ( cHistory.count() <= (unsigned)nRow )
+  while ( cHistory.count() <= nRow )
     cHistory.append(new EquipmentHistoryEntry());
   EquipmentHistoryEntry& cEntry = *cHistory.at(nRow);
   // Convert text to date
@@ -546,11 +546,13 @@ EquipmentView::logEntryChanged(int nRow, int nCol)
       dynamic_cast<DateItem*>(m_pcLogView->item(nRow, nCol));
     assert(pcDateItem != 0);
     QDate cDate(KDateValidator::convertToDate(pcDateItem->text()));
-    if ( false == cDate.isNull() )
+    if ( !cDate.isNull() ) {
       cEntry.setDate(cDate);
-    else
+    }
+    else {
       DBG(("EquipmentView::logEntryChanged(): Invalid date \"%s\"\n",
            pcDateItem->text().toUtf8().constData()));
+    }
   }
   else {
     const QString cComment = m_pcLogView->text(nRow, nCol);

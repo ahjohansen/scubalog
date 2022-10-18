@@ -384,7 +384,7 @@ ScubaLog::newProject()
     setCaption(i18n("Untitled"));
     *m_pcProjectName = "";
   }
-  catch ( std::bad_alloc ) {
+  catch ( std::bad_alloc& ) {
     statusBar()->showMessage(i18n("Out of memory!"), 3000);
   }
 }
@@ -597,7 +597,7 @@ ScubaLog::readLogBook(const QString& cFileName)
       statusBar()->showMessage(i18n("Reading log book...Failed!"), 3000);
     }
   }
-  catch ( std::bad_alloc ) {
+  catch ( std::bad_alloc& ) {
     delete pcLogBook;
     pcLogBook = 0;
     statusBar()->showMessage(i18n("Reading log book...Out of memory!"), 3000);

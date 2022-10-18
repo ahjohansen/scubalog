@@ -119,7 +119,7 @@ KDateValidator::validate(QString& cInput, int&) const
                             anNumbers[2] <= m_cLast.year() &&
                             false == isValidDate(anNumbers[0], anNumbers[1],
                                                  anNumbers[2])))) ) {
-    DBG(("\"%s\" is an invalid date!\n", cInput.data()));
+    DBG(("\"%s\" is an invalid date\n", cInput.toUtf8().constData()));
     return Invalid;
   }
   else if ( (1 <= anNumbers[0]) &&  (31 >= anNumbers[0]) &&
@@ -128,12 +128,12 @@ KDateValidator::validate(QString& cInput, int&) const
             (daysInMonth(anNumbers[1], anNumbers[2]) >= anNumbers[0]) ) {
     QDate cDate(anNumbers[2], anNumbers[1], anNumbers[0]);
     if ( (cDate >= m_cFirst) && ( cDate <= m_cLast) ) {
-      DBG(("\"%s\" is an acceptable date!\n", cInput.data()));
+      DBG(("\"%s\" is an acceptable date\n", cInput.toUtf8().constData()));
       return Acceptable;
     }
   }
 
-  DBG(("\"%s\" is a valid date!\n", cInput.data()));
+  DBG(("\"%s\" is a valid date\n", cInput.toUtf8().constData()));
   return QValidator::Intermediate;
 }
 
@@ -265,11 +265,12 @@ KDateValidator::daysInMonth(int nMonth, int nYear)
   const int anMonthDays[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
   assert((nMonth >= 1) && (nMonth <= 12));
   assert((nYear >= 1752) && (nYear < 8000));
-  if ( (2 == nMonth) &&
-       (nYear % 4 == 0 && nYear % 100 != 0 || nYear % 400 == 0) )
+  if ( 2 == nMonth && QDate::isLeapYear(nYear) ) {
     return 29;
-  else
+  }
+  else {
     return anMonthDays[nMonth-1];
+  }
 }
 
 

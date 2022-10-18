@@ -163,7 +163,7 @@ LogListView::createNewLog()
     (void)new DiveLogItem(m_pcDiveListView, pcLastItem, pcLog);
     emit displayLog(pcLog);
   }
-  catch ( std::bad_alloc ) {
+  catch ( std::bad_alloc& ) {
     // In case the divelogitem causes OOM, delete the log to be sure...
     delete pcLog;
     QMessageBox::warning(QApplication::topLevelWidgets().at(0),
