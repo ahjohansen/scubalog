@@ -4,7 +4,7 @@
   \brief This file contains the implementation of the ScubaLogProject class.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -23,9 +23,15 @@
 #include <qmessagebox.h>
 #include <algorithm>
 
-bool operator < (const LocationLog& l, const LocationLog& r)
+
+/**
+ * Compare function for sorting dive locations \a l and \a r.
+ * The name of the location is used as the sort key.
+ */
+
+static bool CompareLocations(const LocationLog* l, const LocationLog* r)
 {
-  return QString::compare(l.getName(), r.getName());
+  return l->getName() < r->getName();
 }
 
 
@@ -202,7 +208,7 @@ ScubaLogProject::importLogBook(const QString& cFileName) const
   DiveList& cDiveList = pcLogBook->diveList();
   cDiveList.sort();
   QList<LocationLog*>& cLocationList = pcLogBook->locationList();
-  std::sort(cLocationList.begin(), cLocationList.end());
+  std::sort(cLocationList.begin(), cLocationList.end(), CompareLocations);
 
   return pcLogBook;
 }
