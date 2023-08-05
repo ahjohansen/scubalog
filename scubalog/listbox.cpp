@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -25,7 +25,7 @@
 //*****************************************************************************
 
 ListBox::ListBox(QWidget* pcParent)
-  : Q3ListBox(pcParent),
+  : QListWidget(pcParent),
     m_pcPopupMenu(0)
 {
 }
@@ -93,15 +93,15 @@ void
 ListBox::mousePressEvent(QMouseEvent* pcEvent)
 {
   if ( m_pcPopupMenu && Qt::RightButton == pcEvent->button() ) {
-    int nItem = findItem(pcEvent->pos().y());
-    if ( -1 != nItem ) {
-      setCurrentItem(nItem);
+    QListWidgetItem* item = itemAt(pcEvent->pos());
+    if ( item ) {
+      setCurrentItem(item);
     }
     emit aboutToShowPopup(m_pcPopupMenu);
     m_pcPopupMenu->popup(mapToGlobal(pcEvent->pos()));
   }
   else {
-    Q3ListBox::mousePressEvent(pcEvent);
+    QListWidget::mousePressEvent(pcEvent);
   }
 }
 
@@ -126,18 +126,12 @@ ListBox::keyPressEvent(QKeyEvent* pcEvent)
        (Qt::Key_Menu == pcEvent->key() || Qt::Key_Escape  == pcEvent->key()) ) {
     QPoint cPos = mapToGlobal(pos());
     cPos.setX(cPos.x() + 2);
-    int nCurrentY = 2;
-    const int nCurrentItem = currentItem();
-    if ( -1 != nCurrentItem ) {
-      // ### Find new solution
-      //itemYPos(nCurrentItem, &nCurrentY);
-    }
-    cPos.setY(cPos.y() + nCurrentY);
+    cPos.setY(cPos.y() + 2);
     emit aboutToShowPopup(m_pcPopupMenu);
     m_pcPopupMenu->popup(cPos);
   }
   else {
-    Q3ListBox::keyPressEvent(pcEvent);
+    QListWidget::keyPressEvent(pcEvent);
   }
 }
 

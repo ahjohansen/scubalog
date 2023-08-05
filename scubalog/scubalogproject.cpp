@@ -16,11 +16,11 @@
 #include "chunkio.h"
 #include "debug.h"
 
-#include <kapplication.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <qdatastream.h>
 #include <qfile.h>
 #include <qmessagebox.h>
+#include <QApplication>
 #include <algorithm>
 
 
@@ -403,9 +403,9 @@ ScubaLogProject::readDiveLog(QDataStream& cStream,
   cStream >> nChunkSize
           >> nChunkVersion;
   if ( 1 != nChunkVersion ) {
-    QString cText;
-    cText.sprintf(i18n("Unknown dive log chunk version %d!").toLatin1(),
-                  nChunkVersion);
+    const QString cText =
+      QString::asprintf(i18n("Unknown dive log chunk version %d!").toLatin1(),
+                        nChunkVersion);
     throw IOException(cText);
   }
 
@@ -462,10 +462,10 @@ ScubaLogProject::readDiveLog(QDataStream& cStream,
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize - sizeof(unsigned int);
   if ( nNextChunkPos != cDevice.pos() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after reading dive log!\n"
-                       "Current position is %d; expected %d...").toLatin1(),
-                  cDevice.pos(), nNextChunkPos);
+    const QString cText =
+      QString::asprintf(i18n("Unexpected position after reading dive log!\n"
+                             "Current position is %d; expected %d...").toLatin1(),
+                        cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }
@@ -529,10 +529,10 @@ ScubaLogProject::writeDiveLog(QDataStream&   cStream,
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize;
   if ( nNextChunkPos != cDevice.pos() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after writing dive log!\n"
-                       "Current position is %d; expected %d...").toLatin1(),
-                  cDevice.pos(), nNextChunkPos);
+    const QString cText =
+      QString::asprintf(i18n("Unexpected position after writing dive log!\n"
+                             "Current position is %d; expected %d...").toLatin1(),
+                        cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }
@@ -559,9 +559,9 @@ ScubaLogProject::readLocationLog(QDataStream& cStream, LocationLog& cLog) const
   cStream >> nChunkSize
           >> nChunkVersion;
   if ( 1 != nChunkVersion ) {
-    QString cText;
-    cText.sprintf(i18n("Unknown location log chunk version %d!").toLatin1(),
-                  nChunkVersion);
+    const QString cText =
+      QString::asprintf(i18n("Unknown location log chunk version %d!").toLatin1(),
+                        nChunkVersion);
     throw IOException(cText);
   }
 
@@ -576,10 +576,10 @@ ScubaLogProject::readLocationLog(QDataStream& cStream, LocationLog& cLog) const
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize - sizeof(unsigned int);
   if ( nNextChunkPos != cDevice.pos() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after reading location log!\n"
-                       "Current position is %d; expected %d...").toLatin1(),
-                  cDevice.pos(), nNextChunkPos);
+    const QString cText =
+      QString::asprintf(i18n("Unexpected position after reading location log!\n"
+                             "Current position is %d; expected %d...").toLatin1(),
+                        cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }
@@ -619,10 +619,10 @@ ScubaLogProject::writeLocationLog(QDataStream&       cStream,
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize;
   if ( nNextChunkPos != cDevice.pos() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after writing location log!\n"
-                       "Current position is %d; expected %d...").toLatin1(),
-                  cDevice.pos(), nNextChunkPos);
+    const QString cText =
+      QString::asprintf(i18n("Unexpected position after writing location log!\n"
+                             "Current position is %d; expected %d...").toLatin1(),
+                        cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }
@@ -651,9 +651,9 @@ ScubaLogProject::readEquipmentLog(QDataStream&  cStream,
   cStream >> nChunkSize
           >> nChunkVersion;
   if ( 1 != nChunkVersion ) {
-    QString cText;
-    cText.sprintf(i18n("Unknown equipment log chunk version %d!").toLatin1(),
-                  nChunkVersion);
+    const QString cText =
+      QString::asprintf(i18n("Unknown equipment log chunk version %d!").toLatin1(),
+                        nChunkVersion);
     throw IOException(cText);
   }
 
@@ -689,10 +689,10 @@ ScubaLogProject::readEquipmentLog(QDataStream&  cStream,
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize - sizeof(unsigned int);
   if ( nNextChunkPos != cDevice.pos() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after reading equipment log!\n"
-                       "Current position is %d; expected %d...").toLatin1(),
-                  cDevice.pos(), nNextChunkPos);
+    const QString cText =
+      QString::asprintf(i18n("Unexpected position after reading equipment log!\n"
+                             "Current position is %d; expected %d...").toLatin1(),
+                        cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }
@@ -752,10 +752,10 @@ ScubaLogProject::writeEquipmentLog(QDataStream&        cStream,
   // Ensure we're at the correct position in the stream
   const unsigned int nNextChunkPos = nPos + nChunkSize;
   if ( nNextChunkPos != cDevice.pos() ) {
-    QString cText;
-    cText.sprintf(i18n("Unexpected position after writing equipment log!\n"
-                       "Current position is %d; expected %d...").toLatin1(),
-                  cDevice.pos(), nNextChunkPos);
+    const QString cText =
+      QString::asprintf(i18n("Unexpected position after writing equipment log!\n"
+                             "Current position is %d; expected %d...").toLatin1(),
+                        cDevice.pos(), nNextChunkPos);
     throw IOException(cText);
   }
 }

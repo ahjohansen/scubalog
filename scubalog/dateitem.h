@@ -7,35 +7,35 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
 #ifndef DATEITEM_H
 #define DATEITEM_H
 
-#include <q3table.h>
+#include <QTableWidgetItem>
+
 
 //*****************************************************************************
 /*!
   \class DateItem
-  \brief The DateItem class is used to show dates in a QTable widget.
+  \brief The DateItem class is used to show dates in a QTableWidget.
 
-  \author André Johansen
+  \author André Hübert Johansen
 */
 //*****************************************************************************
 
-class DateItem : public Q3TableItem
+class DateItem : public QTableWidgetItem
 {
 public:
   //! Initialise the object.
-  DateItem(Q3Table* i_pcTable, EditType eEditType, const QString& i_cText)
-    : Q3TableItem(i_pcTable, eEditType, i_cText)
+  DateItem(const QString& text)
+    : QTableWidgetItem(text)
   {
-    setReplaceable(false);
   }
 
-  void setContentFromEditor(QWidget* pcEditor);
+  virtual void setData(int role, const QVariant& value);
 };
 
 #endif // DATEITEM_H

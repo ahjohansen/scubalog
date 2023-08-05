@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -37,7 +37,7 @@ static bool compareDiveLogItems(const DiveLog* pcLog1, const DiveLog* pcLog2)
 
   This class is basically a wrapper around a QList.
 
-  \author André Johansen
+  \author André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -50,7 +50,7 @@ public:
 
   void sort()
   {
-    qSort(this->begin(), this->end(), compareDiveLogItems);
+    std::sort(this->begin(), this->end(), compareDiveLogItems);
   }
 
 private:

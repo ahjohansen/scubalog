@@ -1,23 +1,20 @@
-# Custom configuration.
-
-KDE_LIB_DIR = /usr/lib64/kde4/devel ;
-
-
 ###############################################################################
 # For Jamrules:
 
-MOC = moc-qt4 ;
+QTDIR = /usr/include/qt5 ;
+KDE_INC_DIR = /usr/include/KF5 ;
+MOC = moc-qt5 ;
 
 rule Moc
 {
-    TEMPORARY $(<) ;
+#   TEMPORARY $(<) ;
     NOCARE Moc ;
     NOTFILE Moc ;
     Clean $(<) ;
 #   RmTemps $(<:S=.o) : $(<) ;
     # are both of the following necessary?
     DEPENDS $(<) : $(>) ;
-    DEPENDS $(<:S=.o) : $(<) ;
+#   DEPENDS $(<:S=.o) : $(<) ;
 }
 
 actions Moc
@@ -26,22 +23,27 @@ actions Moc
     for i in $(>) ; do $(MOC) $i >> $(<) ; done
 }
 
-
 ###############################################################################
 
 
 C++         = g++ ;
-C++FLAGS    = -g ;
+C++FLAGS    = -g -Wall ;
 OPTIM       = ;
 LINK        = $(C++) ;
 
-SubDirHdrs /usr/include/Qt ;
-SubDirHdrs /usr/include/QtCore ;
-SubDirHdrs /usr/include/QtGui ;
-SubDirHdrs /usr/include/Qt3Support ;
-SubDirHdrs /usr/include/kde4 ;
-
-#SEARCH_SOURCE += [ FDirName scubalog ] ;
+SubDirHdrs [ FDirName $(QTDIR) ] ;
+SubDirHdrs [ FDirName $(QTDIR) Qt ] ;
+SubDirHdrs [ FDirName $(QTDIR) QtCore ] ;
+SubDirHdrs [ FDirName $(QTDIR) QtGui ] ;
+SubDirHdrs [ FDirName $(QTDIR) QtWidgets ] ;
+SubDirHdrs [ FDirName $(QTDIR) QtXml ] ;
+SubDirHdrs [ FDirName $(QTDIR) QtPrintSupport ] ;
+SubDirHdrs /usr/lib64/qt5/mkspecs/linux-g++-64 ;
+SubDirHdrs [ FDirName $(KDE_INC_DIR) KCoreAddons ] ;
+SubDirHdrs [ FDirName $(KDE_INC_DIR) KConfigCore ] ;
+SubDirHdrs [ FDirName $(KDE_INC_DIR) KConfigGui ] ;
+SubDirHdrs [ FDirName $(KDE_INC_DIR) KXmlGui ] ;
+SubDirHdrs [ FDirName $(KDE_INC_DIR) KI18n ] ;
 
 Moc scubalog_moc.cpp :
   equipmentview.h
@@ -63,7 +65,7 @@ Moc scubalog_moc.cpp :
 Main scubalog :
   dateitem.cpp
   divelog.cpp
-  divelogitem.cpp
+  # divelogitem.cpp
   equipmentlog.cpp
   equipmentview.cpp
   htmlexporter.cpp
@@ -89,5 +91,16 @@ Main scubalog :
   ;
 
 LINKLIBS on scubalog +=
-  -L$(KDE_LIB_DIR) -lkdeui -lkio -lkdecore
-  -lQtGui -lQt3Support -lQtXml -lQtCore -lstdc++ ;
+  -lKF5WidgetsAddons
+  -lKF5GuiAddons
+  -lKF5XmlGui
+  -lKF5I18n
+  -lKF5ConfigCore
+  -lKF5CoreAddons
+  -lKF5JobWidgets
+  -lQt5Widgets
+  -lQt5Gui
+  -lQt5Xml
+  -lQt5PrintSupport
+  -lQt5Core
+  -lstdc++ ;

@@ -7,26 +7,26 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
 #include "loglistview.h"
-#include "divelogitem.h"
 #include "divelist.h"
 #include "debug.h"
 
-#include <klocale.h>
-#include <kapplication.h>
+#include <KLocalizedString>
 #include <qmessagebox.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
-#include <q3listview.h>
-#include <q3frame.h>
+#include <QTableWidget>
+#include <QHeaderView>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QApplication>
 #include <new>
 #include <assert.h>
+
 
 //*****************************************************************************
 /*!
@@ -36,28 +36,34 @@
 
 LogListView::LogListView(QWidget* pcParent)
   : QWidget(pcParent),
-    m_pcDiveListView(0),
+    m_pcDiveListWidget(0),
     m_pcNewLog(0),
     m_pcDeleteLog(0),
     m_pcViewLog(0),
     m_pcDiveLogList(0)
 {
-  m_pcDiveListView = new Q3ListView(this, "dives");
-  m_pcDiveListView->setFrameStyle(Q3Frame::WinPanel|Q3Frame::Sunken);
-  m_pcDiveListView->addColumn(i18n("Dive"));
-  m_pcDiveListView->addColumn(i18n("Date"));
-  m_pcDiveListView->addColumn(i18n("Time"));
-  m_pcDiveListView->addColumn(i18n("Location"));
-  m_pcDiveListView->setColumnAlignment(0, Qt::AlignRight);
-  m_pcDiveListView->setColumnWidthMode(3, Q3ListView::Maximum);
-  m_pcDiveListView->setAllColumnsShowFocus(true);
-  m_pcDiveListView->setSorting(0);
-  connect(m_pcDiveListView, SIGNAL(doubleClicked(Q3ListViewItem*)),
-          SLOT(viewLog(Q3ListViewItem*)));
-  connect(m_pcDiveListView, SIGNAL(returnPressed(Q3ListViewItem*)),
-          SLOT(viewLog(Q3ListViewItem*)));
-  connect(m_pcDiveListView, SIGNAL(selectionChanged(Q3ListViewItem*)),
-          SLOT(selectedLogChanged(Q3ListViewItem*)));
+  m_pcDiveListWidget = new QTableWidget(0, 4, this);
+  m_pcDiveListWidget->setSelectionMode(QTableWidget::SingleSelection);
+  m_pcDiveListWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  m_pcDiveListWidget->verticalHeader()->hide();
+  QTableWidgetItem* h;
+  h = new QTableWidgetItem(i18n("Dive"));
+  m_pcDiveListWidget->setHorizontalHeaderItem(0, h);
+  h = new QTableWidgetItem(i18n("Date"));
+  m_pcDiveListWidget->setHorizontalHeaderItem(1, h);
+  h = new QTableWidgetItem(i18n("Time"));
+  m_pcDiveListWidget->setHorizontalHeaderItem(2, h);
+  h = new QTableWidgetItem(i18n("Location"));
+  m_pcDiveListWidget->setHorizontalHeaderItem(3, h);
+
+  QHeaderView* header = m_pcDiveListWidget->horizontalHeader();
+  header->setStretchLastSection(true);
+  //m_pcDiveListWidget->setSortingEnabled(true);
+  //m_pcDiveListWidget->sortByColumn(0, Qt::AscendingOrder);
+  connect(m_pcDiveListWidget, SIGNAL(cellDoubleClicked(int, int)),
+          SLOT(viewLog(int, int)));
+  connect(m_pcDiveListWidget, SIGNAL(cellActivated(int, int)),
+          SLOT(selectedLogChanged(int, int)));
 
   m_pcNewLog = new QPushButton(this);
   m_pcNewLog->setText(i18n("&New log entry"));
@@ -77,7 +83,7 @@ LogListView::LogListView(QWidget* pcParent)
   connect(m_pcViewLog, SIGNAL(clicked()), SLOT(viewLog()));
 
   QVBoxLayout* pcDLVTopLayout = new QVBoxLayout(this);
-  pcDLVTopLayout->addWidget(m_pcDiveListView, 10);
+  pcDLVTopLayout->addWidget(m_pcDiveListWidget, 10);
   QHBoxLayout* pcDLVButtonLayout = new QHBoxLayout();
   pcDLVTopLayout->addLayout(pcDLVButtonLayout);
   pcDLVButtonLayout->addWidget(m_pcNewLog);
@@ -99,6 +105,31 @@ LogListView::~LogListView()
 }
 
 
+/**
+ * Insert the dive log \a log at \a row in the view.
+ */
+
+void
+LogListView::insertLogAt(int row, const DiveLog* log)
+{
+  QTableWidgetItem* diveItem = new QTableWidgetItem();
+  diveItem->setData(Qt::DisplayRole, log->logNumber());
+  QTableWidgetItem* dateItem = new QTableWidgetItem();
+  dateItem->setData(Qt::DisplayRole, log->diveDate());
+  QTableWidgetItem* timeItem = new QTableWidgetItem();
+  timeItem->setData(Qt::DisplayRole, log->diveStart());
+  QTableWidgetItem* locationItem = new QTableWidgetItem();
+  locationItem->setData(Qt::DisplayRole, log->diveLocation());
+  if ( row >= m_pcDiveListWidget->rowCount() ) {
+    m_pcDiveListWidget->setRowCount(row+1);
+  }
+  m_pcDiveListWidget->setItem(row, 0, diveItem);
+  m_pcDiveListWidget->setItem(row, 1, dateItem);
+  m_pcDiveListWidget->setItem(row, 2, timeItem);
+  m_pcDiveListWidget->setItem(row, 3, locationItem);
+}
+
+
 //*****************************************************************************
 /*!
   Use \a pcDiveList as the current dive log list.
@@ -116,18 +147,17 @@ LogListView::~LogListView()
 void
 LogListView::setLogList(DiveList* pcDiveList)
 {
-  assert(m_pcDiveListView);
+  assert(m_pcDiveListWidget);
 
-  m_pcDiveListView->clear();
+  m_pcDiveListWidget->clearContents();
   m_pcDiveLogList = pcDiveList;
   if ( pcDiveList ) {
-    DiveLogItem* pcPreviousItem = 0;
+    int row = 0;
     QListIterator<DiveLog*> iLog(*pcDiveList);
     while ( iLog.hasNext() ) {
       DiveLog* pcLog = iLog.next();
-      DiveLogItem* pcItem =
-        new DiveLogItem(m_pcDiveListView, pcPreviousItem, pcLog);
-      pcPreviousItem = pcItem;
+      insertLogAt(row, pcLog);
+      ++row;
     }
   }
 }
@@ -147,29 +177,46 @@ LogListView::createNewLog()
 {
   assert(m_pcDiveLogList);
 
-  DiveLogItem* pcLastItem =
-    dynamic_cast<DiveLogItem*>(m_pcDiveListView->firstChild());
-  while ( pcLastItem && pcLastItem->nextSibling() )
-    pcLastItem = dynamic_cast<DiveLogItem*>(pcLastItem->nextSibling());
   int nDiveNumber = 1;
-  if ( pcLastItem )
-    nDiveNumber = pcLastItem->log()->logNumber() + 1;
+  const int rows = m_pcDiveListWidget->rowCount();
+  if ( rows ) {
+    QTableWidgetItem* pcLastItem = m_pcDiveListWidget->item(rows-1, 0);
+    nDiveNumber += pcLastItem->text().toInt();
+  }
 
   DiveLog* pcLog = 0;
   try {
     pcLog = new DiveLog();
     pcLog->setLogNumber(nDiveNumber);
     m_pcDiveLogList->append(pcLog);
-    (void)new DiveLogItem(m_pcDiveListView, pcLastItem, pcLog);
+    insertLogAt(rows, pcLog);
     emit displayLog(pcLog);
   }
   catch ( std::bad_alloc& ) {
-    // In case the divelogitem causes OOM, delete the log to be sure...
+    // In case of OOM, delete the log to be sure...
     delete pcLog;
     QMessageBox::warning(QApplication::topLevelWidgets().at(0),
                          i18n("[ScubaLog] New dive log"),
                          i18n("Out of memory when creating a new dive log!"));
   }
+}
+
+
+/**
+ * Get the dive with log number \a number from the dive log list.
+ * Returns the dive log if found, else NULL.
+ */
+
+DiveLog* LogListView::getDiveLogNumber(int number)
+{
+  assert(m_pcDiveLogList != 0);
+  for ( int i = 0; i < m_pcDiveLogList->size(); ++i ) {
+    DiveLog* log = m_pcDiveLogList->at(i);
+    if ( log->logNumber() == number ) {
+      return log;
+    }
+  }
+  return NULL;
 }
 
 
@@ -187,10 +234,10 @@ void
 LogListView::deleteLog()
 {
   assert(m_pcDiveLogList);
-  DiveLogItem* pcItem =
-    dynamic_cast<DiveLogItem*>(m_pcDiveListView->currentItem());
-  if ( pcItem ) {
-    DiveLog* pcLog = pcItem->log();
+  int row = m_pcDiveListWidget->currentRow();
+  const QTableWidgetItem* item = m_pcDiveListWidget->item(row, 0);
+  if ( item ) {
+    DiveLog* pcLog = getDiveLogNumber(item->data(Qt::DisplayRole).toInt());
     DBG(("About to delete dive log #%d\n", pcLog->logNumber()));
     QString cMessage =
       QString(i18n("Are you sure you want to delete log %1?\n"
@@ -202,11 +249,10 @@ LogListView::deleteLog()
                                            cMessage,
                                            i18n("&Yes"), i18n("&No"));
     if ( 0 == nResult ) {
-      delete pcItem;
       emit aboutToDeleteLog(pcLog);
-      int i = m_pcDiveLogList->indexOf(pcLog);
-      assert(i != -1);
-      delete m_pcDiveLogList->takeAt(i);
+      m_pcDiveListWidget->removeRow(row);
+      m_pcDiveLogList->removeAll(pcLog);
+      delete pcLog;
       DBG(("Deleted dive log...\n"));
     }
   }
@@ -222,10 +268,15 @@ LogListView::deleteLog()
 void
 LogListView::viewLog()
 {
-  DiveLogItem* pcCurrentItem =
-    dynamic_cast<DiveLogItem*>(m_pcDiveListView->currentItem());
-  if ( pcCurrentItem )
-    emit displayLog(pcCurrentItem->log());
+  assert(m_pcDiveLogList);
+  int row = m_pcDiveListWidget->currentRow();
+  const QTableWidgetItem* item = m_pcDiveListWidget->item(row, 0);
+  if ( item ) {
+    DiveLog* log = getDiveLogNumber(item->data(Qt::DisplayRole).toInt());
+    if ( log ) {
+      emit displayLog(log);
+    }
+  }
 }
 
 
@@ -236,11 +287,13 @@ LogListView::viewLog()
 //*****************************************************************************
 
 void
-LogListView::viewLog(Q3ListViewItem* pcItem)
+LogListView::viewLog(int row, int col)
 {
-  DiveLogItem* pcLogItem = dynamic_cast<DiveLogItem*>(pcItem);
-  assert(pcLogItem);
-  emit displayLog(pcLogItem->log());
+  int logs = m_pcDiveLogList->count();
+  if ( row < logs ) {
+    DiveLog* log = m_pcDiveLogList->at(row);
+    emit displayLog(log);
+  }
 }
 
 
@@ -251,12 +304,12 @@ LogListView::viewLog(Q3ListViewItem* pcItem)
 //*****************************************************************************
 
 void
-LogListView::selectedLogChanged(Q3ListViewItem* pcItem)
+LogListView::selectedLogChanged(int row, int col)
 {
   assert(m_pcDeleteLog);
   assert(m_pcViewLog);
-  m_pcDeleteLog->setEnabled(pcItem ? true : false);
-  m_pcViewLog->setEnabled(pcItem ? true : false);
+  m_pcDeleteLog->setEnabled(true);
+  m_pcViewLog->setEnabled(true);
 }
 
 

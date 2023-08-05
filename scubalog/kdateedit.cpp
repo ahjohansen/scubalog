@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -121,7 +121,8 @@ KDateEdit::convertToDate(const QString& cText)
   int nMonth = 0;
   int nYear  = 0;
 
-  if ( (3 == sscanf(cText.toAscii(), "%d.%d.%d",
+  if ( (3 == sscanf(cText.toUtf8().constData(),
+                    "%d.%d.%d",
                     &nDay, &nMonth, &nYear)) &&
        (m_pcValidator->isValidDate(nDay, nMonth, nYear)) )
     cDate = QDate(nYear, nMonth, nDay);
@@ -167,8 +168,10 @@ KDateEdit::focusOutEvent(QFocusEvent*)
 void
 KDateEdit::focusInEvent(QFocusEvent*)
 {
-  QString cNewText;
-  cNewText.sprintf("%d.%d.%d", m_cDate.day(), m_cDate.month(), m_cDate.year());
+  const QString cNewText = QString::asprintf("%d.%d.%d",
+                                             m_cDate.day(),
+                                             m_cDate.month(),
+                                             m_cDate.year());
   setText(cNewText);
 }
 

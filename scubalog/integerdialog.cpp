@@ -7,21 +7,20 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
-#include <assert.h>
-#include <qdialog.h>
-#include <qlabel.h>
-#include <qpushbutton.h>
-#include <qlayout.h>
-#include <QGridLayout>
-#include <kapplication.h>
-#include <klocale.h>
-#include "kintegeredit.h"
 #include "integerdialog.h"
+#include "kintegeredit.h"
+#include <KLocalizedString>
+#include <QGridLayout>
+#include <qlayout.h>
+#include <qpushbutton.h>
+#include <qlabel.h>
+#include <qdialog.h>
 #include <algorithm>
+#include <assert.h>
 
 
 //*****************************************************************************
@@ -38,7 +37,7 @@
 //*****************************************************************************
 
 IntegerDialog::IntegerDialog(QWidget* pcParent,
-                             bool isModal, Qt::WFlags nFlags)
+                             bool isModal, Qt::WindowFlags nFlags)
   : QDialog(pcParent, nFlags),
     m_pcText(0),
     m_pcEditor(0),

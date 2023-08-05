@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -41,15 +41,15 @@ class KIntegerEdit;
 
   \sa KIntegerEdit.
 
-  \author André Johansen
+  \author André Hübert Johansen
 */
 //*****************************************************************************
 
 class IntegerDialog : public QDialog {
   Q_OBJECT
 public:
-  IntegerDialog(QWidget* pcParent = 0,
-                bool isModal = false, Qt::WFlags nFlags = 0);
+  IntegerDialog(QWidget* pcParent,
+                bool isModal = false, Qt::WindowFlags nFlags = Qt::Widget);
   virtual ~IntegerDialog();
 
   void setValue(int nValue);

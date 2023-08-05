@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -17,12 +17,14 @@
 #include <qwidget.h>
 
 class QString;
-class Q3ListBox;
+class QListWidget;
+class QListWidgetItem;
 class QPushButton;
 class QLineEdit;
 class LogBook;
-class Q3Table;
 class QMenu;
+class QTableWidget;
+class QTableWidgetItem;
 
 //*****************************************************************************
 /*!
@@ -32,7 +34,7 @@ class QMenu;
   A log book may contain descriptions of the divers equipment, together
   with a history, service requirements etc.
 
-  \author André Johansen
+  \author André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -48,17 +50,17 @@ private slots:
   void newItem();
   void deleteItem();
   void changeItemName();
-  void editItemName(int nItemNumber);
-  void itemSelected(int nItemNumber);
+  void editItemName(QListWidgetItem* item);
+  void itemSelected();
   void itemTypeChanged(const QString& cType);
   void itemSerialChanged(const QString& cSerial);
   void itemServiceChanged(const QString& cService);
-  void logEntryChanged(int nRow, int nCol);
+  void logEntryChanged(QTableWidgetItem* item);
   void newLogEntry();
   void deleteLogEntry();
   void moveCurrentUp();
   void moveCurrentDown();
-  void showLogEntryMenu(int i_nRow, int i_nCol, const QPoint& i_cPos);
+  void showLogEntryMenu(const QPoint& i_cPos);
 
 private:
   void createLogEntryMenu();
@@ -67,7 +69,7 @@ private:
   //! The log book.
   LogBook*       m_pcLogBook;
   //! The equipment list view.
-  Q3ListBox*      m_pcItemView;
+  QListWidget*   m_pcItemView;
   //! The new item button.
   QPushButton*   m_pcNew;
   //! The delete item button.
@@ -85,7 +87,7 @@ private:
   //! The service editor.
   QLineEdit*     m_pcService;
   //! The log edit view.
-  Q3Table*       m_pcLogView;
+  QTableWidget*  m_pcLogView;
   //! The context menu used in the log for an entry.
   QMenu*         m_pcLogEntryMenu;
 };

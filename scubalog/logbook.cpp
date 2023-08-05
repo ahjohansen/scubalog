@@ -7,15 +7,13 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
 #include <qfile.h>
 #include <qdatastream.h>
 #include <qmessagebox.h>
-#include <kapplication.h>
-#include <klocale.h>
 #include "debug.h"
 #include "chunkio.h"
 #include "divelist.h"

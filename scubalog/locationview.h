@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -17,10 +17,9 @@
 #include <qwidget.h>
 
 class QMenu;
-class Q3ListBox;
 class QPushButton;
 class QLineEdit;
-class Q3MultiLineEdit;
+class QListWidgetItem;
 class QTextEdit;
 class ListBox;
 class LogBook;
@@ -43,7 +42,7 @@ class LocationLog;
   (although this class might create and delete logs upon request
   from the user).
 
-  \author André Johansen
+  \author André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -60,7 +59,7 @@ public slots:
 
 private slots:
   void locationSelected(int nLocationIndex);
-  void editLocationName(int nLocationIndex);
+  void editLocationName(QListWidgetItem* item);
   void editCurrentLocationName();
   void newLocation();
   void deleteLocation();

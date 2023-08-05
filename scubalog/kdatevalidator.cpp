@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -107,18 +107,17 @@ KDateValidator::validate(QString& cInput, int&) const
   DBG(("Date found: %d.%d.%d\n", anNumbers[0], anNumbers[1], anNumbers[2]));
 
   // Invalid date
-  if ( (31 < anNumbers[0]) ||
-       ((iNumber >= 1) && ((1 > anNumbers[0]) || (12 < anNumbers[1])) ||
-        ((anNumbers[1] >= 1) && (daysInMonth(anNumbers[1]) < anNumbers[0]))) ||
-       ((iNumber == 2) && ((1 > anNumbers[1]) ||
-                           (daysInMonth(anNumbers[1]) < anNumbers[0]) ||
-                           (m_cLast.year() < anNumbers[2]) ||
-                           ((m_cFirst.year()-anNumbers[2] < 10) &&
-                            anNumbers[2] < m_cFirst.year()) ||
-                           (anNumbers[2] >= m_cFirst.year() &&
-                            anNumbers[2] <= m_cLast.year() &&
-                            false == isValidDate(anNumbers[0], anNumbers[1],
-                                                 anNumbers[2])))) ) {
+  if ( (anNumbers[0] > 31) ||
+       (iNumber >= 1 && (((anNumbers[1] < 1) || (12 < anNumbers[1])) ||
+                         ((anNumbers[1] >= 1) && (daysInMonth(anNumbers[1]) < anNumbers[0])))) ||
+       (iNumber == 2 && ((anNumbers[1] < 1) ||
+                         (daysInMonth(anNumbers[1]) < anNumbers[0]) ||
+                         (m_cLast.year() < anNumbers[2]) ||
+                         ((m_cFirst.year()-anNumbers[2] < 10) &&
+                          anNumbers[2] < m_cFirst.year()) ||
+                         (anNumbers[2] >= m_cFirst.year() &&
+                          anNumbers[2] <= m_cLast.year() &&
+                          !isValidDate(anNumbers[0], anNumbers[1], anNumbers[2])))) ) {
     DBG(("\"%s\" is an invalid date\n", cInput.toUtf8().constData()));
     return Invalid;
   }
@@ -294,7 +293,8 @@ KDateValidator::convertToDate(const QString& cDateText)
   int nMonth = 0;
   int nYear  = 0;
 
-  if ( (3 == sscanf(cDateText.toAscii(), "%d.%d.%d",
+  if ( (3 == sscanf(cDateText.toUtf8().constData(),
+                    "%d.%d.%d",
                     &nDay, &nMonth, &nYear)) &&
        (QDate::isValid(nYear, nMonth, nDay)) )
     cDate = QDate(nYear, nMonth, nDay);

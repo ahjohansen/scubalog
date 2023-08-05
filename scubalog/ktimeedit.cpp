@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -120,7 +120,8 @@ KTimeEdit::convertToTime(const QString& cText)
   int nMinute = 0;
   int nSecond = 0;
 
-  if ( (3 == sscanf(cText.toAscii(), "%d:%d:%d",
+  if ( (3 == sscanf(cText.toUtf8().constData(),
+                    "%d:%d:%d",
                     &nHour, &nMinute, &nSecond)) &&
        (m_pcValidator->isValidTime(nHour, nMinute, nSecond)) )
     cTime = QTime(nHour, nMinute, nSecond);

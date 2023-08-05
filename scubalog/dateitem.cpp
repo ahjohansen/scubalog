@@ -4,45 +4,39 @@
   \brief This file contains the implementation of the DateItem class.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
 #include "dateitem.h"
-
-#include <assert.h>
+#include "kdatevalidator.h"
 #include <qdatetime.h>
 #include <qstring.h>
-#include <qlineedit.h>
 
 //*****************************************************************************
 /*!
-  The editor \a i_pcEditor has edited the contents of this table item.
-  Copy the date into the item, if valid.
+  Set the data for this item for role \a role with value \a value.
+  On edit role, copy the date into the item if valid.
 
   \sa QDate::fromString(), QDate::toString().
 */
 //*****************************************************************************
 
 void
-DateItem::setContentFromEditor(QWidget* i_pcEditor)
+DateItem::setData(int role, const QVariant& value)
 {
-  assert(i_pcEditor);
-
-  QLineEdit* pcEditor = dynamic_cast<QLineEdit*>(i_pcEditor);
-  if ( pcEditor ) {
-    const QString cText = pcEditor->text();
-    const QDate cDate = QDate::fromString(cText, Qt::ISODate);
-    if ( false == cDate.isValid() )
+  if ( role == Qt::EditRole ) {
+    const QString cText = value.toString();
+    const QDate cDate = KDateValidator::convertToDate(cText);
+    if ( !cDate.isValid() )
       return;
-    const QString cItemText = cDate.toString(Qt::ISODate);
+    const QString cItemText = cDate.toString();
     setText(cItemText);
   }
   else {
-    Q3TableItem::setContentFromEditor(i_pcEditor);
+    QTableWidgetItem::setData(role, value);
   }
 }
-
 
 
 // Local Variables:

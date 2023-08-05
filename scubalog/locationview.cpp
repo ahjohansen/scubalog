@@ -7,29 +7,30 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
-#include <assert.h>
-#include <new>
-#include <qwidget.h>
-#include <qsplitter.h>
-#include <qpushbutton.h>
-#include <qlineedit.h>
-#include <QTextEdit>
-#include <qmessagebox.h>
-#include <qlayout.h>
-#include <QMenu>
-#include <QHBoxLayout>
-#include <QBoxLayout>
-#include <QVBoxLayout>
-#include <kapplication.h>
-#include <klocale.h>
-#include "listbox.h"
-#include "logbook.h"
-#include "locationlog.h"
 #include "locationview.h"
+#include "locationlog.h"
+#include "logbook.h"
+#include "listbox.h"
+
+#include <KLocalizedString>
+#include <QVBoxLayout>
+#include <QBoxLayout>
+#include <QHBoxLayout>
+#include <QMenu>
+#include <qlayout.h>
+#include <qmessagebox.h>
+#include <QTextEdit>
+#include <qlineedit.h>
+#include <qpushbutton.h>
+#include <qsplitter.h>
+#include <qwidget.h>
+#include <QApplication>
+#include <new>
+#include <assert.h>
 
 
 //*****************************************************************************
@@ -53,10 +54,10 @@ LocationView::LocationView(QWidget* pcParent)
 
   m_pcLocations = new ListBox(pcTop);
   m_pcLocations->setEnabled(false);
-  connect(m_pcLocations, SIGNAL(highlighted(int)),
+  connect(m_pcLocations, SIGNAL(currentRowChanged(int)),
           SLOT(locationSelected(int)));
-  connect(m_pcLocations, SIGNAL(selected(int)),
-          SLOT(editLocationName(int)));
+  connect(m_pcLocations, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+          SLOT(editLocationName(QListWidgetItem*)));
 
   m_pcNewLocation = new QPushButton(pcTop);
   m_pcNewLocation->setEnabled(false);
@@ -148,15 +149,15 @@ LocationView::setLogBook(LogBook* pcLogBook)
 
   if ( pcLogBook ) {
     m_pcLocations->clear();
-    m_pcLocations->setAutoUpdate(false);
+    m_pcLocations->setUpdatesEnabled(false);
     QList<LocationLog*>& cLocationList = pcLogBook->locationList();
     QListIterator<LocationLog*> iLoc(cLocationList);
     LocationLog* pcLocation;
     while ( iLoc.hasNext() ) {
       pcLocation = iLoc.next();
-      m_pcLocations->insertItem(pcLocation->getName());
+      m_pcLocations->addItem(pcLocation->getName());
     }
-    m_pcLocations->setAutoUpdate(true);
+    m_pcLocations->setUpdatesEnabled(true);
     m_pcNewLocation->setEnabled(true);
     unsigned int nNumLocations = cLocationList.count();
     bool bLocationsExist = nNumLocations != 0;
@@ -210,17 +211,19 @@ LocationView::locationSelected(int nLocationIndex)
 
 //*****************************************************************************
 /*!
-  Edit the name of the item \a nLocationIndex.
+  Edit the name of the item \a item.
 
   \sa locationNameChanged().
 */
 //*****************************************************************************
 
 void
-LocationView::editLocationName(int nLocationIndex)
+LocationView::editLocationName(QListWidgetItem* item)
 {
+  assert(item);
   assert(m_pcLogBook);
-  assert(m_pcLocations->count() > (unsigned)nLocationIndex);
+  int nLocationIndex = m_pcLocations->row(item);
+  assert(m_pcLocations->count() > nLocationIndex);
   QList<LocationLog*>& cLocationList = m_pcLogBook->locationList();
   LocationLog* pcLog = cLocationList.at(nLocationIndex);
   assert(pcLog);
@@ -246,11 +249,11 @@ void
 LocationView::editCurrentLocationName()
 {
   assert(m_pcLogBook);
-  int nLocationIndex = m_pcLocations->currentItem();
-  if ( -1 == nLocationIndex ) {
+  QListWidgetItem* current = m_pcLocations->currentItem();
+  if ( !current ) {
     return;
   }
-  editLocationName(nLocationIndex);
+  editLocationName(current);
 }
 
 
@@ -278,7 +281,7 @@ LocationView::editLocation(const QString& cLocationName)
     }
   }
   if ( isFound ) {
-    m_pcLocations->setCurrentItem(nLocationIndex);
+    m_pcLocations->setCurrentRow(nLocationIndex);
     locationSelected(nLocationIndex);
     return;
   }
@@ -298,8 +301,8 @@ LocationView::editLocation(const QString& cLocationName)
 
   pcLog->setName(cLocationName);
   cLocations.append(pcLog);
-  m_pcLocations->insertItem(cLocationName);
-  m_pcLocations->setCurrentItem(m_pcLocations->count()-1);
+  m_pcLocations->addItem(cLocationName);
+  m_pcLocations->setCurrentRow(m_pcLocations->count()-1);
   m_pcLocationName->setText(cLocationName);
   m_pcLocationDescription->setText("");
 
@@ -339,8 +342,8 @@ LocationView::newLocation()
 
   QList<LocationLog*>& cLocations = m_pcLogBook->locationList();
   cLocations.append(pcLog);
-  m_pcLocations->insertItem("");
-  m_pcLocations->setCurrentItem(m_pcLocations->count()-1);
+  m_pcLocations->addItem("");
+  m_pcLocations->setCurrentRow(m_pcLocations->count()-1);
   m_pcLocationName->setText("");
   m_pcLocationDescription->setText("");
 
@@ -370,7 +373,7 @@ LocationView::deleteLocation()
 
   // Find and delete the location
   QList<LocationLog*>& cLocationList = m_pcLogBook->locationList();
-  int nCurrentItem = m_pcLocations->currentItem();
+  int nCurrentItem = m_pcLocations->currentRow();
   if ( -1 == nCurrentItem )
     return;
   assert(cLocationList.count() > nCurrentItem);
@@ -388,11 +391,12 @@ LocationView::deleteLocation()
   if ( 1 == nResult )
     return;
 
-  m_pcLocations->removeItem(nCurrentItem);
+  QListWidgetItem* item = m_pcLocations->takeItem(nCurrentItem);
+  delete item;
   cLocationList.removeAt(nCurrentItem);
 
   // Update the view with the new current location, if any
-  const int nNewCurrent = m_pcLocations->currentItem();
+  const int nNewCurrent = m_pcLocations->currentRow();
   if ( -1 == nNewCurrent ) {
     m_pcLocations->setEnabled(false);
     m_pcDeleteLocation->setEnabled(false);
@@ -414,7 +418,7 @@ LocationView::locationNameChanged()
   assert(m_pcLogBook);
   assert(m_pcLocations->count() >= 1);
 
-  int nCurrentItem = m_pcLocations->currentItem();
+  int nCurrentItem = m_pcLocations->currentRow();
   assert(nCurrentItem >= 0);
   QList<LocationLog*>& cLocations = m_pcLogBook->locationList();
   LocationLog* pcLocation = cLocations.at(nCurrentItem);
@@ -422,7 +426,8 @@ LocationView::locationNameChanged()
   pcLocation->setName(cName);
 
   m_pcLocationName->hide();
-  m_pcLocations->changeItem(cName, nCurrentItem);
+  QListWidgetItem* item = m_pcLocations->currentItem();
+  item->setText(cName);
 
   m_pcLocations->setEnabled(true);
   m_pcNewLocation->setEnabled(true);
@@ -446,7 +451,7 @@ LocationView::locationDescriptionChanged()
 {
   assert(m_pcLogBook);
 
-  int nCurrentItem = m_pcLocations->currentItem();
+  int nCurrentItem = m_pcLocations->currentRow();
   if ( -1 == nCurrentItem )
     return;
   QList<LocationLog*>& cLocations = m_pcLogBook->locationList();
@@ -469,7 +474,7 @@ LocationView::prepareLocationsMenu(QMenu* pcMenu)
 {
   assert(pcMenu);
 
-  bool bHasSelectedLocation = (m_pcLocations->currentItem() != -1);
+  bool bHasSelectedLocation = (m_pcLocations->currentRow() != -1);
   pcMenu->actions().at(1)->setEnabled(bHasSelectedLocation);
   pcMenu->actions().at(2)->setEnabled(bHasSelectedLocation);
 }

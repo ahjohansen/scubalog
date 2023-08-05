@@ -7,14 +7,14 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
 #ifndef LISTBOX_H
 #define LISTBOX_H
 
-#include <q3listbox.h>
+#include <QListWidget>
 
 class QMenu;
 class QKeyEvent;
@@ -43,11 +43,11 @@ class QMouseEvent;
   Notice that the pop-up menu is owned by this widget, it can be changed by
   users, but not deleted.
 
-  \author André Johansen
+  \author André Hübert Johansen
 */
 //*****************************************************************************
 
-class ListBox : public Q3ListBox {
+class ListBox : public QListWidget {
   Q_OBJECT
 
 public:

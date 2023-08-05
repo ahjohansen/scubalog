@@ -7,19 +7,18 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
-
 
 #ifndef LOGLISTVIEW_H
 #define LOGLISTVIEW_H
 
 #include <qwidget.h>
 
-class Q3ListView;
+class QTableWidget;
+class QTableWidgetItem;
 class QPushButton;
-class Q3ListViewItem;
 class DiveList;
 class DiveLog;
 
@@ -29,18 +28,16 @@ class DiveLog;
   \class LogListView
   \brief The LogListView class is used to display all the dive logs.
 
-  A listview is used to view the logs. This widget is the main part of the
+  A table widget is used to view the logs. This widget is the main part of the
   view. Four parts of a dive log is shown in the view:
   \arg Dive number
   \arg Dive date
   \arg Dive start time
   \arg Location.
 
-  The log list can be sorted on any of theese parts.
+  The log list can be sorted on any of these parts.
 
-  \sa QListView.
-
-  \author André Johansen
+  \author André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -56,20 +53,24 @@ public slots:
   void createNewLog();
   void deleteLog();
   void viewLog();
-  void viewLog(Q3ListViewItem* pcItem);
-  void selectedLogChanged(Q3ListViewItem* pcItem);
+  void viewLog(int row, int col);
+  void selectedLogChanged(int row, int col);
 
 private:
-  //! The dive list view.
-  Q3ListView*  m_pcDiveListView;
+  void insertLogAt(int row, const DiveLog* item);
+  DiveLog* getDiveLogNumber(int number);
+
+private:
+  //! The dive list widget.
+  QTableWidget* m_pcDiveListWidget;
   //! The button used to create a new log.
-  QPushButton* m_pcNewLog;
+  QPushButton*  m_pcNewLog;
   //! The button used to delete a log.
-  QPushButton* m_pcDeleteLog;
+  QPushButton*  m_pcDeleteLog;
   //! The button used to view a selected log.
-  QPushButton* m_pcViewLog;
+  QPushButton*  m_pcViewLog;
   //! The current dive log list.
-  DiveList*    m_pcDiveLogList;
+  DiveList*     m_pcDiveLogList;
 
 signals:
   //! This signal is emitted when the log \a pcLog should be displayed.

@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -20,8 +20,7 @@
 #include "kintegeredit.h"
 #include "debug.h"
 
-#include <kapplication.h>
-#include <klocale.h>
+#include <KLocalizedString>
 #include <qmessagebox.h>
 #include <qpushbutton.h>
 #include <qtextedit.h>
@@ -33,6 +32,7 @@
 #include <QHBoxLayout>
 #include <QGridLayout>
 #include <QVBoxLayout>
+#include <QApplication>
 #include <new>
 #include <assert.h>
 #include <limits.h>
@@ -373,8 +373,7 @@ LogView::viewLog(DiveLog* pcLog)
   m_pcCurrentLog = pcLog;
 
   if ( pcLog ) {
-    QString cDepth;
-    cDepth.sprintf("%.2f", pcLog->maxDepth());
+    const QString cDepth = QString::asprintf("%.2f", pcLog->maxDepth());
     m_pcDiveNumber->setValue(pcLog->logNumber());
     m_pcDiveNumber->setEnabled(true);
     m_pcDiveDate->setDate(pcLog->diveDate());
@@ -606,7 +605,7 @@ LogView::locationChanged(const QString& cLocation)
 void
 LogView::maxDepthChanged(const QString& cDepth)
 {
-  float vDepth = (float)atof(cDepth.toAscii());
+  float vDepth = (float)atof(cDepth.toUtf8().constData());
   if ( m_pcCurrentLog )
     m_pcCurrentLog->setMaxDepth(vDepth);
 }

@@ -7,7 +7,7 @@
   ScubaLog is free software licensed under the GPL.
 
   \par Copyright:
-  André Johansen
+  André Hübert Johansen
 */
 //*****************************************************************************
 
@@ -16,16 +16,15 @@
 #define SCUBALOG_H
 
 #include <qlist.h>
-#include <kmainwindow.h>
-#include <kio/job.h>
+#include <KMainWindow>
 
 
 class QAction;
 class QTabWidget;
+class QMenu;
+class QSessionManager;
 class DiveLog;
 class LogBook;
-class QMenu;
-class KUrl;
 class LogListView;
 class LogView;
 class LocationView;
@@ -40,23 +39,15 @@ class EquipmentView;
 
   This is a singleton class that should be created in main().
 
-  \author André Johansen, Jordi Cantón
+  \author André Hübert Johansen, Jordi Cantón
 */
 //*****************************************************************************
 
 class ScubaLog : public KMainWindow {
   Q_OBJECT
 
-  //! Download modes.
-  enum DownloadMode_e {
-    //! Synchronous mode (i.e. don't return until finished).
-    e_DownloadSynchronous,
-    //! Asynchronous mode (i.e. return immediately, download in background).
-    e_DownloadAsynchronous
-  };
-
 public:
-  ScubaLog(const char* pzName, const char* pzLogBook);
+  ScubaLog(const char* pzLogBook);
   virtual ~ScubaLog();
 
 public slots:
@@ -73,7 +64,6 @@ private slots:
   void saveProject();
   void saveProjectAs();
   void print();
-  void handleDownloadFinished(KIO::Job* pcJob);
   void viewLogList();
   void viewLog(DiveLog* pcLog);
   void editLocation(const QString& cLocationName);
@@ -83,7 +73,6 @@ private slots:
 private:
   void dragEnterEvent(QDragEnterEvent* pcEvent);
   void dropEvent(QDropEvent* pcEvent);
-  bool readLogBookUrl(const KUrl& cUrl, DownloadMode_e eMode);
   bool readLogBook(const QString& cFileName);
 
   void updateRecentProjects(const QString& cProjectName);
@@ -107,11 +96,6 @@ private:
   PersonalInfoView* m_pcPersonalInfoView;
   //! The equipment view.
   EquipmentView*    m_pcEquipmentView;
-
-  //! The current URL being processed by KFM.
-  QString*          m_pcKfmUrl;
-  //! The current temporary file from KFM.
-  QString*          m_pcKfmFileName;
 
   //
   // Configuration settings
