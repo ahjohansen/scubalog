@@ -87,6 +87,7 @@ Main scubalog :
   scubalog.cpp
   scubalogproject.cpp
   udcfexporter.cpp
+  udcfimporter.cpp
   scubalog_moc.cpp
   ;
 

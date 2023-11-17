@@ -14,6 +14,7 @@
 #include "scubalog.h"
 #include "scubalogproject.h"
 #include "udcfexporter.h"
+#include "udcfimporter.h"
 #include "htmlexporter.h"
 #include "equipmentview.h"
 #include "personalinfoview.h"
@@ -383,11 +384,10 @@ ScubaLog::newProject()
 void
 ScubaLog::openProject()
 {
-  const QString cFilters("*.slb|" + i18n("ScubaLog projects (*.slb)") + "\n" +
-                         "*|"     + i18n("All files (*)"));
+  const QString filters(i18n("UDCF files (*.xml);;ScubaLog projects (*.slb)"));
   QString caption(i18n("Open log book"));
   const QString cProjectName =
-    QFileDialog::getOpenFileName(this, caption, QString(), cFilters, NULL);
+    QFileDialog::getOpenFileName(this, caption, QString(), filters, NULL);
   if ( false == cProjectName.isEmpty() ) {
     readLogBook(cProjectName);
   }
@@ -411,8 +411,15 @@ ScubaLog::saveProject()
   else {
     statusBar()->showMessage(i18n("Writing log book..."));
 
-    ScubaLogProject cExporter;
-    const bool isOk = cExporter.exportLogBook(*m_pcLogBook, *m_pcProjectName);
+    Exporter* exporter;
+    if ( m_pcProjectName->endsWith(".xml") ) {
+      exporter = new UDCFExporter();
+    }
+    else {
+      exporter = new ScubaLogProject();
+    }
+    const bool isOk = exporter->exportLogBook(*m_pcLogBook, *m_pcProjectName);
+    delete exporter;
     if ( isOk ) {
       //setUnsavedData(false);
       statusBar()->showMessage(i18n("Writing log book...Done"), 3000);
@@ -436,20 +443,28 @@ ScubaLog::saveProject()
 void
 ScubaLog::saveProjectAs()
 {
-  const QString cFilters("*.slb|" + i18n("ScubaLog files (*.slb)") + "\n" +
-                         "*|"     + i18n("All files (*)"));
+  const QString filters(i18n("UDCF files (*.xml);;ScubaLog projects (*.slb)"));
 
   statusBar()->showMessage(i18n("Writing log book..."));
 
   QString caption(i18n("Save log book"));
   QString cProjectName =
-    QFileDialog::getSaveFileName(this, caption, QString(), cFilters);
+    QFileDialog::getSaveFileName(this, caption, QString(), filters);
   if ( false == cProjectName.isEmpty() ) {
-    if ( !cProjectName.endsWith(".slb") )
-      cProjectName += ".slb";
+    Exporter* exporter;
+    if ( cProjectName.endsWith(".xml") ) {
+      exporter = new UDCFExporter();
+    }
+    else {
+      if ( !cProjectName.endsWith(".slb") ) {
+        cProjectName += ".slb";
+      }
+      exporter = new ScubaLogProject();
+    }
     *m_pcProjectName = cProjectName;
     ScubaLogProject cExporter;
-    const bool isOk = cExporter.exportLogBook(*m_pcLogBook, *m_pcProjectName);
+    const bool isOk = exporter->exportLogBook(*m_pcLogBook, *m_pcProjectName);
+    delete exporter;
     if ( isOk ) {
       //setUnsavedData(false);
       updateRecentProjects(cProjectName);
@@ -485,8 +500,15 @@ ScubaLog::readLogBook(const QString& cFileName)
 
   LogBook* pcLogBook = 0;
   try {
-    ScubaLogProject cImporter;
-    pcLogBook = cImporter.importLogBook(cFileName);
+    Importer* importer;
+    if ( cFileName.endsWith(".xml") ) {
+      importer = new UDCFImporter();
+    }
+    else {
+      importer = new ScubaLogProject();
+    }
+    pcLogBook = importer->importLogBook(cFileName);
+    delete importer;
     if ( pcLogBook ) {
       // Insert the new logbook
       m_pcLogListView->setLogList(&pcLogBook->diveList());
@@ -618,14 +640,13 @@ ScubaLog::exportLogBookUDCF()
 
   statusBar()->showMessage(i18n("Exporting log book..."));
 
-  const QString cFilters("*.xml|" + i18n("UDCF Files (*.xml)") + "\n" +
-                         "*|"     + i18n("All files (*)"));
+  const QString filters(i18n("UDCF files (*.xml)"));
 
   statusBar()->showMessage(i18n("Writing log book..."));
 
   const QString caption(i18n("Save log book"));
   QString cProjectName =
-    QFileDialog::getSaveFileName(this, caption, QString(), cFilters);
+    QFileDialog::getSaveFileName(this, caption, QString(), filters);
   if ( false == cProjectName.isEmpty() ) {
     if ( !cProjectName.endsWith(".xml") ) {
       cProjectName += ".xml";
